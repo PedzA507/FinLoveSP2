@@ -4,11 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +21,7 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import android.app.AlertDialog
+import android.widget.TextView
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -37,11 +41,14 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var textViewEducation: EditText
     private lateinit var textViewGoal: EditText
     private lateinit var imageViewProfile: ImageView
-    private lateinit var buttonEditProfile: Button
+
+    // แก้จาก Button เป็น ImageButton
+    private lateinit var buttonEditProfile: ImageButton
     private lateinit var buttonSaveProfile: Button
     private lateinit var buttonChangeImage: Button
     private lateinit var buttonLogout: Button
     private lateinit var buttonDeleteAccount: Button
+    private lateinit var toolbar: Toolbar // Toolbar for nickname
     private var selectedImageUri: Uri? = null
     private var isEditing = false
     private val PICK_IMAGE_REQUEST = 1
@@ -49,6 +56,10 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
+        // Initialize Toolbar and set it as ActionBar
+        toolbar = findViewById(R.id.toolbarProfile)
+        setSupportActionBar(toolbar)
 
         // Initialize views
         textViewUsername = findViewById(R.id.textViewUsername)
@@ -63,15 +74,26 @@ class ProfileActivity : AppCompatActivity() {
         textViewEducation = findViewById(R.id.textViewEducation)
         textViewGoal = findViewById(R.id.textViewGoal)
         imageViewProfile = findViewById(R.id.imageViewProfile)
+
+        // แก้จาก Button เป็น ImageButton
         buttonEditProfile = findViewById(R.id.buttonEditProfile)
         buttonSaveProfile = findViewById(R.id.buttonSaveProfile)
         buttonChangeImage = findViewById(R.id.buttonChangeImage)
         buttonLogout = findViewById(R.id.buttonLogout)
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount)
 
-        // Initially hide the Save button and additional fields
-        buttonSaveProfile.visibility = Button.GONE
-        setFieldsVisibility(false)
+        // ซ่อนปุ่มเปลี่ยนรูปภาพและปุ่มบันทึกในตอนเริ่มต้น
+        buttonChangeImage.visibility = View.GONE
+        buttonSaveProfile.visibility = View.GONE
+
+        // ซ่อนฟิลด์หลังจาก Gender
+        textViewUsername.visibility = View.GONE
+        textViewEmail.visibility = View.GONE
+        textViewHeight.visibility = View.GONE
+        textViewHome.visibility = View.GONE
+        textViewDateBirth.visibility = View.GONE
+        textViewEducation.visibility = View.GONE
+        textViewGoal.visibility = View.GONE
 
         // Get the userID from the intent
         val userID = intent.getIntExtra("userID", -1)
@@ -94,16 +116,30 @@ class ProfileActivity : AppCompatActivity() {
             isEditing = !isEditing
             setEditingEnabled(isEditing)
             setFieldsVisibility(isEditing)
-            buttonEditProfile.text = if (isEditing) "Cancel" else "Edit"
-            buttonSaveProfile.visibility = if (isEditing) Button.VISIBLE else Button.GONE
+
+            // แสดงปุ่มเปลี่ยนรูปภาพและบันทึกเมื่ออยู่ในโหมดแก้ไข
+            buttonChangeImage.visibility = if (isEditing) View.VISIBLE else View.GONE
+            buttonSaveProfile.visibility = if (isEditing) View.VISIBLE else View.GONE
+
+            // แสดงฟิลด์เพิ่มเติมเมื่ออยู่ในโหมดแก้ไข
+            textViewUsername.visibility = if (isEditing) View.VISIBLE else View.GONE
+            textViewEmail.visibility = if (isEditing) View.VISIBLE else View.GONE
+            textViewHeight.visibility = if (isEditing) View.VISIBLE else View.GONE
+            textViewHome.visibility = if (isEditing) View.VISIBLE else View.GONE
+            textViewDateBirth.visibility = if (isEditing) View.VISIBLE else View.GONE
+            textViewEducation.visibility = if (isEditing) View.VISIBLE else View.GONE
+            textViewGoal.visibility = if (isEditing) View.VISIBLE else View.GONE
+
             Toast.makeText(this, if (isEditing) "Editing enabled" else "Editing disabled", Toast.LENGTH_SHORT).show()
         }
 
         buttonSaveProfile.setOnClickListener {
+            // บันทึกข้อมูลเมื่อกดปุ่มบันทึก
             saveUserInfo(userID)
         }
 
         buttonChangeImage.setOnClickListener {
+            // เปิดตัวเลือกการเลือกรูปภาพ
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
@@ -112,7 +148,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun logoutUser(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             if (userID != -1) {
-                val url = "root_url/api/logout/$userID"
+                val url = getString(R.string.root_url) + "/api/logout/$userID"
                 val request = Request.Builder().url(url).post(FormBody.Builder().build()).build()
 
                 try {
@@ -163,7 +199,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun deleteAccount(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "root_url/api/user/$userID"
+                val url = getString(R.string.root_url) + "/api/user/$userID"
                 val request = Request.Builder().url(url).delete().build()
 
                 val response = OkHttpClient().newCall(request).execute()
@@ -212,7 +248,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun fetchUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "root_url/api/user/$userID"
+                val url = getString(R.string.root_url) + "/api/user/$userID"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpClient().newCall(request).execute()
 
@@ -221,6 +257,12 @@ class ProfileActivity : AppCompatActivity() {
                     val user = parseUserInfo(responseBody)
 
                     withContext(Dispatchers.Main) {
+                        // Clear toolbar title and set the nickname to the TextView in the toolbar
+                        toolbar.title = ""  // Clear default toolbar title
+                        val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
+                        toolbarTitle.text = user.nickname // Set nickname in TextView
+
+                        // Update other user info in the UI
                         textViewUsername.setText(user.username)
                         textViewNickname.setText(user.nickname)
                         textViewEmail.setText(user.email)
@@ -232,6 +274,8 @@ class ProfileActivity : AppCompatActivity() {
                         textViewDateBirth.setText(user.dateBirth)
                         textViewEducation.setText(user.education)
                         textViewGoal.setText(user.goal)
+
+                        // Load user image if available
                         user.imageFile?.let { loadImage(it, imageViewProfile) }
                     }
                 } else {
@@ -246,6 +290,7 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun saveUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -291,8 +336,6 @@ class ProfileActivity : AppCompatActivity() {
                             loadImage(it, imageViewProfile)
                         }
                         setEditingEnabled(false)
-                        buttonEditProfile.text = "Edit"
-                        buttonSaveProfile.visibility = Button.GONE
                         isEditing = false
                     } else {
                         val message = jsonObject.optString("message", "บันทึกข้อมูลล้มเหลว")
@@ -326,6 +369,8 @@ class ProfileActivity : AppCompatActivity() {
     private fun setFieldsVisibility(showAll: Boolean) {
         if (showAll) {
             // Show all fields
+
+            textViewUsername.visibility = EditText.VISIBLE
             textViewEmail.visibility = EditText.VISIBLE
             textViewHeight.visibility = EditText.VISIBLE
             textViewHome.visibility = EditText.VISIBLE
@@ -334,6 +379,7 @@ class ProfileActivity : AppCompatActivity() {
             textViewGoal.visibility = EditText.VISIBLE
         } else {
             // Hide additional fields, only show essential ones
+            textViewUsername.visibility = EditText.GONE
             textViewEmail.visibility = EditText.GONE
             textViewHeight.visibility = EditText.GONE
             textViewHome.visibility = EditText.GONE

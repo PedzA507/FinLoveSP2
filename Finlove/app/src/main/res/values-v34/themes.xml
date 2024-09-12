@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme -->
+
     <style name="Theme.Finlove" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@android:color/system_control_activated_dark</item>
+        <item name="colorPrimary">@android:color/system_accent1_300</item>
         <item name="colorPrimaryVariant">@color/purple_200</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -12,13 +13,5 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-    </style>
-
-    <!-- Theme without Action Bar and Status Bar -->
-    <style name="Theme.Finlove.NoActionBar" parent="Theme.Finlove">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item> <!-- ซ่อน Status Bar -->
-        <item name="android:statusBarColor">@android:color/transparent</item> <!-- ทำให้ Status Bar โปร่งใส -->
     </style>
 </resources>
