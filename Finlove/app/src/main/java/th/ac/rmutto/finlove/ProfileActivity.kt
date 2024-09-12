@@ -112,7 +112,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun logoutUser(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             if (userID != -1) {
-                val url = "root_url/api/logout/$userID"
+                val url = getString(R.string.root_url) + "/api/logout/$userID"
                 val request = Request.Builder().url(url).post(FormBody.Builder().build()).build()
 
                 try {
@@ -163,7 +163,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun deleteAccount(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "root_url/api/user/$userID"
+                val url = getString(R.string.root_url) + "/api/user/$userID"
                 val request = Request.Builder().url(url).delete().build()
 
                 val response = OkHttpClient().newCall(request).execute()
@@ -212,7 +212,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun fetchUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "root_url/api/user/$userID"
+                val url = getString(R.string.root_url) + "/api/user/$userID"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpClient().newCall(request).execute()
 

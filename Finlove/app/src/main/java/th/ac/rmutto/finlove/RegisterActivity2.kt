@@ -52,7 +52,7 @@ class RegisterActivity2 : AppCompatActivity() {
             }
 
             // ส่งข้อมูลไปยังเซิร์ฟเวอร์
-            val url = "root_url/api/register2"
+            val url = getString(R.string.root_url) + "/api/register2"
             val formBody: RequestBody = FormBody.Builder()
                 .add("firstname", firstname)
                 .add("lastname", lastname)

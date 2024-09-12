@@ -55,7 +55,7 @@ class RegisterActivity3 : AppCompatActivity() {
             }
 
             // ส่งข้อมูลไปยังเซิร์ฟเวอร์
-            val url = "root_url/api/register3"
+            val url = getString(R.string.root_url) + "/api/register3"
             val formBody: RequestBody = FormBody.Builder()
                 .add("gender", gender)
                 .add("height", height)

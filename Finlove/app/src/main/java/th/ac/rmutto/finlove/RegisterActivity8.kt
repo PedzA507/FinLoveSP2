@@ -57,7 +57,7 @@ class RegisterActivity8 : AppCompatActivity() {
                     try {
                         val client = OkHttpClient()
                         val request = Request.Builder()
-                            .url("root_url/api/register8")
+                            .url("http://192.168.1.49:3000/api/register8")
                             .post(MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
                                 .addPart(MultipartBody.Part.createFormData("userID", userID.toString()))
