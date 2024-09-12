@@ -21,6 +21,7 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import android.app.AlertDialog
+import android.text.Editable
 import android.widget.TextView
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -29,6 +30,8 @@ import org.json.JSONObject
 import java.io.File
 
 class ProfileActivity : AppCompatActivity() {
+
+    private var user: User? = null
     private lateinit var textViewUsername: EditText
     private lateinit var textViewNickname: EditText
     private lateinit var textViewEmail: EditText
@@ -41,6 +44,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var textViewEducation: EditText
     private lateinit var textViewGoal: EditText
     private lateinit var imageViewProfile: ImageView
+    private lateinit var textViewPreferences: EditText
 
     // แก้จาก Button เป็น ImageButton
     private lateinit var buttonEditProfile: ImageButton
@@ -74,6 +78,7 @@ class ProfileActivity : AppCompatActivity() {
         textViewEducation = findViewById(R.id.textViewEducation)
         textViewGoal = findViewById(R.id.textViewGoal)
         imageViewProfile = findViewById(R.id.imageViewProfile)
+        textViewPreferences = findViewById(R.id.textViewPreferences)
 
         // แก้จาก Button เป็น ImageButton
         buttonEditProfile = findViewById(R.id.buttonEditProfile)
@@ -254,29 +259,32 @@ class ProfileActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    val user = parseUserInfo(responseBody)
+                    user = parseUserInfo(responseBody) // เก็บค่าผู้ใช้ในตัวแปร user
 
                     withContext(Dispatchers.Main) {
                         // Clear toolbar title and set the nickname to the TextView in the toolbar
                         toolbar.title = ""  // Clear default toolbar title
                         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
-                        toolbarTitle.text = user.nickname // Set nickname in TextView
+                        toolbarTitle.text = user?.nickname ?: "" // Set nickname in TextView
 
                         // Update other user info in the UI
-                        textViewUsername.setText(user.username)
-                        textViewNickname.setText(user.nickname)
-                        textViewEmail.setText(user.email)
-                        textViewFirstName.setText(user.firstName)
-                        textViewLastName.setText(user.lastName)
-                        textViewGender.setText(user.gender)
-                        textViewHeight.setText(user.height.toString())
-                        textViewHome.setText(user.home)
-                        textViewDateBirth.setText(user.dateBirth)
-                        textViewEducation.setText(user.education)
-                        textViewGoal.setText(user.goal)
+                        textViewUsername.setText(user?.username ?: "")
+                        textViewNickname.setText(user?.nickname ?: "")  // อัปเดต nickname ใน EditText
+                        textViewEmail.setText(user?.email ?: "")
+                        textViewFirstName.setText(user?.firstName ?: "")
+                        textViewLastName.setText(user?.lastName ?: "")
+                        textViewGender.setText(user?.gender ?: "")
+                        textViewHeight.setText(user?.height.toString())
+                        textViewHome.setText(user?.home ?: "")
+                        textViewDateBirth.setText(user?.dateBirth ?: "")
+                        textViewEducation.setText(user?.education ?: "")
+                        textViewGoal.setText(user?.goal ?: "")
+
+                        // แสดง Preferences
+                        textViewPreferences.text = Editable.Factory.getInstance().newEditable(user?.preferences ?: "No preferences available")
 
                         // Load user image if available
-                        user.imageFile?.let { loadImage(it, imageViewProfile) }
+                        user?.imageFile?.let { loadImage(it, imageViewProfile) }
                     }
                 } else {
                     withContext(Dispatchers.Main) {
@@ -292,13 +300,26 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
+
+
+
+    // แปลง preferences ที่เป็นชื่อกลับเป็น ID ก่อนบันทึก
+    private fun convertPreferencesToIds(preferences: String): List<Int> {
+        val preferencesMap = mapOf(
+            "ดูหนัง" to 1,
+            "ฟังเพลง" to 2,
+            "เล่นกีฬา" to 3
+        )
+        return preferences.split(",").mapNotNull { preferencesMap[it.trim()] }
+    }
+
     private fun saveUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val client = OkHttpClient()
                 val requestBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("username", textViewUsername.text.toString())
-                    .addFormDataPart("nickname", textViewNickname.text.toString())
+                    .addFormDataPart("nickname", textViewNickname.text.toString())  // ส่ง nickname
                     .addFormDataPart("email", textViewEmail.text.toString())
                     .addFormDataPart("firstname", textViewFirstName.text.toString())
                     .addFormDataPart("lastname", textViewLastName.text.toString())
@@ -309,17 +330,29 @@ class ProfileActivity : AppCompatActivity() {
                     .addFormDataPart("education", textViewEducation.text.toString())
                     .addFormDataPart("goal", textViewGoal.text.toString())
 
-                selectedImageUri?.let {
-                    val file = getFileFromUri(it)
+                // แปลง preferences เป็น ID
+                val preferencesIds = convertPreferencesToIds(textViewPreferences.text.toString())
+                for (prefId in preferencesIds) {
+                    requestBuilder.addFormDataPart("preferences[]", prefId.toString())
+                }
+
+                if (selectedImageUri != null) {
+                    // ถ้าเลือกภาพใหม่ ให้ส่งไฟล์ภาพใหม่
+                    val file = getFileFromUri(selectedImageUri!!)
                     if (file != null && file.exists()) {
                         val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
                         requestBuilder.addFormDataPart("imageFile", file.name, requestBody)
+                    }
+                } else {
+                    // ถ้าไม่ได้เลือกภาพใหม่ ให้ใช้ URL ของภาพเดิมที่ดึงจากเซิร์ฟเวอร์
+                    user?.imageFile?.let {
+                        requestBuilder.addFormDataPart("imageFile", it)
                     }
                 }
 
                 val requestBody = requestBuilder.build()
                 val request = Request.Builder()
-                    .url("root_url/api/user/update/$userID")
+                    .url("http://192.168.1.49:3000/api/user/update/$userID")
                     .put(requestBody)
                     .build()
 
@@ -332,6 +365,11 @@ class ProfileActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     if (success) {
                         Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลสำเร็จ", Toast.LENGTH_SHORT).show()
+
+                        // อัปเดต nickname ใน toolbar
+                        val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
+                        toolbarTitle.text = textViewNickname.text.toString()
+
                         updatedImageUrl?.let {
                             loadImage(it, imageViewProfile)
                         }
@@ -349,6 +387,7 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun setEditingEnabled(enabled: Boolean) {
         textViewUsername.isEnabled = enabled
@@ -411,7 +450,8 @@ class ProfileActivity : AppCompatActivity() {
             dateBirth = jsonObject.optString("DateBirth", ""),
             education = jsonObject.optString("education", ""),
             goal = jsonObject.optString("goal", ""),
-            imageFile = jsonObject.optString("imageFile", "")
+            imageFile = jsonObject.optString("imageFile", ""),
+            preferences = jsonObject.optString("preferences", "")
         )
     }
 

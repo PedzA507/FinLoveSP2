@@ -12,5 +12,6 @@ data class User(
     val dateBirth: String,
     val education: String,
     val goal: String,
-    val imageFile: String
+    val imageFile: String,
+    val preferences: String?
 )

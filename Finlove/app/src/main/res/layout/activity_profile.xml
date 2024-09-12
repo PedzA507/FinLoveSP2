@@ -96,7 +96,6 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/edittext"
                 android:enabled="false"
                 android:padding="12dp"
                 android:text="Username"
@@ -111,7 +110,6 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/edittext"
                 android:enabled="false"
                 android:padding="12dp"
                 android:text="Nickname"
@@ -127,7 +125,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Email"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -141,7 +138,6 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
-                android:background="@drawable/edittext"
                 android:enabled="false"
                 android:padding="12dp"
                 android:text="Firstname"
@@ -157,7 +153,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Last Name"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -172,7 +167,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Gender"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -187,7 +181,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Height"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -202,7 +195,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Home"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -217,7 +209,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Date of Birth"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -232,7 +223,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Education"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -247,7 +237,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Goal"
-                android:background="@drawable/edittext"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 android:enabled="false"
@@ -255,6 +244,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textViewEducation"/>
+
+            <EditText
+                android:id="@+id/textViewPreferences"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Preference"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:enabled="false"
+                android:padding="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewGoal"/>
 
 
             <ImageButton
@@ -282,7 +285,7 @@
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewGoal" />
+                app:layout_constraintTop_toBottomOf="@id/textViewPreferences" />
 
             <Button
                 android:id="@+id/buttonLogout"
@@ -307,6 +310,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonLogout" />
+
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
