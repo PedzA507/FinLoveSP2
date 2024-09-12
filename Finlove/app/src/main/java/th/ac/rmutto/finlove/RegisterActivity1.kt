@@ -55,7 +55,7 @@ class RegisterActivity1 : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val url = "http://192.168.1.49:3000/api/register1"
+            val url = "root_url/api/register1"
 
             val formBody: RequestBody = FormBody.Builder()
                 .add("email", email)

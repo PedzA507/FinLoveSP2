@@ -53,7 +53,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
             .build()
 
         val request = Request.Builder()
-            .url("http://192.168.1.49:3000/api/reset-password") // เปลี่ยน URL ตามต้องการ
+            .url("root_url/api/reset-password") // เปลี่ยน URL ตามต้องการ
             .post(requestBody)
             .build()
 

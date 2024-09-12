@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val url = "http://192.168.1.49:3000/api/login"
+            val url = "root_url/api/login"
             val formBody: RequestBody = FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
