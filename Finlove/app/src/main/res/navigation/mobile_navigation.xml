@@ -2,24 +2,24 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="th.ac.rmutto.finlove.ui.home.HomeFragment"
-        android:label="@string/title_Main"
-        tools:layout="@layout/fragment_main" />
+        android:name="th.ac.rmutto.finlove.ui.Home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="th.ac.rmutto.finlove.ui.dashboard.DashboardFragment"
-        android:label="@string/title_Message"
+        android:id="@+id/navigation_message"
+        android:name="th.ac.rmutto.finlove.ui.Message.MessageFragment"
+        android:label="Message"
         tools:layout="@layout/fragment_message" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="th.ac.rmutto.finlove.ui.notifications.NotificationsFragment"
-        android:label="@string/title_Profile"
+        android:id="@+id/navigation_profile"
+        android:name="th.ac.rmutto.finlove.ui.profile.ProfileFragment"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
 </navigation>

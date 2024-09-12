@@ -2,10 +2,11 @@ package th.ac.rmutto.finlove
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,29 +20,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Get the userID from the intent
-        val userID = intent.getIntExtra("userID", -1)
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        // Find the logout button and set a click listener
-        val buttonLogout = findViewById<Button>(R.id.buttonLogout)
-        buttonLogout.setOnClickListener {
-            logoutUser(userID)
-        }
-
-        // Find the BottomNavigationView and set a listener
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_Profile -> {
-                    // Navigate to ProfileActivity
-                    val intent = Intent(this@MainActivity, ProfileActivity::class.java)
-                    intent.putExtra("userID", userID) // Pass userID to ProfileActivity
-                    startActivity(intent)
-                    true
-                }
-                else -> false
-            }
-        }
+        // เชื่อมต่อ BottomNavigationView กับ NavController
+        bottomNavigationView.setupWithNavController(navController)
     }
 
     private fun logoutUser(userID: Int) {

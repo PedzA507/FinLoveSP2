@@ -3,5 +3,5 @@
     <string name="title_Main">Main</string>
     <string name="title_Message">Message</string>
     <string name="title_Profile">Profile</string>
-    <string name="root_url">http://192.168.1.49:3000</string>
+    <string name="root_url">http://192.168.1.49:4000</string>
 </resources>

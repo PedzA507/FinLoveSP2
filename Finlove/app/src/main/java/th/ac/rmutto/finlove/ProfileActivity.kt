@@ -21,17 +21,24 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
 import java.io.File
+import java.util.Calendar
 
 class ProfileActivity : AppCompatActivity() {
 
     private var user: User? = null
+    private val educationOptions = arrayOf("มัธยมศึกษา", "ปริญญาตรี", "ปริญญาโท", "ปริญญาเอก")
     private lateinit var textViewUsername: EditText
     private lateinit var textViewNickname: EditText
     private lateinit var textViewEmail: EditText
@@ -40,20 +47,20 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var textViewGender: EditText
     private lateinit var textViewHeight: EditText
     private lateinit var textViewHome: EditText
-    private lateinit var textViewDateBirth: EditText
-    private lateinit var textViewEducation: EditText
+    private lateinit var buttonSelectDateProfile: Button
+    private lateinit var spinnerEducationProfile: Spinner
     private lateinit var textViewGoal: EditText
     private lateinit var imageViewProfile: ImageView
     private lateinit var textViewPreferences: EditText
 
-    // แก้จาก Button เป็น ImageButton
     private lateinit var buttonEditProfile: ImageButton
     private lateinit var buttonSaveProfile: Button
     private lateinit var buttonChangeImage: Button
     private lateinit var buttonLogout: Button
     private lateinit var buttonDeleteAccount: Button
-    private lateinit var toolbar: Toolbar // Toolbar for nickname
+    private lateinit var toolbar: Toolbar
     private var selectedImageUri: Uri? = null
+    private var selectedDateOfBirth: String? = null
     private var isEditing = false
     private val PICK_IMAGE_REQUEST = 1
 
@@ -74,13 +81,12 @@ class ProfileActivity : AppCompatActivity() {
         textViewGender = findViewById(R.id.textViewGender)
         textViewHeight = findViewById(R.id.textViewHeight)
         textViewHome = findViewById(R.id.textViewHome)
-        textViewDateBirth = findViewById(R.id.textViewDateBirth)
-        textViewEducation = findViewById(R.id.textViewEducation)
+        buttonSelectDateProfile = findViewById(R.id.buttonSelectDateProfile)
+        spinnerEducationProfile = findViewById(R.id.spinnerEducationProfile)
         textViewGoal = findViewById(R.id.textViewGoal)
         imageViewProfile = findViewById(R.id.imageViewProfile)
         textViewPreferences = findViewById(R.id.textViewPreferences)
 
-        // แก้จาก Button เป็น ImageButton
         buttonEditProfile = findViewById(R.id.buttonEditProfile)
         buttonSaveProfile = findViewById(R.id.buttonSaveProfile)
         buttonChangeImage = findViewById(R.id.buttonChangeImage)
@@ -96,9 +102,30 @@ class ProfileActivity : AppCompatActivity() {
         textViewEmail.visibility = View.GONE
         textViewHeight.visibility = View.GONE
         textViewHome.visibility = View.GONE
-        textViewDateBirth.visibility = View.GONE
-        textViewEducation.visibility = View.GONE
+        buttonSelectDateProfile.visibility = View.GONE
+        spinnerEducationProfile.visibility = View.GONE
         textViewGoal.visibility = View.GONE
+
+        // Set up DatePickerDialog for Date of Birth
+        buttonSelectDateProfile.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                selectedDateOfBirth = "$selectedYear-${String.format("%02d", selectedMonth + 1)}-${String.format("%02d", selectedDay)}"
+                buttonSelectDateProfile.text = selectedDateOfBirth
+            }, year, month, day)
+
+            datePickerDialog.show()
+        }
+
+        // Set up Spinner for Education
+        val educationOptions = arrayOf("มัธยมศึกษา", "ปริญญาตรี", "ปริญญาโท", "ปริญญาเอก")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, educationOptions)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerEducationProfile.adapter = adapter
 
         // Get the userID from the intent
         val userID = intent.getIntExtra("userID", -1)
@@ -108,14 +135,78 @@ class ProfileActivity : AppCompatActivity() {
             Toast.makeText(this, "ไม่พบ userID", Toast.LENGTH_LONG).show()
         }
 
+        buttonEditProfile.setOnClickListener {
+            isEditing = !isEditing
+            setEditingEnabled(isEditing)
+            buttonChangeImage.visibility = if (isEditing) View.VISIBLE else View.GONE
+            buttonSaveProfile.visibility = if (isEditing) View.VISIBLE else View.GONE
+        }
+
+        buttonSaveProfile.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val client = OkHttpClient()
+                    val requestBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("username", textViewUsername.text.toString())
+                        .addFormDataPart("nickname", textViewNickname.text.toString())
+                        .addFormDataPart("email", textViewEmail.text.toString())
+                        .addFormDataPart("firstname", textViewFirstName.text.toString())
+                        .addFormDataPart("lastname", textViewLastName.text.toString())
+                        .addFormDataPart("gender", textViewGender.text.toString())
+                        .addFormDataPart("height", textViewHeight.text.toString())
+                        .addFormDataPart("home", textViewHome.text.toString())
+                        .addFormDataPart("DateBirth", selectedDateOfBirth ?: "")
+                        .addFormDataPart("education", spinnerEducationProfile.selectedItem.toString())
+                        .addFormDataPart("goal", textViewGoal.text.toString())
+
+                    if (selectedImageUri != null) {
+                        val file = getFileFromUri(selectedImageUri!!)
+                        if (file != null && file.exists()) {
+                            val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+                            requestBuilder.addFormDataPart("imageFile", file.name, requestBody)
+                        }
+                    }
+
+                    val requestBody = requestBuilder.build()
+                    val request = Request.Builder()
+                        .url("http://192.168.1.49:4000/api/user/update/$userID")
+                        .put(requestBody)
+                        .build()
+
+                    val response = client.newCall(request).execute()
+                    val responseBody = response.body?.string()
+                    val jsonObject = JSONObject(responseBody ?: "{}")
+                    val success = response.isSuccessful
+
+                    withContext(Dispatchers.Main) {
+                        if (success) {
+                            Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลสำเร็จ", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลล้มเหลว", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ProfileActivity, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+
+
+        buttonChangeImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        }
+
         buttonLogout.setOnClickListener {
             logoutUser(userID)
         }
 
-        // ปุ่มลบบัญชี
         buttonDeleteAccount.setOnClickListener {
             showDeleteConfirmationDialog(userID)
         }
+
 
         buttonEditProfile.setOnClickListener {
             isEditing = !isEditing
@@ -131,12 +222,16 @@ class ProfileActivity : AppCompatActivity() {
             textViewEmail.visibility = if (isEditing) View.VISIBLE else View.GONE
             textViewHeight.visibility = if (isEditing) View.VISIBLE else View.GONE
             textViewHome.visibility = if (isEditing) View.VISIBLE else View.GONE
-            textViewDateBirth.visibility = if (isEditing) View.VISIBLE else View.GONE
-            textViewEducation.visibility = if (isEditing) View.VISIBLE else View.GONE
+            buttonSelectDateProfile.visibility = if (isEditing) View.VISIBLE else View.GONE
+            spinnerEducationProfile.visibility = if (isEditing) View.VISIBLE else View.GONE
             textViewGoal.visibility = if (isEditing) View.VISIBLE else View.GONE
 
-            Toast.makeText(this, if (isEditing) "Editing enabled" else "Editing disabled", Toast.LENGTH_SHORT).show()
+            if (isEditing) {
+                // ตั้งค่า hint เมื่อช่องข้อมูลว่าง
+                setupHintOnEmptyFields()
+            }
         }
+
 
         buttonSaveProfile.setOnClickListener {
             // บันทึกข้อมูลเมื่อกดปุ่มบันทึก
@@ -180,18 +275,15 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    // ป๊อปอัปยืนยันการลบบัญชี
     private fun showDeleteConfirmationDialog(userID: Int) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirm Delete")
         builder.setMessage("คุณแน่ใจหรือว่าต้องการลบบัญชีของคุณ? การลบนี้ไม่สามารถยกเลิกได้!")
 
-        // ปุ่มยืนยัน
         builder.setPositiveButton("ยืนยัน") { dialog, which ->
             deleteAccount(userID)
         }
 
-        // ปุ่มยกเลิก
         builder.setNegativeButton("ยกเลิก") { dialog, which ->
             dialog.dismiss()
         }
@@ -200,7 +292,7 @@ class ProfileActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    // ลบบัญชีผู้ใช้
+
     private fun deleteAccount(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -231,6 +323,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
@@ -259,31 +352,28 @@ class ProfileActivity : AppCompatActivity() {
 
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    user = parseUserInfo(responseBody) // เก็บค่าผู้ใช้ในตัวแปร user
+                    user = parseUserInfo(responseBody)
 
                     withContext(Dispatchers.Main) {
-                        // Clear toolbar title and set the nickname to the TextView in the toolbar
-                        toolbar.title = ""  // Clear default toolbar title
+                        toolbar.title = ""
                         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
-                        toolbarTitle.text = user?.nickname ?: "" // Set nickname in TextView
+                        toolbarTitle.text = user?.nickname ?: ""
 
-                        // Update other user info in the UI
                         textViewUsername.setText(user?.username ?: "")
-                        textViewNickname.setText(user?.nickname ?: "")  // อัปเดต nickname ใน EditText
+                        textViewNickname.setText(user?.nickname ?: "")
                         textViewEmail.setText(user?.email ?: "")
                         textViewFirstName.setText(user?.firstName ?: "")
                         textViewLastName.setText(user?.lastName ?: "")
                         textViewGender.setText(user?.gender ?: "")
                         textViewHeight.setText(user?.height.toString())
                         textViewHome.setText(user?.home ?: "")
-                        textViewDateBirth.setText(user?.dateBirth ?: "")
-                        textViewEducation.setText(user?.education ?: "")
+                        buttonSelectDateProfile.text = user?.dateBirth ?: ""
+                        val educationIndex = educationOptions.indexOf(user?.education)
+                        spinnerEducationProfile.setSelection(educationIndex)
                         textViewGoal.setText(user?.goal ?: "")
 
-                        // แสดง Preferences
                         textViewPreferences.text = Editable.Factory.getInstance().newEditable(user?.preferences ?: "No preferences available")
 
-                        // Load user image if available
                         user?.imageFile?.let { loadImage(it, imageViewProfile) }
                     }
                 } else {
@@ -299,60 +389,29 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
-    // แปลง preferences ที่เป็นชื่อกลับเป็น ID ก่อนบันทึก
-    private fun convertPreferencesToIds(preferences: String): List<Int> {
-        val preferencesMap = mapOf(
-            "ดูหนัง" to 1,
-            "ฟังเพลง" to 2,
-            "เล่นกีฬา" to 3
-        )
-        return preferences.split(",").mapNotNull { preferencesMap[it.trim()] }
-    }
-
     private fun saveUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val client = OkHttpClient()
                 val requestBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("username", textViewUsername.text.toString())
-                    .addFormDataPart("nickname", textViewNickname.text.toString())  // ส่ง nickname
+                    .addFormDataPart("nickname", textViewNickname.text.toString())
                     .addFormDataPart("email", textViewEmail.text.toString())
                     .addFormDataPart("firstname", textViewFirstName.text.toString())
                     .addFormDataPart("lastname", textViewLastName.text.toString())
                     .addFormDataPart("gender", textViewGender.text.toString())
                     .addFormDataPart("height", textViewHeight.text.toString())
                     .addFormDataPart("home", textViewHome.text.toString())
-                    .addFormDataPart("DateBirth", textViewDateBirth.text.toString())
-                    .addFormDataPart("education", textViewEducation.text.toString())
+                    .addFormDataPart("DateBirth", selectedDateOfBirth ?: "")
+                    .addFormDataPart("education", spinnerEducationProfile.selectedItem.toString())
                     .addFormDataPart("goal", textViewGoal.text.toString())
 
-                // แปลง preferences เป็น ID
-                val preferencesIds = convertPreferencesToIds(textViewPreferences.text.toString())
-                for (prefId in preferencesIds) {
-                    requestBuilder.addFormDataPart("preferences[]", prefId.toString())
-                }
-
-                if (selectedImageUri != null) {
-                    // ถ้าเลือกภาพใหม่ ให้ส่งไฟล์ภาพใหม่
-                    val file = getFileFromUri(selectedImageUri!!)
-                    if (file != null && file.exists()) {
-                        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
-                        requestBuilder.addFormDataPart("imageFile", file.name, requestBody)
-                    }
-                } else {
-                    // ถ้าไม่ได้เลือกภาพใหม่ ให้ใช้ URL ของภาพเดิมที่ดึงจากเซิร์ฟเวอร์
-                    user?.imageFile?.let {
-                        requestBuilder.addFormDataPart("imageFile", it)
-                    }
-                }
+                // Log ข้อมูลที่กำลังจะถูกส่ง
+                Log.d("ProfileActivity", "Sending Data: ${textViewUsername.text.toString()}, ${textViewNickname.text.toString()}, ${textViewEmail.text.toString()}")
 
                 val requestBody = requestBuilder.build()
                 val request = Request.Builder()
-                    .url("http://192.168.1.49:3000/api/user/update/$userID")
+                    .url("http://192.168.1.49:4000/api/user/update/$userID")
                     .put(requestBody)
                     .build()
 
@@ -366,7 +425,6 @@ class ProfileActivity : AppCompatActivity() {
                     if (success) {
                         Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลสำเร็จ", Toast.LENGTH_SHORT).show()
 
-                        // อัปเดต nickname ใน toolbar
                         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
                         toolbarTitle.text = textViewNickname.text.toString()
 
@@ -398,8 +456,8 @@ class ProfileActivity : AppCompatActivity() {
         textViewGender.isEnabled = enabled
         textViewHeight.isEnabled = enabled
         textViewHome.isEnabled = enabled
-        textViewDateBirth.isEnabled = enabled
-        textViewEducation.isEnabled = enabled
+        buttonSelectDateProfile.isEnabled = enabled
+        buttonSelectDateProfile.isEnabled = enabled
         textViewGoal.isEnabled = enabled
         buttonChangeImage.isEnabled = enabled
         buttonSaveProfile.isEnabled = enabled
@@ -407,23 +465,20 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setFieldsVisibility(showAll: Boolean) {
         if (showAll) {
-            // Show all fields
-
             textViewUsername.visibility = EditText.VISIBLE
             textViewEmail.visibility = EditText.VISIBLE
             textViewHeight.visibility = EditText.VISIBLE
             textViewHome.visibility = EditText.VISIBLE
-            textViewDateBirth.visibility = EditText.VISIBLE
-            textViewEducation.visibility = EditText.VISIBLE
+            buttonSelectDateProfile.visibility = EditText.VISIBLE
+            spinnerEducationProfile.visibility = EditText.VISIBLE
             textViewGoal.visibility = EditText.VISIBLE
         } else {
-            // Hide additional fields, only show essential ones
             textViewUsername.visibility = EditText.GONE
             textViewEmail.visibility = EditText.GONE
             textViewHeight.visibility = EditText.GONE
             textViewHome.visibility = EditText.GONE
-            textViewDateBirth.visibility = EditText.GONE
-            textViewEducation.visibility = EditText.GONE
+            buttonSelectDateProfile.visibility = EditText.GONE
+            spinnerEducationProfile.visibility = EditText.GONE
             textViewGoal.visibility = EditText.GONE
         }
     }
@@ -455,6 +510,7 @@ class ProfileActivity : AppCompatActivity() {
         )
     }
 
+
     private fun getFileFromUri(uri: Uri): File? {
         return try {
             val inputStream = contentResolver.openInputStream(uri) ?: return null
@@ -468,4 +524,32 @@ class ProfileActivity : AppCompatActivity() {
             null
         }
     }
+
+    private fun setupHintOnEmptyFields() {
+        setHintOnEmptyField(textViewUsername, "Username")
+        setHintOnEmptyField(textViewNickname, "Nickname")
+        setHintOnEmptyField(textViewEmail, "Email")
+        setHintOnEmptyField(textViewFirstName, "Firstname")
+        setHintOnEmptyField(textViewLastName, "Last Name")
+        setHintOnEmptyField(textViewGender, "Gender")
+        setHintOnEmptyField(textViewHeight, "Height")
+        setHintOnEmptyField(textViewHome, "Home")
+        setHintOnEmptyField(textViewGoal, "Goal")
+        setHintOnEmptyField(textViewPreferences, "Preferences")
+    }
+
+    private fun setHintOnEmptyField(editText: EditText, hint: String) {
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s.isNullOrEmpty()) {
+                    editText.hint = hint
+                }
+            }
+        })
+    }
+
 }

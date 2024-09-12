@@ -1,19 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
-        android:id="@+id/navigation_Main"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_Main" />
-
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Home" />
     <item
-        android:id="@+id/navigation_Message"
+        android:id="@+id/navigation_message"
         android:icon="@drawable/ic_message"
-        android:title="@string/title_Message" />
-
+        android:title="Message" />
     <item
-        android:id="@+id/navigation_Profile"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_user"
-        android:title="@string/title_Profile" />
-
+        android:title="Profile" />
 </menu>

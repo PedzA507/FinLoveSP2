@@ -65,31 +65,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageViewProfile"
-                android:layout_width="202dp"
-                android:layout_height="186dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="90dp"
+            <!-- กล่องสีฟ้าที่ล้อมรอบ ImageView -->
+            <FrameLayout
+                android:id="@+id/frameLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="89dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginEnd="89dp"
+                android:background="@android:color/holo_blue_light"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/img_1" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- ImageView ใส่ในกล่องสีฟ้า -->
+                <ImageView
+                    android:id="@+id/imageViewProfile"
+                    android:layout_width="202dp"
+                    android:layout_height="186dp"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:srcCompat="@drawable/img_1" />
+            </FrameLayout>
 
             <Button
                 android:id="@+id/buttonChangeImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="เปลี่ยนรูปภาพ"
+                android:layout_marginTop="25dp"
                 android:background="@drawable/button"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="16dp"
                 android:enabled="false"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewProfile"
+                android:text="เปลี่ยนรูปภาพ"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.488"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
 
             <EditText
                 android:id="@+id/textViewUsername"
@@ -203,33 +216,30 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textViewHeight"/>
 
-            <EditText
-                android:id="@+id/textViewDateBirth"
+            <Button
+                android:id="@+id/buttonSelectDateProfile"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginTop="16dp"
-                android:text="Date of Birth"
+                android:background="@drawable/edittext"
+                android:text="เลือก วัน/เดือน/ปีเกิด"
+                android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="18sp"
-                android:enabled="false"
-                android:padding="12dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewHome"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewHome"
+                app:layout_constraintWidth_percent="0.7" />
 
-            <EditText
-                android:id="@+id/textViewEducation"
+            <Spinner
+                android:id="@+id/spinnerEducationProfile"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_marginTop="16dp"
-                android:text="Education"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:enabled="false"
-                android:padding="12dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/edittext"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewDateBirth"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonSelectDateProfile"
+                app:layout_constraintWidth_percent="0.7" />
 
             <EditText
                 android:id="@+id/textViewGoal"
@@ -243,7 +253,7 @@
                 android:padding="12dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewEducation"/>
+                app:layout_constraintTop_toBottomOf="@id/spinnerEducationProfile"/>
 
             <EditText
                 android:id="@+id/textViewPreferences"
@@ -264,15 +274,15 @@
                 android:id="@+id/buttonEditProfile"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="25dp"
                 android:background="@null"
                 android:contentDescription="Edit Profile"
                 android:padding="12dp"
                 android:src="@drawable/ic_edit"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.876"
+                app:layout_constraintHorizontal_bias="0.854"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageViewProfile" />
+                app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
 
             <Button
                 android:id="@+id/buttonSaveProfile"
