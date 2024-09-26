@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/drawable/blue_border.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_first_page.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_forgot_password.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_get_pinactivity.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_loading.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_profile.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register1.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register2.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register3.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register4.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register5.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register6.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register7.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_register8.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_reset_password.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_message.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_profile.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/user_item.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/menu/bottom_nav_menu.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/navigation/mobile_navigation.xml">
+        <config>
+          <theme>@style/Theme.Finlove.NoActionBar</theme>
+        </config>
+      </layout>
+    </layouts>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4719132d-c685-4b3f-a423-17cc242cf75f" name="Changes" comment="Ant 12/9/2024">
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/deploymentTargetSelector.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/kotlinc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/migrations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/other.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/androidTest/java/th/ac/rmutto/finlove/ExampleInstrumentedTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/ic_launcher-playstore.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/FirstPageActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ForgotPasswordActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/LoadingActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/LoginActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/MainActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ProfileActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity1.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity2.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity3.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity4.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity5.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity6.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity7.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity8.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/User.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ui/dashboard/DashboardFragment.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ui/dashboard/DashboardViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ui/home/HomeFragment.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ui/home/HomeViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ui/notifications/NotificationsFragment.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/java/th/ac/rmutto/finlove/ui/notifications/NotificationsViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/border.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/button.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/congrat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/custom_loadingbar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/cyclebutton.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/edittext.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/error.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/ic_home_black_24dp.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/ic_notifications_black_24dp.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/ic_user.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/img.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/img_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/login_bg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/newbg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/phone_bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/profilebg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/drawable/rouded_img.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/font/abril_fatface.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/font/adlam_display.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_first_page.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_forgot_password.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_loading.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_login.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_main.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_profile.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register4.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register5.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register6.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/activity_register8.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/fragment_dashboard.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/fragment_home.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/layout/fragment_notifications.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/menu/bottom_nav_menu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-hdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-mdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-xhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/navigation/mobile_navigation.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values-night/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values/dimens.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values/font_certs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values/preloaded_fonts.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/values/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/xml/backup_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/xml/data_extraction_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/main/res/xml/network_security_config.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/app/src/test/java/th/ac/rmutto/finlove/ExampleUnitTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/gradle/libs.versions.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove For School/settings.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/deploymentTargetSelector.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/kotlinc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/migrations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/other.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/androidTest/java/th/ac/rmutto/finlove/ExampleInstrumentedTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/ic_launcher-playstore.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/FirstPageActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ForgotPasswordActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/LoadingActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/LoginActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/MainActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ProfileActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity1.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity2.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity3.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity4.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity5.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity6.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity7.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/RegisterActivity8.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/User.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ui/dashboard/DashboardFragment.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ui/dashboard/DashboardViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ui/home/HomeFragment.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ui/home/HomeViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ui/notifications/NotificationsFragment.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/java/th/ac/rmutto/finlove/ui/notifications/NotificationsViewModel.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/border.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/button.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/congrat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/custom_loadingbar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/cyclebutton.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/edittext.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/error.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_edit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_home_black_24dp.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_message.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_notifications_black_24dp.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/ic_user.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/img.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/img_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/login_bg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/newbg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/phone_bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/profilebg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/drawable/rouded_img.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/font/abril_fatface.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/font/adlam_display.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_first_page.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_forgot_password.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_loading.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_login.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_main.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_profile.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register4.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register5.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register6.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register7.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/activity_register8.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/fragment_main.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/fragment_message.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/layout/fragment_profile.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/menu/bottom_nav_menu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-hdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-mdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-xhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/navigation/mobile_navigation.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values-night/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values-v34/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values/dimens.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values/font_certs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values/preloaded_fonts.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/values/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/xml/backup_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/xml/data_extraction_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/main/res/xml/network_security_config.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/app/src/test/java/th/ac/rmutto/finlove/ExampleUnitTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/gradle/libs.versions.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Finlove/settings.gradle.kts" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\pedza\.android\avd\Pixel_8_Pro_API_35_2.avd)]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Finlove" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="valueResourceFile" />
+        <option value="layoutResourceFile" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;PedzA507&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/PedzA507/Finlove.git&quot;,
+    &quot;accountId&quot;: &quot;b68e5d40-c934-4d73-8ad5-385a56c4c0f0&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2lXqzkgyzQCBo6yUPxJKnfYG0b4" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Finlove/FinLoveV.1 - Copy/Finlove&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;kotlin-gradle-user-dirs&quot;: [
+      &quot;C:\\Users\\pedza\\.gradle&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Ananchai\Finlove\app\src\main\res\drawable" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Finlove\FinLoveV.1 - Copy\Finlove\app\src\main\res\drawable" />
+    </key>
+    <key name="android.template.474865037">
+      <recent name="th.ac.rmutto.finlove" />
+    </key>
+    <key name="android.template.1511500326">
+      <recent name="th.ac.rmutto.finlove" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="Finlove.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Hybrid>
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4719132d-c685-4b3f-a423-17cc242cf75f" name="Changes" comment="" />
+      <created>1725337032821</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1725337032821</updated>
+    </task>
+    <task id="LOCAL-00001" summary="AnT 07/09/2024">
+      <option name="closed" value="true" />
+      <created>1725712312839</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1725712312839</updated>
+    </task>
+    <task id="LOCAL-00002" summary="AnT 07/09/2024">
+      <option name="closed" value="true" />
+      <created>1726027438955</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1726027438955</updated>
+    </task>
+    <task id="LOCAL-00003" summary="AnT 12/09/2024">
+      <option name="closed" value="true" />
+      <created>1726131624085</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1726131624085</updated>
+    </task>
+    <task id="LOCAL-00004" summary="AnT 12/09/2024">
+      <option name="closed" value="true" />
+      <created>1726132588624</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1726132588624</updated>
+    </task>
+    <task id="LOCAL-00005" summary="AnT 12/09/2024">
+      <option name="closed" value="true" />
+      <created>1726141743698</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1726141743698</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Merge remote-tracking branch 'github/master'">
+      <option name="closed" value="true" />
+      <created>1726141782532</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1726141782532</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Ant 12/9/2024">
+      <option name="closed" value="true" />
+      <created>1726152672837</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1726152672837</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="AnT 07/09/2024" />
+    <MESSAGE value="AnT 12/09/2024" />
+    <MESSAGE value="Merge remote-tracking branch 'github/master'" />
+    <MESSAGE value="Ant 111111" />
+    <MESSAGE value="Ant 12/9/2024" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ant 12/9/2024" />
+  </component>
+</project>

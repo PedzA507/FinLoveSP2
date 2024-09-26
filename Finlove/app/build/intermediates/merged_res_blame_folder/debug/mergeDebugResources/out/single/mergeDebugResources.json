@@ -1,0 +1,266 @@
+[
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-xxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_get_pinactivity.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_get_pinactivity.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register8.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register8.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_congrat.png.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\congrat.png"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register1.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register1.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-mdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\xml_network_security_config.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\xml\\network_security_config.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_profilebg.png.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\profilebg.png"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_dashboard_black_24dp.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_dashboard_black_24dp.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_fragment_home.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register5.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register5.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_error.jpeg.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\error.jpeg"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_img.png.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\img.png"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_cyclebutton.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\cyclebutton.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_fragment_notifications.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\fragment_notifications.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_fragment_main.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\fragment_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_login.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_edit.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_edit.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register7.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register7.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_fragment_message.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\fragment_message.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_newbg.png.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\newbg.png"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-mdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-xhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register4.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register4.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\font_adlam_display.ttf.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\font\\adlam_display.ttf"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_custom_loadingbar.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\custom_loadingbar.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_profile.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_blue_border.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\blue_border.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_login_bg.png.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\login_bg.png"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-xxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\menu\\bottom_nav_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register6.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register6.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_first_page.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_first_page.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\navigation_mobile_navigation.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\navigation\\mobile_navigation.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_phone_bg.jpg.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\phone_bg.jpg"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_user.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_user.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_fragment_profile.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-xhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_img_1.png.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\img_1.png"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_rouded_img.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\rouded_img.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register3.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register3.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_loading.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_loading.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_home_black_24dp.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_home_black_24dp.xml"
+    },
+    {
+        "merged": "th.ac.rmutto.finlove.app-debug-50:/layout_activity_main.xml.flat",
+        "source": "th.ac.rmutto.finlove.app-main-52:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-hdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_button.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\button.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\mipmap-hdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_notifications_black_24dp.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_notifications_black_24dp.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_forgot_password.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_forgot_password.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_reset_password.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_reset_password.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_border.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\border.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_activity_register2.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\activity_register2.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_ic_message.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\ic_message.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\layout_fragment_dashboard.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\layout\\fragment_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\drawable_edittext.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\drawable\\edittext.xml"
+    },
+    {
+        "merged": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-debug-50:\\font_abril_fatface.xml.flat",
+        "source": "C:\\Users\\pedza\\.gradle\\daemon\\8.7\\th.ac.rmutto.finlove.app-main-52:\\font\\abril_fatface.xml"
+    }
+]
