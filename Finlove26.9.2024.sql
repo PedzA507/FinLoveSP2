@@ -112,7 +112,7 @@ CREATE TABLE `user` (
   `phonenumber` varchar(255) DEFAULT NULL,
   `height` float DEFAULT NULL,
   `home` varchar(255) DEFAULT NULL,
-  `DateBirth` date DEFAULT NULL,
+  `DateBirth` varchar(30) DEFAULT NULL,
   `interestedGender` varchar(45) DEFAULT NULL,
   `imageFile` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `education` varchar(255) DEFAULT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE `user` (
   `pinCode` varchar(10) DEFAULT NULL,
   `pinCodeExpiration` datetime DEFAULT NULL,
   PRIMARY KEY (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (11,'ant','$2b$10$q.6bXcC21vaNw3D4da.cGu7oahb/oVuarpPcw1bv113ynHpTuu60i','Methaporn','Limrostham','ANT','pedza507@gmail.com','0642727318',180,'satriwit','2024-09-08','หญิง','image5659273214376440803.jpg','ปริญญาตรี','Love Forever',1,NULL,1,0,NULL,'d44abf99df6d57adf69d79ae2db8fbb804b8eeb0','2024-09-26 17:54:49','4416','2024-09-26 20:33:21'),(12,'arm','$2b$10$udcmB9ceKATtVZ0vzDromO00oIhSINs/Tff034HuhwCM6bxmdKfLW',NULL,NULL,NULL,'adsd',NULL,NULL,NULL,NULL,NULL,'image6779698432442957937.jpg',NULL,NULL,NULL,NULL,1,0,NULL,NULL,NULL,NULL,NULL),(13,'tul','$2b$10$4yw7e6pnsX29xl8KpXDVdOaA1PSXLUcvhOeQ8X5biO3qDzWPomzpC',NULL,NULL,NULL,'fsdfsd',NULL,NULL,NULL,NULL,NULL,'image6779698432442957937.jpg',NULL,NULL,NULL,NULL,0,0,'2024-09-12 18:58:17',NULL,NULL,NULL,NULL),(14,'Rick','$2b$10$DbdL8BMNspuhkeo3f.9DFuVEQ1q1.agUu1oPtzd9gDcAD/PZ5CPIC','Tawatchai','Kreeweek','New','tawatchai.kee@rmutto.ac.th','0922732903',171,'Ladprow63','2024-09-13','อื่นๆ','image6779698432442957937.jpg','ปริญญาตรี','one night',1,NULL,0,0,'2024-09-13 05:16:15',NULL,NULL,NULL,NULL),(15,'vvc','$2b$10$/r4jfBQ18evqicnTfHDO9uVKPLb7wPpXiq6G5RH56tjbrLGfSJCgG','hgfh','fhfgh','fghfgh','vvc','2452345',242,'245245','2024-09-16','หญิง','image3683749073219213965.jpg','ปริญญาตรี','24545',3,NULL,1,0,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `user` VALUES (11,'ant','$2b$10$q.6bXcC21vaNw3D4da.cGu7oahb/oVuarpPcw1bv113ynHpTuu60i','Methaporn','Limrostham','ANT','pedza507@gmail.com','0642727318',180,'satriwit','2024-09-25','หญิง','image1137143508727635471.jpg','ปริญญาโท','Love Forever',1,NULL,1,0,NULL,'d44abf99df6d57adf69d79ae2db8fbb804b8eeb0','2024-09-26 17:54:49','1740','2024-09-26 22:35:15'),(12,'arm','$2b$10$udcmB9ceKATtVZ0vzDromO00oIhSINs/Tff034HuhwCM6bxmdKfLW',NULL,NULL,NULL,'adsd',NULL,NULL,NULL,NULL,NULL,'image6779698432442957937.jpg',NULL,NULL,NULL,NULL,1,0,NULL,NULL,NULL,NULL,NULL),(13,'tul','$2b$10$4yw7e6pnsX29xl8KpXDVdOaA1PSXLUcvhOeQ8X5biO3qDzWPomzpC',NULL,NULL,NULL,'fsdfsd',NULL,NULL,NULL,NULL,NULL,'image6779698432442957937.jpg',NULL,NULL,NULL,NULL,0,0,'2024-09-12 18:58:17',NULL,NULL,NULL,NULL),(14,'Rick','$2b$10$DbdL8BMNspuhkeo3f.9DFuVEQ1q1.agUu1oPtzd9gDcAD/PZ5CPIC','Tawatchai','Kreeweek','New','tawatchai.kee@rmutto.ac.th','0922732903',171,'Ladprow63','2024-09-13','อื่นๆ','image6779698432442957937.jpg','ปริญญาตรี','one night',1,NULL,0,0,'2024-09-13 05:16:15',NULL,NULL,NULL,NULL),(15,'vvc','$2b$10$/r4jfBQ18evqicnTfHDO9uVKPLb7wPpXiq6G5RH56tjbrLGfSJCgG','hgfh','fhfgh','fghfgh','vvc','2452345',242,'245245','2024-09-16','หญิง','image3683749073219213965.jpg','ปริญญาตรี','24545',3,NULL,1,0,NULL,NULL,NULL,NULL,NULL),(16,'fff','$2b$10$Ed6HGMaiZ1qNCdbF.vHIwuXcw8R3p.D6dqINJL7RpcqDc37Dxtr0.','fff','fff','fff','fff','58',2255,'fawfawf','2024-09-16','หญิง','image5138860518797904611.jpg','ปริญญาโท','ffaf',2,NULL,1,0,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -163,7 +163,7 @@ CREATE TABLE `userpreferences` (
 
 LOCK TABLES `userpreferences` WRITE;
 /*!40000 ALTER TABLE `userpreferences` DISABLE KEYS */;
-INSERT INTO `userpreferences` VALUES (11,1),(14,1),(15,1),(11,2),(14,2);
+INSERT INTO `userpreferences` VALUES (11,1),(14,1),(15,1),(11,2),(14,2),(16,2);
 /*!40000 ALTER TABLE `userpreferences` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -176,4 +176,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-26 19:48:53
+-- Dump completed on 2024-09-27 21:37:15
