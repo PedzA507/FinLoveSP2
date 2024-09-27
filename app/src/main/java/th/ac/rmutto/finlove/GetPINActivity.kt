@@ -56,9 +56,10 @@ class GetPINActivity : AppCompatActivity() {
             .add("email", email)
             .add("pin", pin)
             .build()
-
+        val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
+        val url = "$rootUrl/api/verify-pin" // ประกอบ URL กับ path ที่ต้องการ
         val request = Request.Builder()
-            .url("http://192.168.1.49:4000/api/verify-pin")  // URL สำหรับ verify PIN
+            .url(url)  // URL สำหรับ verify PIN
             .post(requestBody)
             .build()
 
@@ -80,10 +81,16 @@ class GetPINActivity : AppCompatActivity() {
                         // นำไปหน้า ResetPasswordActivity
                         val intent = Intent(this@GetPINActivity, ResetPasswordActivity::class.java)
                         intent.putExtra("email", email)
+                        intent.putExtra("pin", pin) // ส่งค่า PIN ไปยังหน้า ResetPasswordActivity ด้วย
                         startActivity(intent)
                         finish() // ปิดหน้าปัจจุบัน
                     } else {
-                        Toast.makeText(this@GetPINActivity, "PIN ไม่ถูกต้อง", Toast.LENGTH_LONG).show()
+                        // แสดงข้อความเมื่อ PIN ไม่ถูกต้อง
+                        response.body?.string()?.let { errorBody ->
+                            Toast.makeText(this@GetPINActivity, "Error: $errorBody", Toast.LENGTH_LONG).show()
+                        } ?: run {
+                            Toast.makeText(this@GetPINActivity, "Unknown Error", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }

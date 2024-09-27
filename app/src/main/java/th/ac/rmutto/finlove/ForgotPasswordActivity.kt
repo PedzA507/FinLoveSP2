@@ -47,9 +47,10 @@ class ForgotPasswordActivity : AppCompatActivity() {
         val requestBody = FormBody.Builder()
             .add("email", email)
             .build()
-
+        val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
+        val url = "$rootUrl/api/request-pin" // ประกอบ URL กับ path ที่ต้องการ
         val request = Request.Builder()
-            .url("http://192.168.1.49:4000/api/reset-password") // เปลี่ยน URL ตามต้องการ
+            .url(url) // เปลี่ยน URL ตามต้องการ
             .post(requestBody)
             .build()
 
@@ -77,10 +78,14 @@ class ForgotPasswordActivity : AppCompatActivity() {
                             intent.putExtra("email", email)  // ส่ง email ไปด้วย
                             startActivity(intent)
                             finish() // ปิด ForgotPasswordActivity เพื่อไม่ให้ย้อนกลับมา
-                        }, 1500) // หน่วงเวลา 2 วินาที (ปรับแต่งได้ตามความต้องการ)
+                        }, 1500) // หน่วงเวลา 1.5 วินาที
                     } else {
                         // แสดงข้อความเมื่ออีเมลไม่ถูกต้อง โดยไม่ต้องแสดงหน้า LoadingActivity
-                        Toast.makeText(this@ForgotPasswordActivity, "Email ไม่ถูกต้อง", Toast.LENGTH_LONG).show()
+                        response.body?.string()?.let { errorBody ->
+                            Toast.makeText(this@ForgotPasswordActivity, "Error: $errorBody", Toast.LENGTH_LONG).show()
+                        } ?: run {
+                            Toast.makeText(this@ForgotPasswordActivity, "Unknown Error", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }

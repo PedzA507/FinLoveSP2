@@ -56,8 +56,10 @@ class RegisterActivity8 : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val client = OkHttpClient()
+                        val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
+                        val url = "$rootUrl/api/reset-password" // ประกอบ URL กับ path ที่ต้องการ
                         val request = Request.Builder()
-                            .url("http://192.168.1.49:4000/api/register8")
+                            .url(url)
                             .post(MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
                                 .addPart(MultipartBody.Part.createFormData("userID", userID.toString()))

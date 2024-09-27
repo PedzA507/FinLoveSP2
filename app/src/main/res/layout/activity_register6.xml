@@ -1,54 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/newbg"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".RegisterActivity6">
 
-
+    <!-- หัวข้อเป้าหมายของคุณ -->
     <TextView
-        android:id="@+id/textViewTitle6"
+        android:id="@+id/textViewTitleGoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
-        android:text="เป้าหมาย"
+        android:layout_marginTop="64dp"
+        android:text="เป้าหมายของคุณ"
         android:textColor="#00BCD4"
         android:shadowColor="#BC000000"
         android:shadowDy="8"
         android:shadowRadius="4"
-        android:textSize="48sp"
+        android:textSize="40sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.228"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
 
-    <EditText
-        android:id="@+id/editTextGoal"
-        android:layout_width="0dp"
+    <!-- RadioGroup สำหรับเลือกเป้าหมาย -->
+    <RadioGroup
+        android:id="@+id/radioGroupGoals"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="หาคู่รัก/หาเพื่อน/อื่นๆ"
-        android:background="@drawable/edittext"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitleGoal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle6"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp">
 
-    <android.widget.Button
+        <RadioButton
+            android:id="@+id/radioButtonGoal1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ลดน้ำหนัก" />
+
+        <RadioButton
+            android:id="@+id/radioButtonGoal2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="เพิ่มกล้ามเนื้อ" />
+
+        <RadioButton
+            android:id="@+id/radioButtonGoal3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ออกกำลังกายเพื่อสุขภาพ" />
+    </RadioGroup>
+
+    <!-- ปุ่ม Next -->
+    <Button
         android:id="@+id/buttonNextStep6"
         android:layout_width="93dp"
         android:layout_height="93dp"
-        android:layout_marginTop="208dp"
-        android:layout_marginEnd="7dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/cyclebutton"
         android:text="Next"
         android:textColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupGoals"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.888"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextGoal" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

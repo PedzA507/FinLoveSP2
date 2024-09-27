@@ -168,8 +168,10 @@ class ProfileActivity : AppCompatActivity() {
                     }
 
                     val requestBody = requestBuilder.build()
+                    val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
+                    val url = "$rootUrl/api/reset-password" // ประกอบ URL กับ path ที่ต้องการ
                     val request = Request.Builder()
-                        .url("http://192.168.1.49:4000/api/user/update/$userID")
+                        .url(url)
                         .put(requestBody)
                         .build()
 
@@ -412,8 +414,10 @@ class ProfileActivity : AppCompatActivity() {
                 Log.d("ProfileActivity", "Sending Data: ${textViewUsername.text.toString()}, ${textViewNickname.text.toString()}, ${textViewEmail.text.toString()}")
 
                 val requestBody = requestBuilder.build()
+                val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
+                val url = "$rootUrl/api/reset-password" // ประกอบ URL กับ path ที่ต้องการ
                 val request = Request.Builder()
-                    .url("http://192.168.1.49:4000/api/user/update/$userID")
+                    .url(url)
                     .put(requestBody)
                     .build()
 
