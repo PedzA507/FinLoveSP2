@@ -262,13 +262,32 @@ app.post('/api/register6', async function(req, res) {
     }
 
     try {
-        await db.promise().query("UPDATE User SET goal = ? WHERE UserId = ?", [goal, userID]);
-        res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
+        // ค้นหา GoalID จากชื่อ goal ที่ส่งมา
+        const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
+
+        if (goalResult.length === 0) {
+            return res.status(404).send({ "message": "ไม่พบข้อมูล goal ที่ระบุ", "status": false });
+        }
+
+        const goalID = goalResult[0].goalID;
+
+        // ตรวจสอบว่าผู้ใช้มีการเลือก goal นี้แล้วหรือไม่
+        const [existingUserGoal] = await db.promise().query("SELECT * FROM usergoal WHERE UserID = ? AND goalID = ?", [userID, goalID]);
+
+        if (existingUserGoal.length > 0) {
+            return res.status(400).send({ "message": "คุณได้เลือก goal นี้แล้ว", "status": false });
+        }
+
+        // แทรกข้อมูล goal ใหม่สำหรับผู้ใช้ใน usergoal
+        await db.promise().query("INSERT INTO usergoal (UserID, goalID) VALUES (?, ?)", [userID, goalID]);
+
+        res.send({ "message": "ข้อมูล goal ถูกบันทึกแล้ว", "status": true });
     } catch (err) {
-        console.error('Database update error:', err);
-        res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
+        console.error('Database error:', err);
+        res.status(500).send({ "message": "เกิดข้อผิดพลาดในการบันทึก goal", "status": false });
     }
 });
+
 
 // API สำหรับการลงทะเบียน (ขั้นตอนที่ 7)
 app.post('/api/register7', async function(req, res) {
@@ -305,101 +324,68 @@ app.post('/api/register8', upload.single('imageFile'), async function(req, res) 
     }
 });
 
-// API สำหรับการส่ง PIN รีเซ็ตรหัสผ่าน
-app.post('/api/reset-password', async function(req, res) {
+app.post('/api/request-pin', async (req, res) => {
     const { email } = req.body;
 
     try {
-        const [result] = await db.promise().query("SELECT * FROM User WHERE email = ?", [email]);
+        // ดึง userID จาก email
+        const [result] = await db.promise().query("SELECT userID FROM User WHERE email = ?", [email]);
 
-        if (result.length > 0) {
-            const pinCode = Math.floor(1000 + Math.random() * 9000).toString(); // PIN 4 หลัก ให้เป็นสตริงเพื่อความง่ายในการเปรียบเทียบ
-            const expirationDate = new Date(Date.now() + 3600000); // 1 ชั่วโมง
-
-            // อัปเดต pinCode และ pinCodeExpiration
-            await db.promise().query(
-                "UPDATE User SET pinCode = ?, pinCodeExpiration = ? WHERE email = ?",
-                [pinCode, expirationDate, email]
-            );
-
-            // ส่ง PIN ไปยังอีเมลผู้ใช้
-            const mailOptions = {
-                from: process.env.EMAIL_USER,
-                to: email,
-                subject: 'รหัส PIN สำหรับรีเซ็ตรหัสผ่าน',
-                text: `รหัส PIN ของคุณคือ: ${pinCode}. รหัสนี้จะหมดอายุใน 1 ชั่วโมง.`
-            };
-
-            await transporter.sendMail(mailOptions);
-
-            res.send("รหัส PIN ถูกส่งไปยังอีเมลของคุณ");
-        } else {
-            res.status(400).send({ message: "ไม่พบอีเมลนี้ในระบบ", status: false });
+        if (result.length === 0) {
+            return res.status(400).send({ message: "ไม่พบอีเมลนี้ในระบบ", status: false });
         }
+
+        const userId = result[0].userID;  // ดึง userID เพื่ออัพเดต PIN
+        const pinCode = Math.floor(1000 + Math.random() * 9000).toString(); // PIN 4 หลัก
+        const expirationDate = new Date(Date.now() + 3600000); // PIN หมดอายุใน 1 ชั่วโมง
+
+        // อัพเดต pinCode และ pinCodeExpiration โดยใช้ userID
+        const updateResult = await db.promise().query(
+            "UPDATE User SET pinCode = ?, pinCodeExpiration = ? WHERE userID = ?",
+            [pinCode, expirationDate, userId]
+        );
+
+        // ตรวจสอบการอัพเดต
+        if (updateResult[0].affectedRows === 0) {
+            return res.status(500).send({ message: "ไม่สามารถอัพเดต PIN ได้", status: false });
+        }
+
+        // ส่ง PIN ไปยังอีเมลผู้ใช้
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'รหัส PIN สำหรับรีเซ็ตรหัสผ่าน',
+            text: `รหัส PIN ของคุณคือ: ${pinCode}. รหัสนี้จะหมดอายุใน 1 ชั่วโมง.`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.send({ message: "PIN ถูกส่งไปยังอีเมลของคุณ", status: true });
     } catch (err) {
-        console.error('Database error:', err);
+        console.error('Error sending PIN:', err);
         res.status(500).send({ message: "เกิดข้อผิดพลาดในการส่ง PIN", status: false });
     }
 });
-
-
-
-
-// API สำหรับการยืนยัน PIN และเปลี่ยนรหัสผ่าน
-app.post('/api/reset-password/verify', async function(req, res) {
-    const { email, pin, newPassword } = req.body;
-
-    if (!email || !pin || !newPassword) {
-        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
-    }
-
-    try {
-        // ตรวจสอบ PIN และการหมดอายุ
-        const [result] = await db.promise().query(
-            "SELECT pinCode, pinCodeExpiration FROM User WHERE email = ? AND pinCode = ? AND pinCodeExpiration > ?",
-            [email, pin, new Date()]
-        );
-
-        if (result.length > 0) {
-            const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-
-            // อัปเดตรหัสผ่าน และล้าง PIN
-            await db.promise().query("UPDATE User SET password = ?, pinCode = NULL, pinCodeExpiration = NULL WHERE email = ?", [hashedPassword, email]);
-
-            res.send({ "message": "รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว", "status": true });
-        } else {
-            res.send({ "message": "PIN ไม่ถูกต้องหรือหมดอายุ", "status": false });
-        }
-    } catch (err) {
-        console.error('Database error:', err);
-        res.status(500).send({ "message": "เกิดข้อผิดพลาดในการเชื่อมต่อ", "status": false });
-    }
-});
-
-
 
 
 app.post('/api/verify-pin', async (req, res) => {
     const { email, pin } = req.body;
 
     try {
+        // ตรวจสอบว่าอีเมลและ PIN ถูกต้อง
         const [result] = await db.promise().query(
-            "SELECT pinCode, pinCodeExpiration FROM User WHERE email = ?",
-            [email]
+            "SELECT userID, pinCode, pinCodeExpiration FROM User WHERE email = ? AND pinCode = ?",
+            [email, pin]
         );
 
         if (result.length === 0) {
-            return res.status(400).send({ message: "ไม่พบอีเมลนี้ในระบบ", status: false });
+            return res.status(400).send({ message: "PIN ไม่ถูกต้อง", status: false });
         }
 
         const user = result[0];
         const currentTime = new Date();
 
-        // ตรวจสอบว่ามี PIN และ PIN ยังไม่หมดอายุ
-        if (user.pinCode !== pin) {
-            return res.status(400).send({ message: "PIN ไม่ถูกต้อง", status: false });
-        }
-
+        // ตรวจสอบว่า PIN หมดอายุหรือไม่
         if (currentTime > user.pinCodeExpiration) {
             return res.status(400).send({ message: "PIN หมดอายุ", status: false });
         }
@@ -412,6 +398,51 @@ app.post('/api/verify-pin', async (req, res) => {
     }
 });
 
+app.post('/api/reset-password', async (req, res) => {
+    const { email, pin, newPassword } = req.body;
+
+    // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
+    if (!email || !pin || !newPassword) {
+        return res.status(400).send({ message: "ข้อมูลไม่ครบถ้วน", status: false });
+    }
+
+    console.log("Received Data:", req.body); // Log ข้อมูลที่ได้รับจากแอป Android
+
+    try {
+        // ตรวจสอบ PIN และวันหมดอายุ
+        const [result] = await db.promise().query(
+            "SELECT userID, pinCode, pinCodeExpiration FROM User WHERE email = ? AND pinCode = ? AND pinCodeExpiration > ?",
+            [email, pin, new Date()]
+        );
+
+        if (result.length === 0) {
+            return res.status(400).send({ message: "PIN ไม่ถูกต้องหรือหมดอายุ", status: false });
+        }
+
+        const userId = result[0].userID;
+
+        // เข้ารหัสรหัสผ่านใหม่
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // อัปเดตรหัสผ่านใหม่ในฟิลด์ password และลบข้อมูล PIN ออก
+        const updateResult = await db.promise().query(
+            "UPDATE User SET password = ?, pinCode = NULL, pinCodeExpiration = NULL WHERE userID = ?",
+            [hashedPassword, userId]
+        );
+
+        if (updateResult[0].affectedRows === 0) {
+            return res.status(400).send({ message: "ไม่สามารถอัปเดตรหัสผ่านได้", status: false });
+        }
+
+        res.send({ message: "รีเซ็ตรหัสผ่านเรียบร้อยแล้ว", status: true });
+    } catch (err) {
+        console.error('Error resetting password:', err);
+        res.status(500).send({ message: "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน", status: false });
+    }
+});
+
+
+
 // API เรียกดูข้อมูลผู้ใช้
 app.get('/api/user/:id', async function (req, res) {
     const { id } = req.params;
@@ -419,12 +450,15 @@ app.get('/api/user/:id', async function (req, res) {
         SELECT 
             u.username, u.email, u.firstname, u.lastname, u.nickname, 
             g.Gender_Name AS gender, u.height, u.home, u.DateBirth, 
-            u.education, u.goal, u.imageFile,
-            GROUP_CONCAT(p.PreferenceNames SEPARATOR ', ') AS preferences
+            u.education, u.imageFile,
+            GROUP_CONCAT(p.PreferenceNames SEPARATOR ', ') AS preferences,
+            GROUP_CONCAT(goal.goalName SEPARATOR ', ') AS goals  -- ดึงข้อมูล goal ของผู้ใช้
         FROM user u
         LEFT JOIN gender g ON u.GenderID = g.GenderID
         LEFT JOIN userpreferences up ON u.UserID = up.UserID
         LEFT JOIN preferences p ON up.PreferenceID = p.PreferenceID
+        LEFT JOIN usergoal ug ON u.UserID = ug.UserID  -- เชื่อมตาราง usergoal
+        LEFT JOIN goal ON ug.goalID = goal.goalID    -- ดึงข้อมูล goal
         WHERE u.UserID = ?
         GROUP BY u.UserID`;
 
@@ -444,12 +478,12 @@ app.get('/api/user/:id', async function (req, res) {
     }
 });
 
+
 app.post('/api/user/update/:id', async function (req, res) {
     const { id } = req.params;
-    let { username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, goal, preferences } = req.body;
+    let { username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, goals, preferences } = req.body;
 
     try {
-        // ดึงข้อมูลเดิมจากฐานข้อมูลก่อน หากข้อมูลบางส่วนไม่ได้ส่งมา
         const [userResult] = await db.promise().query("SELECT * FROM User WHERE UserId = ?", [id]);
 
         if (userResult.length === 0) {
@@ -468,24 +502,37 @@ app.post('/api/user/update/:id', async function (req, res) {
         height = height || currentUser.height;
         home = home || currentUser.home;
 
-        // แปลง DateBirth ให้เป็นรูปแบบ YYYY-MM-DD
         if (DateBirth) {
-            DateBirth = new Date(DateBirth).toISOString().split('T')[0]; // ตัดเวลาออก
+            DateBirth = new Date(DateBirth).toISOString().split('T')[0];
         } else {
-            DateBirth = currentUser.DateBirth; // ถ้าไม่ได้ส่งมา ให้ใช้ค่าจากฐานข้อมูล
+            DateBirth = currentUser.DateBirth;
         }
 
         education = education || currentUser.education;
-        goal = goal || currentUser.goal;
 
         const updateUserSql = `
             UPDATE User 
-            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, gender = ?, height = ?, home = ?, DateBirth = ?, education = ?, goal = ?
+            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, gender = ?, height = ?, home = ?, DateBirth = ?, education = ?
             WHERE UserId = ?
         `;
 
-        // อัปเดตข้อมูลผู้ใช้ในตาราง User
-        const [updateResult] = await db.promise().query(updateUserSql, [username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, goal, id]);
+        await db.promise().query(updateUserSql, [username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, id]);
+
+        // ลบ goals เก่าของผู้ใช้ใน usergoal
+        const deleteGoalsSql = `DELETE FROM usergoal WHERE UserID = ?`;
+        await db.promise().query(deleteGoalsSql, [id]);
+
+        // แทรก goals ใหม่ที่ได้รับจาก client
+        const insertGoalsSql = `INSERT INTO usergoal (UserID, goalID) VALUES (?, ?)`;
+        if (Array.isArray(goals) && goals.length > 0) {
+            for (let goal of goals) {
+                const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
+                if (goalResult.length > 0) {
+                    const goalID = goalResult[0].goalID;
+                    await db.promise().query(insertGoalsSql, [id, goalID]);
+                }
+            }
+        }
 
         // ลบ preferences เก่าของผู้ใช้ใน userpreferences
         const deletePreferencesSql = `DELETE FROM userpreferences WHERE UserID = ?`;
@@ -505,6 +552,7 @@ app.post('/api/user/update/:id', async function (req, res) {
         res.status(500).send({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูลผู้ใช้", status: false });
     }
 });
+
 
 
 // API สำหรับการอัปเดตรูปภาพของผู้ใช้ (PUT)
@@ -559,13 +607,17 @@ app.delete('/api/user/:id', async function (req, res) {
     const { id } = req.params;
 
     const sqlDeletePreferences = "DELETE FROM userpreferences WHERE UserID = ?";
+    const sqlDeleteGoals = "DELETE FROM usergoal WHERE UserID = ?";
     const sqlDeleteUser = "DELETE FROM User WHERE UserId = ?";
 
     try {
         // ลบข้อมูลในตาราง userpreferences ก่อน
         await db.promise().query(sqlDeletePreferences, [id]);
 
-        // ลบข้อมูลผู้ใช้
+        // ลบข้อมูลในตาราง usergoal ก่อน
+        await db.promise().query(sqlDeleteGoals, [id]);
+
+        // ลบข้อมูลผู้ใช้ในตาราง user
         const [result] = await db.promise().query(sqlDeleteUser, [id]);
 
         if (result.affectedRows > 0) {
