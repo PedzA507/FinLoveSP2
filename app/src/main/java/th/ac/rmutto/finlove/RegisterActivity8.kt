@@ -57,7 +57,7 @@ class RegisterActivity8 : AppCompatActivity() {
                     try {
                         val client = OkHttpClient()
                         val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
-                        val url = "$rootUrl/api/reset-password" // ประกอบ URL กับ path ที่ต้องการ
+                        val url = "$rootUrl/api/register8" // ประกอบ URL กับ path ที่ต้องการ
                         val request = Request.Builder()
                             .url(url)
                             .post(MultipartBody.Builder()

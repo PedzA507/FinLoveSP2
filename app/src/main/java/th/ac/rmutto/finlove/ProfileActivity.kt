@@ -169,7 +169,7 @@ class ProfileActivity : AppCompatActivity() {
 
                     val requestBody = requestBuilder.build()
                     val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
-                    val url = "$rootUrl/api/reset-password" // ประกอบ URL กับ path ที่ต้องการ
+                    val url = "$rootUrl/api/user/update/$userID" // ประกอบ URL กับ path ที่ต้องการ
                     val request = Request.Builder()
                         .url(url)
                         .put(requestBody)
@@ -312,7 +312,6 @@ class ProfileActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         Toast.makeText(this@ProfileActivity, "บัญชีถูกลบสำเร็จ", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this@ProfileActivity, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()
                     } else {
@@ -326,6 +325,7 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
+
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -415,7 +415,7 @@ class ProfileActivity : AppCompatActivity() {
 
                 val requestBody = requestBuilder.build()
                 val rootUrl = getString(R.string.root_url) // ดึงค่า root_url จาก strings.xml
-                val url = "$rootUrl/api/reset-password" // ประกอบ URL กับ path ที่ต้องการ
+                val url = "$rootUrl/api/user/update/$userID"  // ใช้ API สำหรับอัปเดตผู้ใช้
                 val request = Request.Builder()
                     .url(url)
                     .put(requestBody)
