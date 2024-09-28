@@ -2,10 +2,7 @@ package th.ac.rmutto.finlove
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -18,23 +15,28 @@ import okhttp3.Request
 import okhttp3.RequestBody
 
 class RegisterActivity6 : AppCompatActivity() {
+
+    private var selectedGoalID: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register6)
 
-        val radioGroupGoals = findViewById<RadioGroup>(R.id.radioGroupGoals)
+        val buttonGoal1 = findViewById<Button>(R.id.buttonGoal1)
+        val buttonGoal2 = findViewById<Button>(R.id.buttonGoal2)
+        val buttonGoal3 = findViewById<Button>(R.id.buttonGoal3)
         val buttonNextStep6 = findViewById<Button>(R.id.buttonNextStep6)
 
+        // ฟังก์ชันสำหรับจัดการการคลิกปุ่มเป้าหมาย
+        setupGoalButton(buttonGoal1, "ลดน้ำหนัก")
+        setupGoalButton(buttonGoal2, "เพิ่มกล้ามเนื้อ")
+        setupGoalButton(buttonGoal3, "ออกกำลังกายเพื่อสุขภาพ")
+
         buttonNextStep6.setOnClickListener {
-            // ตรวจสอบว่ามีการเลือก RadioButton หรือไม่
-            val selectedGoalId = radioGroupGoals.checkedRadioButtonId
-            if (selectedGoalId == -1) {
+            if (selectedGoalID == null) {
                 Toast.makeText(this, "กรุณาเลือกหนึ่งเป้าหมาย", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-
-            // นำค่า Text จาก RadioButton ที่ถูกเลือก
-            val selectedGoal = findViewById<RadioButton>(selectedGoalId).text.toString()
 
             val userID = intent.getIntExtra("userID", -1)
             if (userID == -1) {
@@ -43,11 +45,9 @@ class RegisterActivity6 : AppCompatActivity() {
             }
 
             val url = getString(R.string.root_url) + "/api/register6"
-            Log.d("RegisterActivity6", "URL: $url")
-            Log.d("RegisterActivity6", "Selected Goal: $selectedGoal")
 
             val formBody: RequestBody = FormBody.Builder()
-                .add("goal", selectedGoal)
+                .add("goalID", selectedGoalID.toString()) // ส่ง goalID แทน goal
                 .add("userID", userID.toString())
                 .build()
 
@@ -66,17 +66,38 @@ class RegisterActivity6 : AppCompatActivity() {
                             intent.putExtra("userID", userID)
                             startActivity(intent)
                         } else {
-                            Log.e("RegisterActivity6", "Response Code: ${response.code}")
                             Toast.makeText(this@RegisterActivity6, "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้", Toast.LENGTH_LONG).show()
                         }
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Log.e("RegisterActivity6", "Error: ${e.message}")
                         Toast.makeText(this@RegisterActivity6, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
                     }
                 }
             }
+        }
+    }
+
+    // ฟังก์ชันสำหรับแปลง goal เป็น goalID
+    private fun getGoalID(goal: String): Int {
+        return when (goal) {
+            "ลดน้ำหนัก" -> 1
+            "เพิ่มกล้ามเนื้อ" -> 2
+            "ออกกำลังกายเพื่อสุขภาพ" -> 3
+            else -> -1
+        }
+    }
+
+    private fun setupGoalButton(button: Button, goal: String) {
+        button.setOnClickListener {
+            // ปรับสถานะปุ่มที่ถูกเลือก
+            findViewById<Button>(R.id.buttonGoal1).isSelected = false
+            findViewById<Button>(R.id.buttonGoal2).isSelected = false
+            findViewById<Button>(R.id.buttonGoal3).isSelected = false
+
+            // ตั้งค่าสำหรับปุ่มที่ถูกเลือก
+            button.isSelected = true
+            selectedGoalID = getGoalID(goal)
         }
     }
 }

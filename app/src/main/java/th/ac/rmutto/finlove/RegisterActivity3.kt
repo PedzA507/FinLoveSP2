@@ -2,10 +2,8 @@ package th.ac.rmutto.finlove
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -18,33 +16,36 @@ import okhttp3.Request
 import okhttp3.RequestBody
 
 class RegisterActivity3 : AppCompatActivity() {
+
+    private lateinit var selectedGender: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register3)
 
-        val spinnerGender = findViewById<Spinner>(R.id.spinnerGender)
+        val buttonMale = findViewById<Button>(R.id.buttonMale)
+        val buttonFemale = findViewById<Button>(R.id.buttonFemale)
+        val buttonOther = findViewById<Button>(R.id.buttonOther)
         val editTextHeight = findViewById<EditText>(R.id.editTextHeight)
-        val editTextPhonenumber = findViewById<EditText>(R.id.editTextPhoneNumber)
+        val editTextPhoneNumber = findViewById<EditText>(R.id.editTextPhoneNumber)
         val buttonNextStep3 = findViewById<Button>(R.id.buttonNextStep3)
 
-        // กำหนดค่าตัวเลือกใน Spinner
-        val genderOptions = arrayOf("Male", "Female", "Other")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, genderOptions)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerGender.adapter = adapter
+        // ฟังก์ชันสำหรับจัดการการคลิกปุ่มเพศ
+        setupGenderButton(buttonMale, "Male")
+        setupGenderButton(buttonFemale, "Female")
+        setupGenderButton(buttonOther, "Other")
 
         buttonNextStep3.setOnClickListener {
-            val gender = spinnerGender.selectedItem.toString()
             val height = editTextHeight.text.toString()
-            val phonenumber = editTextPhonenumber.text.toString()
+            val phoneNumber = editTextPhoneNumber.text.toString()
 
             if (height.isEmpty()) {
                 editTextHeight.error = "กรุณาระบุส่วนสูง"
                 return@setOnClickListener
             }
 
-            if (phonenumber.isEmpty()) {
-                editTextPhonenumber.error = "กรุณาระบุเบอร์โทร"
+            if (phoneNumber.isEmpty()) {
+                editTextPhoneNumber.error = "กรุณาระบุเบอร์โทร"
                 return@setOnClickListener
             }
 
@@ -57,9 +58,9 @@ class RegisterActivity3 : AppCompatActivity() {
             // ส่งข้อมูลไปยังเซิร์ฟเวอร์
             val url = getString(R.string.root_url) + "/api/register3"
             val formBody: RequestBody = FormBody.Builder()
-                .add("gender", gender)
+                .add("gender", selectedGender)
                 .add("height", height)
-                .add("phonenumber", phonenumber)
+                .add("phonenumber", phoneNumber)
                 .add("userID", userID.toString()) // ส่ง userID ไปยังเซิร์ฟเวอร์
                 .build()
 
@@ -79,23 +80,28 @@ class RegisterActivity3 : AppCompatActivity() {
                             intent.putExtra("userID", userID)
                             startActivity(intent)
                         } else {
-                            Toast.makeText(
-                                this@RegisterActivity3,
-                                "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            Toast.makeText(this@RegisterActivity3, "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้", Toast.LENGTH_LONG).show()
                         }
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            this@RegisterActivity3,
-                            "เกิดข้อผิดพลาด: ${e.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this@RegisterActivity3, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
                     }
                 }
             }
+        }
+    }
+
+    private fun setupGenderButton(button: Button, gender: String) {
+        button.setOnClickListener {
+            // ปรับสถานะปุ่มที่ถูกเลือก
+            findViewById<Button>(R.id.buttonMale).isSelected = false
+            findViewById<Button>(R.id.buttonFemale).isSelected = false
+            findViewById<Button>(R.id.buttonOther).isSelected = false
+
+            // ตั้งค่าสำหรับปุ่มที่ถูกเลือก
+            button.isSelected = true
+            selectedGender = gender
         }
     }
 }

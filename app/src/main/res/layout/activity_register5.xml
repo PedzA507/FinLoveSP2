@@ -9,9 +9,6 @@
 
     <TextView
         android:id="@+id/textViewTitle"
-        android:shadowColor="#BC000000"
-        android:shadowDy="8"
-        android:shadowRadius="4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="184dp"
@@ -21,69 +18,59 @@
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.259"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/checkBoxPreference1"
+    <Button
+        android:id="@+id/buttonOption1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:freezesText="false"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/button_selector"
         android:text="ดูหนัง"
-        android:background="@drawable/edittext"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonOption3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
-    <CheckBox
-        android:id="@+id/checkBoxPreference2"
+    <Button
+        android:id="@+id/buttonOption2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/button_selector"
         android:text="ฟังเพลง"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:textSize="20sp"
-        android:background="@drawable/edittext"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintStart_toEndOf="@+id/buttonOption3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.192"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBoxPreference1" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
-    <CheckBox
-        android:id="@+id/checkBoxPreference3"
+    <Button
+        android:id="@+id/buttonOption3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/edittext"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/button_selector"
         android:text="เล่นกีฬา"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.192"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBoxPreference2" />
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonOption2"
+        app:layout_constraintStart_toEndOf="@+id/buttonOption1"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
-    <android.widget.Button
+
+    <!-- ปุ่ม Next -->
+    <Button
         android:id="@+id/buttonNextStep5"
         android:layout_width="93dp"
         android:layout_height="93dp"
         android:layout_marginTop="120dp"
-        android:layout_marginEnd="7dp"
         android:background="@drawable/cyclebutton"
         android:text="Next"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.855"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBoxPreference3" />
-
+        app:layout_constraintTop_toBottomOf="@+id/buttonOption3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

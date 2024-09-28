@@ -26,29 +26,57 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/spinnerGender"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/edittext"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.265"
+    <!-- ปุ่มตัวเลือกเพศ ชาย -->
+    <Button
+        android:id="@+id/buttonMale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/button_selector"
+        android:text="ชาย"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonFemale"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <!-- ปุ่มตัวเลือกเพศ หญิง -->
+    <Button
+        android:id="@+id/buttonFemale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/button_selector"
+        android:text="หญิง"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonOther"
+        app:layout_constraintStart_toEndOf="@+id/buttonMale"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <!-- ปุ่มตัวเลือกเพศ อื่นๆ -->
+    <Button
+        android:id="@+id/buttonOther"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/button_selector"
+        android:text="อื่นๆ"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonFemale"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
     <EditText
         android:id="@+id/editTextHeight"
         android:layout_width="300dp"
         android:layout_height="55dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:background="@drawable/edittext"
         android:hint="Height (cm)"
         android:inputType="number"
         android:paddingLeft="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerGender" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonFemale" />
 
     <EditText
         android:id="@+id/editTextPhoneNumber"
@@ -63,7 +91,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextHeight" />
 
-    <android.widget.Button
+    <Button
         android:id="@+id/buttonNextStep3"
         android:layout_width="93dp"
         android:layout_height="93dp"
@@ -82,21 +110,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="59dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="294dp"
         android:layout_marginBottom="8dp"
         android:text="เพศ"
         android:textColor="#000000"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerGender"
+        app:layout_constraintBottom_toTopOf="@+id/buttonMale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="53dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="300dp"
         android:layout_marginBottom="12dp"
         android:text="ส่วนสูง"
@@ -105,7 +136,8 @@
         app:layout_constraintBottom_toTopOf="@+id/editTextHeight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMale" />
 
     <TextView
         android:id="@+id/textView10"

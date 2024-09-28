@@ -156,8 +156,13 @@ class ProfileActivity : AppCompatActivity() {
                         .addFormDataPart("height", textViewHeight.text.toString())
                         .addFormDataPart("home", textViewHome.text.toString())
                         .addFormDataPart("DateBirth", selectedDateOfBirth ?: "")
-                        .addFormDataPart("education", spinnerEducationProfile.selectedItem.toString())
-                        .addFormDataPart("goal", textViewGoal.text.toString())
+
+                    // หา EducationID จากการเลือกใน Spinner
+                    val educationSelected = spinnerEducationProfile.selectedItem.toString()
+                    val educationID = getEducationIDFromName(educationSelected)
+                    requestBuilder.addFormDataPart("educationID", educationID.toString())
+
+                    requestBuilder.addFormDataPart("goal", textViewGoal.text.toString())
 
                     if (selectedImageUri != null) {
                         val file = getFileFromUri(selectedImageUri!!)
@@ -194,7 +199,6 @@ class ProfileActivity : AppCompatActivity() {
                 }
             }
         }
-
 
         buttonChangeImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -372,11 +376,22 @@ class ProfileActivity : AppCompatActivity() {
                         textViewHeight.setText(user?.height.toString())
                         textViewHome.setText(user?.home ?: "")
                         buttonSelectDateProfile.text = user?.dateBirth ?: ""
-                        val educationIndex = educationOptions.indexOf(user?.education)
-                        spinnerEducationProfile.setSelection(educationIndex)
-                        textViewGoal.setText(user?.goal ?: "")
 
+                        // ตรวจสอบการดึงข้อมูล goal
+                        if (user?.goal != null && user?.goal!!.isNotEmpty()) {
+                            textViewGoal.setText(user?.goal ?: "No goals available")
+                        } else {
+                            textViewGoal.setText("No goals available")
+                        }
+
+                        // ตรวจสอบการดึงข้อมูล preferences
                         textViewPreferences.text = Editable.Factory.getInstance().newEditable(user?.preferences ?: "No preferences available")
+
+                        // ตั้งค่า Spinner สำหรับการแสดงผล Education
+                        val position = educationOptions.indexOf(user?.education)
+                        if (position != -1) {
+                            spinnerEducationProfile.setSelection(position)
+                        }
 
                         user?.imageFile?.let { loadImage(it, imageViewProfile) }
                     }
@@ -392,6 +407,7 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun saveUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -510,11 +526,12 @@ class ProfileActivity : AppCompatActivity() {
             home = jsonObject.optString("home", ""),
             dateBirth = jsonObject.optString("DateBirth", ""),
             education = jsonObject.optString("education", ""),
-            goal = jsonObject.optString("goal", ""),
+            goal = jsonObject.optString("goals", ""), // ดึงข้อมูล goals ที่ใช้ GROUP_CONCAT มาแสดง
             imageFile = jsonObject.optString("imageFile", ""),
-            preferences = jsonObject.optString("preferences", "")
+            preferences = jsonObject.optString("preferences", "") // ดึงข้อมูล preferences ที่ใช้ GROUP_CONCAT มาแสดง
         )
     }
+
 
 
     private fun getFileFromUri(uri: Uri): File? {
@@ -558,4 +575,14 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
+    // ฟังก์ชันที่ใช้สำหรับแปลงจาก EducationName เป็น EducationID
+    private fun getEducationIDFromName(educationName: String): Int {
+        return when (educationName) {
+            "มัธยมศึกษา" -> 1
+            "ปริญญาตรี" -> 2
+            "ปริญญาโท" -> 3
+            "ปริญญาเอก" -> 4
+            else -> 0
+        }
+    }
 }

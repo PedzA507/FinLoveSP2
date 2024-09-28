@@ -21,21 +21,60 @@
         android:textSize="48sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/spinnerEducation"
-        android:layout_width="300dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="48dp"
-        android:background="@drawable/edittext"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+    <!-- ปุ่มตัวเลือกระดับการศึกษา มัธยมศึกษา -->
+    <Button
+        android:id="@+id/buttonHighSchool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_selector"
+        android:text="มัธยมศึกษา"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonBachelor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-        app:layout_constraintWidth_percent="0.7" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <!-- ปุ่มตัวเลือกระดับการศึกษา ปริญญาตรี -->
+    <Button
+        android:id="@+id/buttonBachelor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_selector"
+        android:text="ปริญญาตรี"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintStart_toEndOf="@+id/buttonHighSchool"
+        app:layout_constraintEnd_toStartOf="@+id/buttonMaster"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <!-- ปุ่มตัวเลือกระดับการศึกษา ปริญญาโท -->
+    <Button
+        android:id="@+id/buttonMaster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_selector"
+        android:text="ปริญญาโท"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintStart_toEndOf="@+id/buttonBachelor"
+        app:layout_constraintEnd_toStartOf="@+id/buttonPhd"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <!-- ปุ่มตัวเลือกระดับการศึกษา ปริญญาเอก -->
+    <Button
+        android:id="@+id/buttonPhd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_selector"
+        android:text="ปริญญาเอก"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintStart_toEndOf="@+id/buttonMaster"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
     <EditText
         android:id="@+id/editTextHome"
@@ -48,10 +87,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerEducation"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPhd"
         app:layout_constraintWidth_percent="0.7" />
 
-    <android.widget.Button
+    <Button
         android:id="@+id/buttonSelectDate"
         android:layout_width="300dp"
         android:layout_height="55dp"
@@ -66,49 +105,16 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextHome"
         app:layout_constraintWidth_percent="0.7" />
 
-    <android.widget.Button
+    <Button
         android:id="@+id/buttonNextStep4"
         android:layout_width="93dp"
         android:layout_height="93dp"
         android:layout_marginTop="56dp"
-        android:layout_marginEnd="7dp"
         android:background="@drawable/cyclebutton"
         android:text="Next"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.877"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSelectDate"
-        app:layout_constraintWidth_percent="0.7" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:layout_marginEnd="293dp"
-        android:layout_marginBottom="8dp"
-        android:text="ระดับการศึกษา"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerEducation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.057"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="59dp"
-        android:layout_marginEnd="294dp"
-        android:layout_marginBottom="4dp"
-        android:text="ที่อยู่"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextHome"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonSelectDate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,10 +3,8 @@ package th.ac.rmutto.finlove
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -20,22 +18,27 @@ import okhttp3.RequestBody
 import java.util.Calendar
 
 class RegisterActivity4 : AppCompatActivity() {
+
+    private lateinit var selectedEducation: String
     private var selectedDateOfBirth: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register4)
 
-        val spinnerEducation = findViewById<Spinner>(R.id.spinnerEducation)
+        val buttonHighSchool = findViewById<Button>(R.id.buttonHighSchool)
+        val buttonBachelor = findViewById<Button>(R.id.buttonBachelor)
+        val buttonMaster = findViewById<Button>(R.id.buttonMaster)
+        val buttonPhd = findViewById<Button>(R.id.buttonPhd)
         val editTextHome = findViewById<EditText>(R.id.editTextHome)
         val buttonSelectDate = findViewById<Button>(R.id.buttonSelectDate)
         val buttonNextStep4 = findViewById<Button>(R.id.buttonNextStep4)
 
-        // Set up the education level spinner
-        val educationOptions = arrayOf("มัธยมศึกษา", "ปริญญาตรี", "ปริญญาโท", "ปริญญาเอก")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, educationOptions)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerEducation.adapter = adapter
+        // ฟังก์ชันสำหรับจัดการการคลิกปุ่มระดับการศึกษา
+        setupEducationButton(buttonHighSchool, "มัธยมศึกษา")
+        setupEducationButton(buttonBachelor, "ปริญญาตรี")
+        setupEducationButton(buttonMaster, "ปริญญาโท")
+        setupEducationButton(buttonPhd, "ปริญญาเอก")
 
         // Set up DatePickerDialog
         buttonSelectDate.setOnClickListener {
@@ -54,7 +57,6 @@ class RegisterActivity4 : AppCompatActivity() {
         }
 
         buttonNextStep4.setOnClickListener {
-            val education = spinnerEducation.selectedItem.toString()
             val home = editTextHome.text.toString()
 
             if (home.isEmpty()) {
@@ -73,13 +75,20 @@ class RegisterActivity4 : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Send data to server
+            // แปลง selectedEducation เป็น educationID
+            val educationID = getEducationID(selectedEducation)
+            if (educationID == -1) {
+                Toast.makeText(this, "ไม่พบระดับการศึกษาที่ถูกต้อง", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            // ส่งข้อมูลไปยังเซิร์ฟเวอร์
             val url = getString(R.string.root_url) + "/api/register4"
             val formBody: RequestBody = FormBody.Builder()
-                .add("education", education)
+                .add("educationID", educationID.toString())
                 .add("home", home)
                 .add("DateBirth", selectedDateOfBirth!!)
-                .add("userID", userID.toString()) // Send userID to the server
+                .add("userID", userID.toString()) // ส่ง userID ไปยังเซิร์ฟเวอร์
                 .build()
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -93,7 +102,7 @@ class RegisterActivity4 : AppCompatActivity() {
 
                     withContext(Dispatchers.Main) {
                         if (response.isSuccessful) {
-                            // Go to RegisterActivity5
+                            // ไปยังหน้า RegisterActivity5
                             val intent = Intent(this@RegisterActivity4, RegisterActivity5::class.java)
                             intent.putExtra("userID", userID)
                             startActivity(intent)
@@ -107,6 +116,31 @@ class RegisterActivity4 : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    // ฟังก์ชันสำหรับแปลง education เป็น educationID
+    private fun getEducationID(education: String): Int {
+        return when (education) {
+            "มัธยมศึกษา" -> 1
+            "ปริญญาตรี" -> 2
+            "ปริญญาโท" -> 3
+            "ปริญญาเอก" -> 4
+            else -> -1
+        }
+    }
+
+    private fun setupEducationButton(button: Button, education: String) {
+        button.setOnClickListener {
+            // ปรับสถานะปุ่มที่ถูกเลือก
+            findViewById<Button>(R.id.buttonHighSchool).isSelected = false
+            findViewById<Button>(R.id.buttonBachelor).isSelected = false
+            findViewById<Button>(R.id.buttonMaster).isSelected = false
+            findViewById<Button>(R.id.buttonPhd).isSelected = false
+
+            // ตั้งค่าสำหรับปุ่มที่ถูกเลือก
+            button.isSelected = true
+            selectedEducation = education
         }
     }
 }

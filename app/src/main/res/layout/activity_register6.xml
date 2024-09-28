@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,35 +26,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5" />
 
-    <!-- RadioGroup สำหรับเลือกเป้าหมาย -->
-    <RadioGroup
-        android:id="@+id/radioGroupGoals"
+    <!-- ปุ่มตัวเลือกเป้าหมาย ลดน้ำหนัก -->
+    <Button
+        android:id="@+id/buttonGoal1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitleGoal"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_selector"
+        android:text="ลดน้ำหนัก"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonGoal2"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
+
+    <!-- ปุ่มตัวเลือกเป้าหมาย เพิ่มกล้ามเนื้อ -->
+    <Button
+        android:id="@+id/buttonGoal2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_selector"
+        android:text="เพิ่มกล้ามเนื้อ"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintStart_toEndOf="@+id/buttonGoal1"
+        app:layout_constraintEnd_toStartOf="@+id/buttonGoal3"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
+
+    <!-- ปุ่มตัวเลือกเป้าหมาย ออกกำลังกายเพื่อสุขภาพ -->
+    <Button
+        android:id="@+id/buttonGoal3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_selector"
+        android:text="ออกกำลังกายเพื่อสุขภาพ"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintStart_toEndOf="@+id/buttonGoal2"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp">
-
-        <RadioButton
-            android:id="@+id/radioButtonGoal1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ลดน้ำหนัก" />
-
-        <RadioButton
-            android:id="@+id/radioButtonGoal2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="เพิ่มกล้ามเนื้อ" />
-
-        <RadioButton
-            android:id="@+id/radioButtonGoal3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ออกกำลังกายเพื่อสุขภาพ" />
-    </RadioGroup>
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
 
     <!-- ปุ่ม Next -->
     <Button
@@ -66,7 +74,7 @@
         android:background="@drawable/cyclebutton"
         android:text="Next"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/radioGroupGoals"
+        app:layout_constraintTop_toBottomOf="@+id/buttonGoal3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
