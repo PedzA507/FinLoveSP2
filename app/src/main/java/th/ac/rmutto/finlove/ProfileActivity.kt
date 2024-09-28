@@ -1,5 +1,6 @@
 package th.ac.rmutto.finlove
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
@@ -13,12 +14,15 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.FormBody
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.util.*
 
@@ -66,7 +70,6 @@ class ProfileActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "ไม่พบ userID", Toast.LENGTH_LONG).show()
         }
-
 
         // Initialize Toolbar and set it as ActionBar
         toolbar = findViewById(R.id.toolbarProfile)
@@ -121,6 +124,18 @@ class ProfileActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
 
+        buttonDeleteAccount.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
+                .setPositiveButton("YES") { _, _ ->
+                    deleteUser(userID) // Call deleteUser function to delete account
+                }
+                .setNegativeButton("NO", null)
+                .show()
+        }
+
+
         // Edit profile functionality
         buttonEditProfile.setOnClickListener {
             isEditing = !isEditing
@@ -154,6 +169,16 @@ class ProfileActivity : AppCompatActivity() {
         // Logout functionality
         buttonLogout.setOnClickListener {
             logoutUser(userID)
+        }
+    }
+
+    // Handle the result of image selection
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            selectedImageUri = data.data // เก็บ Uri ของรูปภาพที่เลือก
+            imageViewProfile.setImageURI(selectedImageUri) // แสดงภาพที่เลือกใน ImageView
         }
     }
 
@@ -270,43 +295,69 @@ class ProfileActivity : AppCompatActivity() {
             try {
                 val client = OkHttpClient()
 
-                val selectedGender = spinnerGender.selectedItem.toString() // ดึงค่าจาก Spinner
+                val selectedGender = spinnerGender.selectedItem.toString()
                 val selectedEducation = spinnerEducation.selectedItem.toString()
                 val selectedGoal = spinnerGoal.selectedItem.toString()
                 val selectedPreference = spinnerPreference.selectedItem.toString()
 
+                // สร้าง request body สำหรับข้อมูลโปรไฟล์
                 val requestBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("username", textViewUsername.text.toString())
                     .addFormDataPart("nickname", textViewNickname.text.toString())
                     .addFormDataPart("email", textViewEmail.text.toString())
                     .addFormDataPart("firstname", textViewFirstName.text.toString())
                     .addFormDataPart("lastname", textViewLastName.text.toString())
-                    .addFormDataPart("gender", selectedGender) // ใช้ค่าที่เลือกจาก Spinner
-                    .addFormDataPart("education", selectedEducation) // Education Spinner
-                    .addFormDataPart("goal", selectedGoal) // Goal Spinner
-                    .addFormDataPart("preference", selectedPreference) // Preference Spinner
+                    .addFormDataPart("gender", selectedGender)
+                    .addFormDataPart("education", selectedEducation)
+                    .addFormDataPart("goal", selectedGoal)
+                    .addFormDataPart("preference", selectedPreference)
                     .addFormDataPart("height", textViewHeight.text.toString())
                     .addFormDataPart("home", textViewHome.text.toString())
                     .addFormDataPart("DateBirth", selectedDateOfBirth ?: "")
+
+                // เพิ่มรูปภาพลงใน request ถ้าเลือกภาพมา
+                if (selectedImageUri != null) {
+                    val inputStream = contentResolver.openInputStream(selectedImageUri!!)
+                    val fileBytes = inputStream?.readBytes()
+                    if (fileBytes != null) {
+                        requestBuilder.addFormDataPart(
+                            "image",
+                            "profile_image.jpg",
+                            fileBytes.toRequestBody("image/jpeg".toMediaTypeOrNull())
+                        )
+                    }
+                }
 
                 val requestBody = requestBuilder.build()
                 val rootUrl = getString(R.string.root_url)
                 val url = "$rootUrl/api/user/update/$userID"
                 val request = Request.Builder().url(url).put(requestBody).build()
 
-                // เพิ่มการบันทึก (Log) สำหรับการตอบสนองของเซิร์ฟเวอร์
+                // ส่ง request และจัดการการตอบกลับ
                 val response = client.newCall(request).execute()
                 val success = response.isSuccessful
 
                 withContext(Dispatchers.Main) {
                     if (success) {
                         Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลสำเร็จ", Toast.LENGTH_SHORT).show()
+
+                        // หน่วงเวลาและ fetch ข้อมูลใหม่
+                        withContext(Dispatchers.IO) {
+                            delay(600)
+                        }
+                        fetchUserInfo(userID)
+
+                        setEditingEnabled(false)
+                        buttonChangeImage.visibility = View.GONE
+                        buttonSaveProfile.visibility = View.GONE
+                        hideFieldsForViewingMode()
                     } else {
-                        val errorResponse = response.body?.string() // อ่านข้อผิดพลาดจากเซิร์ฟเวอร์
-                        Log.e("ProfileActivity", "Error response: $errorResponse") // แสดงข้อความบันทึกใน Logcat
+                        val errorResponse = response.body?.string()
+                        Log.e("ProfileActivity", "Error response: $errorResponse")
                         Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลล้มเหลว: ${errorResponse ?: "Unknown error"}", Toast.LENGTH_SHORT).show()
                     }
                 }
+
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@ProfileActivity, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
@@ -351,7 +402,6 @@ class ProfileActivity : AppCompatActivity() {
         buttonSelectDateProfile.visibility = View.GONE
         spinnerGoal.visibility = View.GONE
         spinnerEducation.visibility = View.GONE
-        spinnerPreference.visibility = View.GONE
     }
 
     private fun loadImage(url: String, imageView: ImageView) {
@@ -388,7 +438,7 @@ class ProfileActivity : AppCompatActivity() {
                 val url = getString(R.string.root_url) + "/api/logout/$userID"
                 val request = Request.Builder()
                     .url(url)
-                    .post(FormBody.Builder().build()) // POST with an empty form body
+                    .post(okhttp3.FormBody.Builder().build()) // POST with an empty form body
                     .build()
 
                 val response = OkHttpClient().newCall(request).execute()
@@ -412,4 +462,40 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun deleteUser(userID: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("${getString(R.string.root_url)}/api/user/$userID")
+                    .delete()
+                    .build()
+
+                val response = client.newCall(request).execute()
+                val success = response.isSuccessful
+
+                withContext(Dispatchers.Main) {
+                    if (success) {
+                        Toast.makeText(this@ProfileActivity, "ลบผู้ใช้สำเร็จ", Toast.LENGTH_SHORT).show()
+                        // ทำการ Logout หรือส่งผู้ใช้กลับไปหน้าแรก
+                        val intent = Intent(this@ProfileActivity, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@ProfileActivity, "ลบผู้ใช้ไม่สำเร็จ", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ProfileActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+
 }
+
+
