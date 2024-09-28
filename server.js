@@ -204,9 +204,6 @@ app.post('/api/register3', async function(req, res) {
     }
 });
 
-
-
-// API สำหรับการลงทะเบียน (ขั้นตอนที่ 4)
 app.post('/api/register4', async function(req, res) {
     const { educationID, home, DateBirth, userID } = req.body;
 
@@ -215,13 +212,16 @@ app.post('/api/register4', async function(req, res) {
     }
 
     try {
-        await db.promise().query("UPDATE User SET EducationID = ?, home = ?, DateBirth = ? WHERE UserId = ?", [educationID, home, DateBirth, userID]);
+        // Update home, DateBirth, and educationID in the User table
+        await db.promise().query("UPDATE User SET home = ?, DateBirth = ?, educationID = ? WHERE UserId = ?", [home, DateBirth, educationID, userID]);
+
         res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
     } catch (err) {
         console.error('Database update error:', err);
         res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
     }
 });
+
 
 
 
@@ -233,7 +233,6 @@ app.post('/api/register5', async function(req, res) {
         return res.status(400).send({ "message": "ไม่ได้รับข้อมูล preferences หรือ userID", "status": false });
     }
 
-    // preferences.split(',') คืนค่าเป็นตัวเลข เช่น '3', '1'
     const preferenceID = preferences.split(',').map(Number); // แปลงเป็นตัวเลข
     console.log("Received preferences:", preferenceID);
     console.log("Received userID:", userID);
@@ -244,10 +243,11 @@ app.post('/api/register5', async function(req, res) {
     }
 
     try {
-        // Loop เพื่อบันทึกข้อมูล preference หลายตัวเลือก
-        for (const preferenceID of preferenceID) {
-            await db.promise().query("INSERT INTO userpreferences (UserID, PreferenceID) VALUES (?, ?)", [userID, preferenceID]);
-        }
+        // สมมติว่าคุณต้องการเก็บ PreferenceID ตัวแรกลงในตาราง User
+        const mainPreferenceID = preferenceID[0]; // เลือก PreferenceID ตัวแรกในการอัปเดต (หรือสามารถปรับตาม requirement)
+
+        // อัปเดต PreferenceID ของผู้ใช้ในตาราง user โดยตรง
+        await db.promise().query("UPDATE User SET PreferenceID = ? WHERE UserID = ?", [mainPreferenceID, userID]);
 
         res.send({ "message": "ลงทะเบียนสำเร็จ", "status": true });
     } catch (err) {
@@ -255,7 +255,6 @@ app.post('/api/register5', async function(req, res) {
         res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
     }
 });
-
 
 
 // API สำหรับการลงทะเบียน (ขั้นตอนที่ 6)
@@ -267,13 +266,17 @@ app.post('/api/register6', async function(req, res) {
     }
 
     try {
+        // อัปเดต goalID ในตาราง User โดยตรง
         await db.promise().query("UPDATE User SET goalID = ? WHERE UserId = ?", [goalID, userID]);
+
         res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
     } catch (err) {
         console.error('Database update error:', err);
         res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
     }
 });
+
+
 
 app.post('/api/register7', async function(req, res) {
     const { interestedGenderID, userID } = req.body;
@@ -431,7 +434,7 @@ app.post('/api/reset-password', async (req, res) => {
     }
 });
 
-// API ดึงข้อมูลผู้ใช้พร้อม EducationName
+// API ดึงข้อมูลผู้ใช้
 app.get('/api/user/:id', async function (req, res) {
     const { id } = req.params;
     const sql = `
@@ -439,20 +442,14 @@ app.get('/api/user/:id', async function (req, res) {
         u.username, u.email, u.firstname, u.lastname, u.nickname, 
         g.Gender_Name AS gender, u.height, u.home, u.DateBirth, 
         u.imageFile,
-        e.EducationName AS education,  -- ดึง EducationName แทน EducationID
-        GROUP_CONCAT(p.PreferenceNames SEPARATOR ', ') AS preferences,
-        GROUP_CONCAT(goal.goalName SEPARATOR ', ') AS goals
+        e.EducationName AS education,
+        go.goalName AS goal, -- ดึง goalName จากตาราง goal โดยตรง
+        u.preferences 
     FROM user u
     LEFT JOIN gender g ON u.GenderID = g.GenderID
-    LEFT JOIN userpreferences up ON u.UserID = up.UserID
-    LEFT JOIN preferences p ON up.PreferenceID = p.PreferenceID
-    LEFT JOIN usergoal ug ON u.UserID = ug.UserID
-    LEFT JOIN goal ON ug.goalID = goal.goalID
-    LEFT JOIN usereducation ue ON u.UserID = ue.UserID  -- เชื่อมโยงกับ usereducation
-    LEFT JOIN education e ON ue.EducationID = e.EducationID  -- ดึงข้อมูล EducationName
+    LEFT JOIN education e ON u.educationID = e.educationID
+    LEFT JOIN goal go ON u.goalID = go.goalID -- ดึงข้อมูล goal โดยตรง
     WHERE u.UserID = ?
-    GROUP BY u.UserID, u.username, u.email, u.firstname, u.lastname, u.nickname, 
-        g.Gender_Name, u.height, u.home, u.DateBirth, u.imageFile, e.EducationName
     `;
 
     try {
@@ -471,78 +468,54 @@ app.get('/api/user/:id', async function (req, res) {
     }
 });
 
-
-
-// แก้ไขส่วนการอัปเดตข้อมูลผู้ใช้
-app.post('/api/user/update/:id', async function (req, res) {
+// API อัปเดตข้อมูลผู้ใช้ (POST)
+app.post('/api/user/update/:id', async function(req, res) {
     const { id } = req.params;
-    let { username, email, firstname, lastname, nickname, gender, height, home, DateBirth, educationID, goals, preferences } = req.body;
+    let { username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, goal, preferences } = req.body;
 
     try {
         const [userResult] = await db.promise().query("SELECT * FROM User WHERE UserId = ?", [id]);
-
         if (userResult.length === 0) {
             return res.status(404).send({ message: "ไม่พบผู้ใช้ที่ต้องการอัปเดต", status: false });
         }
 
         const currentUser = userResult[0];
-
-        // ใช้ข้อมูลเดิมหากข้อมูลใหม่ไม่ได้ถูกส่งมา
         username = username || currentUser.username;
         email = email || currentUser.email;
         firstname = firstname || currentUser.firstname;
         lastname = lastname || currentUser.lastname;
         nickname = nickname || currentUser.nickname;
-        gender = gender || currentUser.gender;
         height = height || currentUser.height;
         home = home || currentUser.home;
+        DateBirth = DateBirth ? new Date(DateBirth).toISOString().split('T')[0] : currentUser.DateBirth;
 
-        if (DateBirth) {
-            DateBirth = new Date(DateBirth).toISOString().split('T')[0];
-        } else {
-            DateBirth = currentUser.DateBirth;
+        // หา GenderID จากชื่อเพศ
+        let genderID = currentUser.GenderID;
+        if (gender) {
+            const [genderResult] = await db.promise().query("SELECT GenderID FROM gender WHERE Gender_Name = ?", [gender]);
+            if (genderResult.length === 0) {
+                return res.status(404).send({ message: "ไม่พบเพศที่ระบุ", status: false });
+            }
+            genderID = genderResult[0].GenderID;
         }
 
+        // หา goalID จากชื่อเป้าหมาย
+        let goalID = currentUser.goalID;
+        if (goal) {
+            const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
+            if (goalResult.length === 0) {
+                return res.status(404).send({ message: "ไม่พบเป้าหมายที่ระบุ", status: false });
+            }
+            goalID = goalResult[0].goalID;
+        }
+
+        // Update ข้อมูลใน User table
         const updateUserSql = `
             UPDATE User 
-            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, gender = ?, height = ?, home = ?, DateBirth = ?
+            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, GenderID = ?, height = ?, home = ?, DateBirth = ?, goalID = ?, preferences = ?
             WHERE UserId = ?
         `;
-        await db.promise().query(updateUserSql, [username, email, firstname, lastname, nickname, gender, height, home, DateBirth, id]);
-
-        // อัปเดต EducationID ใน usereducation
-        if (educationID) {
-            const updateEducationSql = `REPLACE INTO usereducation (UserID, EducationID) VALUES (?, ?)`; // อัปเดตการเชื่อมโยง EducationID
-            await db.promise().query(updateEducationSql, [id, educationID]);
-        }
-
-        // ลบ goals เก่าของผู้ใช้ใน usergoal
-        const deleteGoalsSql = `DELETE FROM usergoal WHERE UserID = ?`;
-        await db.promise().query(deleteGoalsSql, [id]);
-
-        // แทรก goals ใหม่ที่ได้รับจาก client
-        const insertGoalsSql = `INSERT INTO usergoal (UserID, goalID) VALUES (?, ?)`;
-        if (Array.isArray(goals) && goals.length > 0) {
-            for (let goal of goals) {
-                const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
-                if (goalResult.length > 0) {
-                    const goalID = goalResult[0].goalID;
-                    await db.promise().query(insertGoalsSql, [id, goalID]);
-                }
-            }
-        }
-
-        // ลบ preferences เก่าของผู้ใช้ใน userpreferences
-        const deletePreferencesSql = `DELETE FROM userpreferences WHERE UserID = ?`;
-        await db.promise().query(deletePreferencesSql, [id]);
-
-        // แทรก preferences ใหม่ที่ได้รับจาก client
-        const insertPreferencesSql = `INSERT INTO userpreferences (UserID, PreferenceID) VALUES (?, ?)`;
-        if (Array.isArray(preferences) && preferences.length > 0) {
-            for (let pref of preferences) {
-                await db.promise().query(insertPreferencesSql, [id, pref]);
-            }
-        }
+        await db.promise().query(updateUserSql, [username, email, firstname, lastname, nickname, genderID, height, home, DateBirth, goalID, preferences, id]);
 
         res.send({ message: "ข้อมูลถูกอัปเดตเรียบร้อย", status: true });
     } catch (err) {
@@ -551,40 +524,41 @@ app.post('/api/user/update/:id', async function (req, res) {
     }
 });
 
-
 // API สำหรับการอัปเดตรูปภาพของผู้ใช้ (PUT)
 app.put('/api/user/update/:id', upload.single('imageFile'), async function (req, res) {
     const { id } = req.params;
     const { username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, goal, preferences } = req.body;
     const image = req.file ? req.file.filename : null;
 
-    if (!username || !email || !firstname || !lastname || !nickname || !gender) {
+    if (!username || !email || !firstname || !lastname || !nickname || !gender || !goal) {
         return res.status(400).send({ message: "ข้อมูลไม่ครบถ้วน", status: false });
     }
 
     try {
-        // หา GenderID จากชื่อเพศ
         const [genderResult] = await db.promise().query("SELECT GenderID FROM gender WHERE Gender_Name = ?", [gender]);
         if (genderResult.length === 0) {
             return res.status(404).send({ message: "ไม่พบข้อมูลเพศที่ระบุ", status: false });
         }
         const genderID = genderResult[0].GenderID;
 
-        // ดึงข้อมูลรูปภาพเดิมถ้าไม่มีการอัปเดตภาพใหม่
+        const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
+        if (goalResult.length === 0) {
+            return res.status(404).send({ message: "ไม่พบข้อมูลเป้าหมายที่ระบุ", status: false });
+        }
+        const goalID = goalResult[0].goalID;
+
         let currentImageFile = image;
         if (!currentImageFile) {
             const [userResult] = await db.promise().query("SELECT imageFile FROM User WHERE UserId = ?", [id]);
-            if (userResult.length > 0) {
-                currentImageFile = userResult[0].imageFile; // ใช้รูปภาพเดิมจากฐานข้อมูล
-            }
+            currentImageFile = userResult[0].imageFile;
         }
 
-        // อัปเดตข้อมูลผู้ใช้ รวมถึง nickname และรูปภาพ
         const sqlUpdate = `
             UPDATE User 
-            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, imageFile = ?, GenderID = ?, height = ?, home = ?, DateBirth = ?, education = ?, goal = ?
-            WHERE UserId = ?`;
-        await db.promise().query(sqlUpdate, [username, email, firstname, lastname, nickname, currentImageFile, genderID, height, home, DateBirth, education, goal, id]);
+            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, imageFile = ?, GenderID = ?, height = ?, home = ?, DateBirth = ?, goalID = ?, preferences = ?
+            WHERE UserId = ?
+        `;
+        await db.promise().query(sqlUpdate, [username, email, firstname, lastname, nickname, currentImageFile, genderID, height, home, DateBirth, goalID, preferences, id]);
 
         const imageUrl = currentImageFile ? `${req.protocol}://${req.get('host')}/uploads/${currentImageFile}` : null;
 
@@ -599,34 +573,6 @@ app.put('/api/user/update/:id', upload.single('imageFile'), async function (req,
     }
 });
 
-// API สำหรับการลบผู้ใช้
-app.delete('/api/user/:id', async function (req, res) {
-    const { id } = req.params;
-
-    const sqlDeletePreferences = "DELETE FROM userpreferences WHERE UserID = ?";
-    const sqlDeleteGoals = "DELETE FROM usergoal WHERE UserID = ?";
-    const sqlDeleteUser = "DELETE FROM User WHERE UserId = ?";
-
-    try {
-        // ลบข้อมูลในตาราง userpreferences ก่อน
-        await db.promise().query(sqlDeletePreferences, [id]);
-
-        // ลบข้อมูลในตาราง usergoal ก่อน
-        await db.promise().query(sqlDeleteGoals, [id]);
-
-        // ลบข้อมูลผู้ใช้ในตาราง user
-        const [result] = await db.promise().query(sqlDeleteUser, [id]);
-
-        if (result.affectedRows > 0) {
-            res.send({ message: "ลบข้อมูลผู้ใช้สำเร็จ", status: true });
-        } else {
-            res.status(404).send({ message: "ไม่พบผู้ใช้ที่ต้องการลบ", status: false });
-        }
-    } catch (err) {
-        console.error('Database delete error:', err);
-        res.status(500).send({ message: "เกิดข้อผิดพลาดในการลบข้อมูลผู้ใช้", status: false });
-    }
-});
 
 
 app.listen(process.env.SERVER_PORT, () => {
