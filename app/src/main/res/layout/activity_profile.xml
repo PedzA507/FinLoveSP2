@@ -50,7 +50,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-
     <!-- ScrollView -->
     <ScrollView
         android:id="@+id/profileScrollView"
@@ -217,16 +216,18 @@
                 app:layout_constraintTop_toBottomOf="@id/textViewHome"
                 app:layout_constraintWidth_percent="0.7" />
 
-            <Spinner
-                android:id="@+id/spinnerEducationProfile"
+            <EditText
+                android:id="@+id/textViewEducation"
                 android:layout_width="300dp"
-                android:layout_height="55dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/edittext"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Education"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:padding="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonSelectDateProfile"
-                app:layout_constraintWidth_percent="0.7" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonSelectDateProfile" />
 
             <EditText
                 android:id="@+id/textViewGoal"
@@ -236,11 +237,10 @@
                 android:text="Goal"
                 android:textColor="#000000"
                 android:textSize="18sp"
-                android:enabled="false"
                 android:padding="12dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinnerEducationProfile"/>
+                app:layout_constraintTop_toBottomOf="@id/textViewEducation"/>
 
             <EditText
                 android:id="@+id/textViewPreferences"
@@ -250,12 +250,10 @@
                 android:text="Preference"
                 android:textColor="#000000"
                 android:textSize="18sp"
-                android:enabled="false"
                 android:padding="12dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textViewGoal"/>
-
 
             <ImageButton
                 android:id="@+id/buttonEditProfile"
@@ -307,9 +305,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonLogout" />
-
-
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
