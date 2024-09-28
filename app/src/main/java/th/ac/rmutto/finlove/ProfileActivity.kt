@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +20,6 @@ import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
-import java.io.File
 import java.util.*
 
 class ProfileActivity : AppCompatActivity() {
@@ -30,14 +29,16 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var textViewEmail: EditText
     private lateinit var textViewFirstName: EditText
     private lateinit var textViewLastName: EditText
-    private lateinit var textViewGender: EditText
+    private lateinit var spinnerGender: Spinner
     private lateinit var textViewHeight: EditText
     private lateinit var textViewHome: EditText
     private lateinit var buttonSelectDateProfile: Button
-    private lateinit var textViewEducation: EditText
-    private lateinit var textViewGoal: EditText
     private lateinit var imageViewProfile: ImageView
-    private lateinit var textViewPreferences: EditText
+
+    // Spinners for education, goal and preference
+    private lateinit var spinnerEducation: Spinner
+    private lateinit var spinnerGoal: Spinner
+    private lateinit var spinnerPreference: Spinner
 
     private lateinit var buttonEditProfile: ImageButton
     private lateinit var buttonSaveProfile: Button
@@ -50,9 +51,22 @@ class ProfileActivity : AppCompatActivity() {
     private var isEditing = false
     private val PICK_IMAGE_REQUEST = 1
 
+    private lateinit var originalUser: User // Original user data
+    private lateinit var currentUser: User // Edited user data
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
+        val userID = intent.getIntExtra("userID", -1)
+        Log.d("ProfileActivity", "Received userID: $userID")
+
+        if (userID != -1) {
+            fetchUserInfo(userID)
+        } else {
+            Toast.makeText(this, "ไม่พบ userID", Toast.LENGTH_LONG).show()
+        }
+
 
         // Initialize Toolbar and set it as ActionBar
         toolbar = findViewById(R.id.toolbarProfile)
@@ -64,20 +78,26 @@ class ProfileActivity : AppCompatActivity() {
         textViewEmail = findViewById(R.id.textViewEmail)
         textViewFirstName = findViewById(R.id.textViewFirstName)
         textViewLastName = findViewById(R.id.textViewLastName)
-        textViewGender = findViewById(R.id.textViewGender)
+        spinnerGender = findViewById(R.id.spinnerGender)
         textViewHeight = findViewById(R.id.textViewHeight)
         textViewHome = findViewById(R.id.textViewHome)
         buttonSelectDateProfile = findViewById(R.id.buttonSelectDateProfile)
-        textViewEducation = findViewById(R.id.textViewEducation)
-        textViewGoal = findViewById(R.id.textViewGoal)
         imageViewProfile = findViewById(R.id.imageViewProfile)
-        textViewPreferences = findViewById(R.id.textViewPreferences)
 
+        // Initialize new Spinners
+        spinnerEducation = findViewById(R.id.spinnerEducation)
+        spinnerGoal = findViewById(R.id.spinnerGoal)
+        spinnerPreference = findViewById(R.id.spinnerPreference)
+
+        // Initialize buttons
+        buttonChangeImage = findViewById(R.id.buttonChangeImage)
         buttonEditProfile = findViewById(R.id.buttonEditProfile)
         buttonSaveProfile = findViewById(R.id.buttonSaveProfile)
-        buttonChangeImage = findViewById(R.id.buttonChangeImage)
         buttonLogout = findViewById(R.id.buttonLogout)
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount)
+
+        // Set adapters for Spinners
+        setupSpinners()
 
         // Initially hide buttons and some fields
         buttonChangeImage.visibility = View.GONE
@@ -101,27 +121,22 @@ class ProfileActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
 
-        // Get userID from intent
-        val userID = intent.getIntExtra("userID", -1)
-        if (userID != -1) {
-            fetchUserInfo(userID)
-        } else {
-            Toast.makeText(this, "ไม่พบ userID", Toast.LENGTH_LONG).show()
-        }
-
         // Edit profile functionality
         buttonEditProfile.setOnClickListener {
             isEditing = !isEditing
-            setEditingEnabled(isEditing)
-            buttonChangeImage.visibility = if (isEditing) View.VISIBLE else View.GONE
-            buttonSaveProfile.visibility = if (isEditing) View.VISIBLE else View.GONE
-
-            // If editing is enabled, show all fields
             if (isEditing) {
-                showAllFields()
+                setEditingEnabled(true)
+                buttonChangeImage.visibility = View.VISIBLE
+                buttonSaveProfile.visibility = View.VISIBLE
+
+                currentUser = originalUser.copy() // Clone original data for editing
+                showAllFields() // Show all fields for editing
             } else {
-                // Hide fields again when editing is done
-                hideFieldsForViewingMode()
+                setEditingEnabled(false)
+                buttonChangeImage.visibility = View.GONE
+                buttonSaveProfile.visibility = View.GONE
+                restoreOriginalUserInfo() // Restore original data
+                hideFieldsForViewingMode() // Hide fields not in viewing mode
             }
         }
 
@@ -142,6 +157,44 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupSpinners() {
+        // Setup the education spinner
+        val educationAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.education_levels,
+            android.R.layout.simple_spinner_item
+        )
+        educationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerEducation.adapter = educationAdapter
+
+        // Setup the goal spinner
+        val goalAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.goal_options,
+            android.R.layout.simple_spinner_item
+        )
+        goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerGoal.adapter = goalAdapter
+
+        // Setup the preference spinner
+        val preferenceAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.preference_options,
+            android.R.layout.simple_spinner_item
+        )
+        preferenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerPreference.adapter = preferenceAdapter
+
+        // Setup the gender spinner
+        val genderAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.gender_array,
+            android.R.layout.simple_spinner_item
+        )
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerGender.adapter = genderAdapter
+    }
+
     private fun fetchUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -154,27 +207,12 @@ class ProfileActivity : AppCompatActivity() {
                     val user = parseUserInfo(responseBody)
 
                     withContext(Dispatchers.Main) {
+                        originalUser = user // Store original user data
                         toolbar.title = ""
                         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
-                        toolbarTitle.text = user.nickname
+                        toolbarTitle.text = user.nickname // Update toolbar title
 
-                        textViewFirstName.setText(user.firstName)
-                        textViewLastName.setText(user.lastName)
-                        textViewNickname.setText(user.nickname)
-                        textViewGender.setText(user.gender)
-
-                        // Other fields will remain hidden until edit mode is enabled
-                        textViewUsername.setText(user.username)
-                        textViewEmail.setText(user.email)
-                        textViewHeight.setText(user.height.toString())
-                        textViewHome.setText(user.home)
-                        buttonSelectDateProfile.text = user.dateBirth
-
-                        textViewGoal.setText(user.goal ?: "No goals available")
-                        textViewPreferences.text = Editable.Factory.getInstance().newEditable(user.preferences ?: "No preferences available")
-                        textViewEducation.setText(user.education ?: "")
-
-                        user.imageFile?.let { loadImage(it, imageViewProfile) }
+                        updateUserFields(user) // Update all fields
                     }
                 } else {
                     withContext(Dispatchers.Main) {
@@ -189,39 +227,84 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateUserFields(user: User) {
+        textViewFirstName.setText(user.firstName)
+        textViewLastName.setText(user.lastName)
+        textViewNickname.setText(user.nickname)
+        textViewUsername.setText(user.username)
+        textViewEmail.setText(user.email)
+        textViewHeight.setText(user.height.toString())
+        textViewHome.setText(user.home)
+        buttonSelectDateProfile.text = user.dateBirth
+
+        // Set Spinner selections safely
+        val genderIndex = resources.getStringArray(R.array.gender_array).indexOf(user.gender)
+        if (genderIndex >= 0) {
+            spinnerGender.setSelection(genderIndex)
+        }
+
+        val educationIndex = resources.getStringArray(R.array.education_levels).indexOf(user.education)
+        if (educationIndex >= 0) {
+            spinnerEducation.setSelection(educationIndex)
+        }
+
+        val goalIndex = resources.getStringArray(R.array.goal_options).indexOf(user.goal)
+        if (goalIndex >= 0) {
+            spinnerGoal.setSelection(goalIndex)
+        }
+
+        val preferenceIndex = resources.getStringArray(R.array.preference_options).indexOf(user.preferences)
+        if (preferenceIndex >= 0) {
+            spinnerPreference.setSelection(preferenceIndex)
+        }
+
+        user.imageFile?.let { loadImage(it, imageViewProfile) }
+    }
+
+    private fun restoreOriginalUserInfo() {
+        updateUserFields(originalUser) // Restore fields to original user data
+    }
+
     private fun saveUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val client = OkHttpClient()
+
+                val selectedGender = spinnerGender.selectedItem.toString() // ดึงค่าจาก Spinner
+                val selectedEducation = spinnerEducation.selectedItem.toString()
+                val selectedGoal = spinnerGoal.selectedItem.toString()
+                val selectedPreference = spinnerPreference.selectedItem.toString()
+
                 val requestBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("username", textViewUsername.text.toString())
                     .addFormDataPart("nickname", textViewNickname.text.toString())
                     .addFormDataPart("email", textViewEmail.text.toString())
                     .addFormDataPart("firstname", textViewFirstName.text.toString())
                     .addFormDataPart("lastname", textViewLastName.text.toString())
-                    .addFormDataPart("gender", textViewGender.text.toString())
+                    .addFormDataPart("gender", selectedGender) // ใช้ค่าที่เลือกจาก Spinner
+                    .addFormDataPart("education", selectedEducation) // Education Spinner
+                    .addFormDataPart("goal", selectedGoal) // Goal Spinner
+                    .addFormDataPart("preference", selectedPreference) // Preference Spinner
                     .addFormDataPart("height", textViewHeight.text.toString())
                     .addFormDataPart("home", textViewHome.text.toString())
                     .addFormDataPart("DateBirth", selectedDateOfBirth ?: "")
-                    .addFormDataPart("education", textViewEducation.text.toString())
-                    .addFormDataPart("goal", textViewGoal.text.toString())
 
                 val requestBody = requestBuilder.build()
                 val rootUrl = getString(R.string.root_url)
                 val url = "$rootUrl/api/user/update/$userID"
                 val request = Request.Builder().url(url).put(requestBody).build()
 
+                // เพิ่มการบันทึก (Log) สำหรับการตอบสนองของเซิร์ฟเวอร์
                 val response = client.newCall(request).execute()
                 val success = response.isSuccessful
 
                 withContext(Dispatchers.Main) {
                     if (success) {
                         Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลสำเร็จ", Toast.LENGTH_SHORT).show()
-                        setEditingEnabled(false)
-                        isEditing = false
-                        hideFieldsForViewingMode()
                     } else {
-                        Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลล้มเหลว", Toast.LENGTH_SHORT).show()
+                        val errorResponse = response.body?.string() // อ่านข้อผิดพลาดจากเซิร์ฟเวอร์
+                        Log.e("ProfileActivity", "Error response: $errorResponse") // แสดงข้อความบันทึกใน Logcat
+                        Toast.makeText(this@ProfileActivity, "บันทึกข้อมูลล้มเหลว: ${errorResponse ?: "Unknown error"}", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
@@ -238,14 +321,37 @@ class ProfileActivity : AppCompatActivity() {
         textViewEmail.isEnabled = enabled
         textViewFirstName.isEnabled = enabled
         textViewLastName.isEnabled = enabled
-        textViewGender.isEnabled = enabled
+        spinnerGender.isEnabled = enabled
+        spinnerEducation.isEnabled = enabled
+        spinnerGoal.isEnabled = enabled
+        spinnerPreference.isEnabled = enabled
         textViewHeight.isEnabled = enabled
         textViewHome.isEnabled = enabled
         buttonSelectDateProfile.isEnabled = enabled
-        textViewGoal.isEnabled = enabled
-        textViewEducation.isEnabled = enabled
         buttonChangeImage.isEnabled = enabled
         buttonSaveProfile.isEnabled = enabled
+    }
+
+    private fun showAllFields() {
+        textViewUsername.visibility = View.VISIBLE
+        textViewEmail.visibility = View.VISIBLE
+        textViewHeight.visibility = View.VISIBLE
+        textViewHome.visibility = View.VISIBLE
+        buttonSelectDateProfile.visibility = View.VISIBLE
+        spinnerGoal.visibility = View.VISIBLE
+        spinnerEducation.visibility = View.VISIBLE
+        spinnerPreference.visibility = View.VISIBLE
+    }
+
+    private fun hideFieldsForViewingMode() {
+        textViewUsername.visibility = View.GONE
+        textViewEmail.visibility = View.GONE
+        textViewHeight.visibility = View.GONE
+        textViewHome.visibility = View.GONE
+        buttonSelectDateProfile.visibility = View.GONE
+        spinnerGoal.visibility = View.GONE
+        spinnerEducation.visibility = View.GONE
+        spinnerPreference.visibility = View.GONE
     }
 
     private fun loadImage(url: String, imageView: ImageView) {
@@ -259,42 +365,21 @@ class ProfileActivity : AppCompatActivity() {
     private fun parseUserInfo(responseBody: String?): User {
         val jsonObject = JSONObject(responseBody ?: "{}")
         return User(
+            id = jsonObject.optInt("id", -1),
             username = jsonObject.optString("username", ""),
             nickname = jsonObject.optString("nickname", ""),
             email = jsonObject.optString("email", ""),
             firstName = jsonObject.optString("firstname", ""),
             lastName = jsonObject.optString("lastname", ""),
-            gender = jsonObject.optString("gender", "Unknown"),
+            gender = jsonObject.optString("gender", ""),
+            education = jsonObject.optString("education", ""),
+            goal = jsonObject.optString("goal", ""),
+            preferences = jsonObject.optString("preferences", ""),
             height = jsonObject.optDouble("height", 0.0),
             home = jsonObject.optString("home", ""),
             dateBirth = jsonObject.optString("DateBirth", ""),
-            education = jsonObject.optString("education", ""),
-            goal = jsonObject.optString("goals", ""),  // Use the string from the API
-            imageFile = jsonObject.optString("imageFile", ""),
-            preferences = jsonObject.optString("preferences", "")
+            imageFile = jsonObject.optString("imageFile", "")
         )
-    }
-
-    private fun hideFieldsForViewingMode() {
-        textViewUsername.visibility = View.GONE
-        textViewEmail.visibility = View.GONE
-        textViewHeight.visibility = View.GONE
-        textViewHome.visibility = View.GONE
-        buttonSelectDateProfile.visibility = View.GONE
-        textViewGoal.visibility = View.GONE
-        textViewPreferences.visibility = View.GONE
-        textViewEducation.visibility = View.GONE
-    }
-
-    private fun showAllFields() {
-        textViewUsername.visibility = View.VISIBLE
-        textViewEmail.visibility = View.VISIBLE
-        textViewHeight.visibility = View.VISIBLE
-        textViewHome.visibility = View.VISIBLE
-        buttonSelectDateProfile.visibility = View.VISIBLE
-        textViewGoal.visibility = View.VISIBLE
-        textViewPreferences.visibility = View.VISIBLE
-        textViewEducation.visibility = View.VISIBLE
     }
 
     private fun logoutUser(userID: Int) {
@@ -327,5 +412,4 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
-
 }

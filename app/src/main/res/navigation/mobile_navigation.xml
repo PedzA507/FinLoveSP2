@@ -10,11 +10,11 @@
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <activity
         android:id="@+id/navigation_message"
-        android:name="th.ac.rmutto.finlove.ui.message.MessageFragment"
+        android:name="th.ac.rmutto.finlove.ProfileActivity"
         android:label="Message"
-        tools:layout="@layout/fragment_message" />
+        tools:layout="@layout/activity_profile" />
 
     <fragment
         android:id="@+id/navigation_profile"

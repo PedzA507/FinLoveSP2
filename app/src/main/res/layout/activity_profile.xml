@@ -13,14 +13,13 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="?attr/actionBarTheme">
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- ใช้ ConstraintLayout เพื่อควบคุมตำแหน่งของ ImageView และ TextView -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- โลโก้ที่ริมซ้าย -->
             <ImageView
                 android:id="@+id/logoImage"
                 android:layout_width="40dp"
@@ -31,7 +30,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:contentDescription="App Logo" />
 
-            <!-- ชื่อผู้ใช้ตรงกลาง -->
             <TextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
@@ -47,35 +45,46 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 android:gravity="center"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.appcompat.widget.Toolbar>
 
     <!-- ScrollView -->
     <ScrollView
         android:id="@+id/profileScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/newbg"
-        android:padding="16dp"
-        android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbarProfile">
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbarProfile"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- Image View Profile -->
             <ImageView
                 android:id="@+id/imageViewProfile"
                 android:layout_width="202dp"
                 android:layout_height="186dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="90dp"
-                android:layout_marginEnd="89dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/img_1" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:contentDescription="Profile Image"
+                android:src="@drawable/img_1" />
+
+            <ImageButton
+                android:id="@+id/buttonEditProfile"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@null"
+                android:contentDescription="Edit Profile"
+                android:padding="12dp"
+                android:src="@drawable/ic_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.873"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageViewProfile" />
 
             <Button
                 android:id="@+id/buttonChangeImage"
@@ -83,192 +92,166 @@
                 android:layout_height="wrap_content"
                 android:text="เปลี่ยนรูปภาพ"
                 android:background="@drawable/button"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="16dp"
-                android:enabled="false"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewProfile"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/imageViewProfile"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Username -->
             <EditText
                 android:id="@+id/textViewUsername"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:enabled="false"
+                android:hint="Username: "
                 android:padding="12dp"
-                android:text="Username"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewEmail" />
-
-            <EditText
-                android:id="@+id/textViewNickname"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:enabled="false"
-                android:padding="12dp"
-                android:text="Nickname"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewLastName" />
-
-            <EditText
-                android:id="@+id/textViewEmail"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Email"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:enabled="false"
-                android:padding="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewGender"/>
-
-            <EditText
-                android:id="@+id/textViewFirstName"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:enabled="false"
-                android:padding="12dp"
-                android:text="Firstname"
                 android:textColor="#000000"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonChangeImage" />
 
+            <!-- Email -->
+            <EditText
+                android:id="@+id/textViewEmail"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:padding="12dp"
+                android:hint="Email: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewUsername"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- First Name -->
+            <EditText
+                android:id="@+id/textViewFirstName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:padding="12dp"
+                android:hint="Firstname: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewEmail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Last Name -->
             <EditText
                 android:id="@+id/textViewLastName"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Last Name"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:layout_marginTop="8dp"
                 android:enabled="false"
                 android:padding="12dp"
+                android:hint="Lastname: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewFirstName"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewFirstName"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Last Name -->
             <EditText
-                android:id="@+id/textViewGender"
+                android:id="@+id/textViewNickname"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Gender"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:layout_marginTop="8dp"
                 android:enabled="false"
                 android:padding="12dp"
+                android:hint="Nickname: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewLastName"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewNickname"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Gender Spinner -->
+            <Spinner
+                android:id="@+id/spinnerGender"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewNickname"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Education Spinner -->
+            <Spinner
+                android:id="@+id/spinnerEducation"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinnerGender"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Goal Spinner -->
+            <Spinner
+                android:id="@+id/spinnerGoal"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinnerEducation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Preference Spinner -->
+            <Spinner
+                android:id="@+id/spinnerPreference"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinnerGoal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Height -->
             <EditText
                 android:id="@+id/textViewHeight"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Height"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:layout_marginTop="8dp"
+                android:hint="Height"
                 android:enabled="false"
                 android:padding="12dp"
+                app:layout_constraintTop_toBottomOf="@id/spinnerPreference"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewUsername"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Home -->
             <EditText
                 android:id="@+id/textViewHome"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Home"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:layout_marginTop="8dp"
+                android:hint="Home"
                 android:enabled="false"
                 android:padding="12dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewHeight"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewHeight"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Date of Birth Button -->
             <Button
                 android:id="@+id/buttonSelectDateProfile"
                 android:layout_width="300dp"
                 android:layout_height="55dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/edittext"
                 android:text="เลือก วัน/เดือน/ปีเกิด"
                 android:textAlignment="center"
-                android:textColor="#000000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textViewHome"
-                app:layout_constraintWidth_percent="0.7" />
-
-            <EditText
-                android:id="@+id/textViewEducation"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Education"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:padding="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonSelectDateProfile" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            <EditText
-                android:id="@+id/textViewGoal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Goal"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:padding="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewEducation"/>
-
-            <EditText
-                android:id="@+id/textViewPreferences"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Preference"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:padding="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewGoal"/>
-
-            <ImageButton
-                android:id="@+id/buttonEditProfile"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="20dp"
-                android:background="@null"
-                android:contentDescription="Edit Profile"
-                android:padding="12dp"
-                android:src="@drawable/ic_edit"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.876"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageViewProfile" />
-
+            <!-- Save Button -->
             <Button
                 android:id="@+id/buttonSaveProfile"
                 android:layout_width="121dp"
@@ -277,34 +260,33 @@
                 android:background="@drawable/button"
                 android:enabled="false"
                 android:text="Save"
-                android:textColor="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonSelectDateProfile"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textViewPreferences" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Logout Button -->
             <Button
                 android:id="@+id/buttonLogout"
                 android:layout_width="126dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/button"
                 android:text="Logout"
-                android:textColor="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonSaveProfile"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonSaveProfile" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Delete Account Button -->
             <Button
                 android:id="@+id/buttonDeleteAccount"
                 android:layout_width="186dp"
                 android:layout_height="54dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/button"
                 android:text="Delete Account"
-                android:textColor="#FFFFFF"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonLogout"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonLogout" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

@@ -1,6 +1,7 @@
 package th.ac.rmutto.finlove
 
 data class User(
+    val id: Int, // เพิ่มฟิลด์ id
     val username: String,
     val email: String,
     val firstName: String,
@@ -15,3 +16,4 @@ data class User(
     val imageFile: String,
     val preferences: String?
 )
+
