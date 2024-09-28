@@ -6,7 +6,9 @@ const nodemailer = require('nodemailer');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
+
 
 const app = express();
 const saltRounds = 10;
@@ -442,13 +444,12 @@ app.get('/api/user/:id', async function (req, res) {
         u.username, u.email, u.firstname, u.lastname, u.nickname, 
         g.Gender_Name AS gender, u.height, u.home, u.DateBirth, 
         u.imageFile,
-        e.EducationName AS education,
-        go.goalName AS goal, -- ดึง goalName จากตาราง goal โดยตรง
-        u.preferences 
+        e.EducationName AS education, -- Join to get EducationName directly
+        u.goal, -- Get goal directly from the User table
+        u.preferences -- Get preferences directly from the User table
     FROM user u
     LEFT JOIN gender g ON u.GenderID = g.GenderID
-    LEFT JOIN education e ON u.educationID = e.educationID
-    LEFT JOIN goal go ON u.goalID = go.goalID -- ดึงข้อมูล goal โดยตรง
+    LEFT JOIN education e ON u.educationID = e.educationID -- Directly get education
     WHERE u.UserID = ?
     `;
 
@@ -468,18 +469,20 @@ app.get('/api/user/:id', async function (req, res) {
     }
 });
 
-// API อัปเดตข้อมูลผู้ใช้ (POST)
 app.post('/api/user/update/:id', async function(req, res) {
     const { id } = req.params;
     let { username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, goal, preferences } = req.body;
 
     try {
+        // Fetch current user data
         const [userResult] = await db.promise().query("SELECT * FROM User WHERE UserId = ?", [id]);
         if (userResult.length === 0) {
             return res.status(404).send({ message: "ไม่พบผู้ใช้ที่ต้องการอัปเดต", status: false });
         }
 
         const currentUser = userResult[0];
+
+        // Use current data if no new data is provided
         username = username || currentUser.username;
         email = email || currentUser.email;
         firstname = firstname || currentUser.firstname;
@@ -487,35 +490,44 @@ app.post('/api/user/update/:id', async function(req, res) {
         nickname = nickname || currentUser.nickname;
         height = height || currentUser.height;
         home = home || currentUser.home;
-        DateBirth = DateBirth ? new Date(DateBirth).toISOString().split('T')[0] : currentUser.DateBirth;
 
-        // หา GenderID จากชื่อเพศ
-        let genderID = currentUser.GenderID;
+        // Handle DateBirth
+        if (DateBirth) {
+            DateBirth = new Date(DateBirth).toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+        } else {
+            DateBirth = currentUser.DateBirth;
+        }
+
+        // Translate gender and education names to their respective IDs
+        let genderID = null;
         if (gender) {
             const [genderResult] = await db.promise().query("SELECT GenderID FROM gender WHERE Gender_Name = ?", [gender]);
             if (genderResult.length === 0) {
                 return res.status(404).send({ message: "ไม่พบเพศที่ระบุ", status: false });
             }
             genderID = genderResult[0].GenderID;
+        } else {
+            genderID = currentUser.GenderID;
         }
 
-        // หา goalID จากชื่อเป้าหมาย
-        let goalID = currentUser.goalID;
-        if (goal) {
-            const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
-            if (goalResult.length === 0) {
-                return res.status(404).send({ message: "ไม่พบเป้าหมายที่ระบุ", status: false });
+        let educationID = null;
+        if (education) {
+            const [educationResult] = await db.promise().query("SELECT EducationID FROM education WHERE EducationName = ?", [education]);
+            if (educationResult.length === 0) {
+                return res.status(404).send({ message: "ไม่พบการศึกษาที่ระบุ", status: false });
             }
-            goalID = goalResult[0].goalID;
+            educationID = educationResult[0].EducationID;
+        } else {
+            educationID = currentUser.educationID;
         }
 
-        // Update ข้อมูลใน User table
+        // Update the User table with genderID, educationID, goal, preferences, and other fields
         const updateUserSql = `
             UPDATE User 
-            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, GenderID = ?, height = ?, home = ?, DateBirth = ?, goalID = ?, preferences = ?
+            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, GenderID = ?, height = ?, home = ?, DateBirth = ?, educationID = ?, goal = ?, preferences = ?
             WHERE UserId = ?
         `;
-        await db.promise().query(updateUserSql, [username, email, firstname, lastname, nickname, genderID, height, home, DateBirth, goalID, preferences, id]);
+        await db.promise().query(updateUserSql, [username, email, firstname, lastname, nickname, genderID, height, home, DateBirth, educationID, goal, preferences, id]);
 
         res.send({ message: "ข้อมูลถูกอัปเดตเรียบร้อย", status: true });
     } catch (err) {
@@ -524,41 +536,57 @@ app.post('/api/user/update/:id', async function(req, res) {
     }
 });
 
+
 // API สำหรับการอัปเดตรูปภาพของผู้ใช้ (PUT)
-app.put('/api/user/update/:id', upload.single('imageFile'), async function (req, res) {
+app.put('/api/user/update/:id', upload.single('image'), async function (req, res) {
     const { id } = req.params;
     const { username, email, firstname, lastname, nickname, gender, height, home, DateBirth, education, goal, preferences } = req.body;
     const image = req.file ? req.file.filename : null;
 
-    if (!username || !email || !firstname || !lastname || !nickname || !gender || !goal) {
+    if (!username || !email || !firstname || !lastname || !nickname || !gender) {
         return res.status(400).send({ message: "ข้อมูลไม่ครบถ้วน", status: false });
     }
 
     try {
+        // หา GenderID จากชื่อเพศ
         const [genderResult] = await db.promise().query("SELECT GenderID FROM gender WHERE Gender_Name = ?", [gender]);
         if (genderResult.length === 0) {
             return res.status(404).send({ message: "ไม่พบข้อมูลเพศที่ระบุ", status: false });
         }
         const genderID = genderResult[0].GenderID;
 
-        const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
-        if (goalResult.length === 0) {
-            return res.status(404).send({ message: "ไม่พบข้อมูลเป้าหมายที่ระบุ", status: false });
-        }
-        const goalID = goalResult[0].goalID;
-
+        // ดึงข้อมูลรูปภาพเดิมถ้าไม่มีการอัปเดตภาพใหม่
         let currentImageFile = image;
         if (!currentImageFile) {
             const [userResult] = await db.promise().query("SELECT imageFile FROM User WHERE UserId = ?", [id]);
-            currentImageFile = userResult[0].imageFile;
+            if (userResult.length > 0) {
+                currentImageFile = userResult[0].imageFile; // ใช้รูปภาพเดิมจากฐานข้อมูลถ้าไม่มีการอัปโหลดรูปใหม่
+            }
+        } else {
+            // เปลี่ยนชื่อไฟล์รูปภาพใหม่เป็น UUID และเก็บนามสกุลไฟล์เดิม
+            const ext = path.extname(req.file.originalname);
+            const newFileName = `${uuidv4()}${ext}`;
+
+            // ย้ายไฟล์รูปภาพใหม่ไปที่โฟลเดอร์ uploads ด้วยชื่อใหม่
+            fs.renameSync(req.file.path, path.join('uploads', newFileName));
+            currentImageFile = newFileName; // ใช้ชื่อไฟล์ใหม่
+
+            // ลบไฟล์รูปภาพเดิมจากเซิร์ฟเวอร์ (ถ้ามีรูปเดิมและกำลังอัปโหลดรูปใหม่)
+            const [oldImageResult] = await db.promise().query("SELECT imageFile FROM User WHERE UserId = ?", [id]);
+            if (oldImageResult.length > 0 && oldImageResult[0].imageFile) {
+                const oldImagePath = path.join(__dirname, 'uploads', oldImageResult[0].imageFile);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath); // ลบไฟล์รูปภาพเก่า
+                }
+            }
         }
 
+        // อัปเดตข้อมูลผู้ใช้ รวมถึง nickname และรูปภาพ
         const sqlUpdate = `
             UPDATE User 
-            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, imageFile = ?, GenderID = ?, height = ?, home = ?, DateBirth = ?, goalID = ?, preferences = ?
-            WHERE UserId = ?
-        `;
-        await db.promise().query(sqlUpdate, [username, email, firstname, lastname, nickname, currentImageFile, genderID, height, home, DateBirth, goalID, preferences, id]);
+            SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, imageFile = ?, GenderID = ?, height = ?, home = ?, DateBirth = ?, education = ?, goal = ?
+            WHERE UserId = ?`;
+        await db.promise().query(sqlUpdate, [username, email, firstname, lastname, nickname, currentImageFile, genderID, height, home, DateBirth, education, goal, id]);
 
         const imageUrl = currentImageFile ? `${req.protocol}://${req.get('host')}/uploads/${currentImageFile}` : null;
 
@@ -570,6 +598,50 @@ app.put('/api/user/update/:id', upload.single('imageFile'), async function (req,
     } catch (err) {
         console.error('Database update error:', err);
         res.status(500).send({ message: "การอัปเดตข้อมูลผู้ใช้ล้มเหลว", status: false });
+    }
+});
+
+
+// API สำหรับการลบผู้ใช้
+app.delete('/api/user/:id', async function (req, res) {
+    const { id } = req.params;
+
+    const sqlGetUserImage = "SELECT imageFile FROM User WHERE UserId = ?";
+    const sqlDeleteUser = "DELETE FROM User WHERE UserId = ?";
+
+    try {
+        // ดึงชื่อไฟล์รูปภาพของผู้ใช้
+        const [imageResult] = await db.promise().query(sqlGetUserImage, [id]);
+
+        if (imageResult.length > 0) {
+            const imageFile = imageResult[0].imageFile;
+
+            // ลบข้อมูลผู้ใช้ในตาราง User
+            const [deleteResult] = await db.promise().query(sqlDeleteUser, [id]);
+
+            if (deleteResult.affectedRows > 0) {
+                // ลบไฟล์รูปภาพจากโฟลเดอร์ uploads
+                if (imageFile) {
+                    const filePath = path.join(__dirname, 'uploads', imageFile);
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error('Error deleting image file:', err);
+                        } else {
+                            console.log('Image file deleted:', filePath);
+                        }
+                    });
+                }
+
+                res.send({ message: "ลบข้อมูลผู้ใช้สำเร็จ", status: true });
+            } else {
+                res.status(404).send({ message: "ไม่พบผู้ใช้ที่ต้องการลบ", status: false });
+            }
+        } else {
+            res.status(404).send({ message: "ไม่พบผู้ใช้ที่ต้องการลบ", status: false });
+        }
+    } catch (err) {
+        console.error('Database delete error:', err);
+        res.status(500).send({ message: "เกิดข้อผิดพลาดในการลบข้อมูลผู้ใช้", status: false });
     }
 });
 
