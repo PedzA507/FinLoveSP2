@@ -17,7 +17,7 @@ import okhttp3.RequestBody
 
 class RegisterActivity3 : AppCompatActivity() {
 
-    private lateinit var selectedGender: String
+    private var selectedGender: String? = null // แก้จาก lateinit เป็น nullable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +39,12 @@ class RegisterActivity3 : AppCompatActivity() {
             val height = editTextHeight.text.toString()
             val phoneNumber = editTextPhoneNumber.text.toString()
 
+            // ตรวจสอบการเลือกเพศ
+            if (selectedGender == null) {
+                Toast.makeText(this, "กรุณาเลือกเพศก่อน", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (height.isEmpty()) {
                 editTextHeight.error = "กรุณาระบุส่วนสูง"
                 return@setOnClickListener
@@ -58,7 +64,7 @@ class RegisterActivity3 : AppCompatActivity() {
             // ส่งข้อมูลไปยังเซิร์ฟเวอร์
             val url = getString(R.string.root_url) + "/api/register3"
             val formBody: RequestBody = FormBody.Builder()
-                .add("gender", selectedGender)
+                .add("gender", selectedGender!!) // ใช้ !! หลังตรวจสอบว่า selectedGender != null
                 .add("height", height)
                 .add("phonenumber", phoneNumber)
                 .add("userID", userID.toString()) // ส่ง userID ไปยังเซิร์ฟเวอร์

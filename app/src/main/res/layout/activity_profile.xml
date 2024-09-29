@@ -76,15 +76,16 @@
                 android:id="@+id/buttonEditProfile"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="220dp"
+                android:layout_marginEnd="18dp"
                 android:background="@null"
                 android:contentDescription="Edit Profile"
                 android:padding="12dp"
                 android:src="@drawable/ic_edit"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.873"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageViewProfile" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/buttonChangeImage"

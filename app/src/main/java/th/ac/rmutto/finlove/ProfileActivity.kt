@@ -106,6 +106,10 @@ class ProfileActivity : AppCompatActivity() {
         buttonChangeImage.visibility = View.GONE
         buttonSaveProfile.visibility = View.GONE
 
+        // Initially disable editing for gender and preferences
+        spinnerGender.isEnabled = false
+        spinnerPreference.isEnabled = false
+
         // Initially hide all fields except profile image, firstname, lastname, nickname, and gender
         hideFieldsForViewingMode()
 
@@ -127,7 +131,6 @@ class ProfileActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
 
-
         buttonDeleteAccount.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Delete Account")
@@ -139,12 +142,13 @@ class ProfileActivity : AppCompatActivity() {
                 .show()
         }
 
-
         // Edit profile functionality
         buttonEditProfile.setOnClickListener {
             isEditing = !isEditing
             if (isEditing) {
                 setEditingEnabled(true)
+                spinnerGender.isEnabled = true // Enable gender selection when editing
+                spinnerPreference.isEnabled = true // Enable preference selection when editing
                 buttonChangeImage.visibility = View.VISIBLE
                 buttonSaveProfile.visibility = View.VISIBLE
 
@@ -152,6 +156,8 @@ class ProfileActivity : AppCompatActivity() {
                 showAllFields() // Show all fields for editing
             } else {
                 setEditingEnabled(false)
+                spinnerGender.isEnabled = false // Disable gender selection when not editing
+                spinnerPreference.isEnabled = false // Disable preference selection when not editing
                 buttonChangeImage.visibility = View.GONE
                 buttonSaveProfile.visibility = View.GONE
                 restoreOriginalUserInfo() // Restore original data
@@ -359,6 +365,8 @@ class ProfileActivity : AppCompatActivity() {
                         fetchUserInfo(userID)
 
                         setEditingEnabled(false)
+                        spinnerGender.isEnabled = false // Disable gender after saving
+                        spinnerPreference.isEnabled = false // Disable preference after saving
                         buttonChangeImage.visibility = View.GONE
                         buttonSaveProfile.visibility = View.GONE
                         hideFieldsForViewingMode()
@@ -376,8 +384,6 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
     private fun setEditingEnabled(enabled: Boolean) {
         textViewUsername.isEnabled = enabled
@@ -416,6 +422,7 @@ class ProfileActivity : AppCompatActivity() {
         spinnerGoal.visibility = View.GONE
         spinnerEducation.visibility = View.GONE
     }
+
 
     private fun loadImage(url: String, imageView: ImageView) {
         Glide.with(this)
@@ -507,8 +514,4 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }
-
-
