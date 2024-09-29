@@ -109,7 +109,6 @@ class ProfileActivity : AppCompatActivity() {
         // Initially hide all fields except profile image, firstname, lastname, nickname, and gender
         hideFieldsForViewingMode()
 
-        // DatePickerDialog setup for Date of Birth
         buttonSelectDateProfile.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -117,12 +116,17 @@ class ProfileActivity : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                // ตั้งค่าให้ไม่มีเวลาในรูปแบบ YYYY-MM-DD
                 selectedDateOfBirth = "$selectedYear-${String.format("%02d", selectedMonth + 1)}-${String.format("%02d", selectedDay)}"
                 buttonSelectDateProfile.text = selectedDateOfBirth
             }, year, month, day)
 
+            // กำหนดวันที่สูงสุดที่เลือกได้คือวันที่ปัจจุบัน
+            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
             datePickerDialog.show()
         }
+
 
         buttonDeleteAccount.setOnClickListener {
             AlertDialog.Builder(this)
@@ -300,6 +304,9 @@ class ProfileActivity : AppCompatActivity() {
                 val selectedGoal = spinnerGoal.selectedItem.toString()
                 val selectedPreference = spinnerPreference.selectedItem.toString()
 
+                // ตรวจสอบว่ามีการเลือกวันที่หรือไม่ ถ้าไม่เลือก ให้ส่งค่าว่างไป
+                val formattedDateBirth = if (selectedDateOfBirth.isNullOrBlank()) null else selectedDateOfBirth?.substring(0, 10)
+
                 // สร้าง request body สำหรับข้อมูลโปรไฟล์
                 val requestBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("username", textViewUsername.text.toString())
@@ -313,8 +320,11 @@ class ProfileActivity : AppCompatActivity() {
                     .addFormDataPart("preferences", selectedPreference)
                     .addFormDataPart("height", textViewHeight.text.toString())
                     .addFormDataPart("home", textViewHome.text.toString())
-                    .addFormDataPart("DateBirth", selectedDateOfBirth ?: "")
 
+                // ถ้า formattedDateBirth ไม่ใช่ null ให้ส่งลง request ด้วย
+                formattedDateBirth?.let {
+                    requestBuilder.addFormDataPart("DateBirth", it)
+                }
 
                 // เพิ่มรูปภาพลงใน request ถ้าเลือกภาพมา
                 if (selectedImageUri != null) {
@@ -366,6 +376,8 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun setEditingEnabled(enabled: Boolean) {
         textViewUsername.isEnabled = enabled

@@ -40,12 +40,13 @@ class MainActivity : AppCompatActivity() {
         // ตรวจสอบการคลิกที่แต่ละเมนูใน BottomNavigationView
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.navigation_message -> {
-                    // ส่งค่า userID ไปยัง MessageFragment
-                    if (navController.currentDestination?.id != R.id.navigation_message) {
-                        val bundle = Bundle()
-                        bundle.putInt("userID", userID)
-                        navController.navigate(R.id.navigation_message, bundle)
+                R.id.navigation_profile -> {
+                    // ส่ง userID ไปยัง ProfileFragment
+                    if (navController.currentDestination?.id != R.id.navigation_profile) {
+                        val bundle = Bundle().apply {
+                            putInt("userID", userID)
+                        }
+                        navController.navigate(R.id.navigation_profile, bundle)
                     }
                     true
                 }
@@ -56,10 +57,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
-                R.id.navigation_profile -> {
-                    // นำทางไปหน้า ProfileFragment
-                    if (navController.currentDestination?.id != R.id.navigation_profile) {
-                        navController.navigate(R.id.navigation_profile)
+                R.id.navigation_message -> {
+                    // นำทางไปหน้า MessageFragment
+                    if (navController.currentDestination?.id != R.id.navigation_message) {
+                        navController.navigate(R.id.navigation_message)
                     }
                     true
                 }
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ฟังก์ชันสำหรับการ Logout
     private fun logoutUser(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             if (userID != -1) {
@@ -79,7 +81,8 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@MainActivity, "Logged out successfully", Toast.LENGTH_SHORT).show()
-                            // กลับไปที่หน้า LoginActivity
+
+                            // กลับไปที่หน้า LoginActivity และเคลียร์ stack
                             val intent = Intent(this@MainActivity, LoginActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(intent)

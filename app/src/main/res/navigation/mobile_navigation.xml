@@ -10,16 +10,16 @@
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
-    <activity
-        android:id="@+id/navigation_message"
-        android:name="th.ac.rmutto.finlove.ProfileActivity"
-        android:label="Message"
-        tools:layout="@layout/activity_profile" />
-
     <fragment
+        android:id="@+id/navigation_message"
+        android:name="th.ac.rmutto.finlove.ui.message.MessageFragment"
+        android:label="Message"
+        tools:layout="@layout/fragment_message" />
+
+    <activity
         android:id="@+id/navigation_profile"
-        android:name="th.ac.rmutto.finlove.ui.profile.ProfileFragment"
+        android:name="th.ac.rmutto.finlove.ProfileActivity"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/activity_profile" />
 
 </navigation>
