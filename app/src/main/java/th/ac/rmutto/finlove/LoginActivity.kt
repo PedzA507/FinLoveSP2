@@ -1,13 +1,19 @@
 package th.ac.rmutto.finlove
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import kotlinx.coroutines.CoroutineScope
@@ -34,9 +40,19 @@ class LoginActivity : AppCompatActivity() {
         val editTextUsername = findViewById<EditText>(R.id.editTextUsername)
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val buttonLogin = findViewById<Button>(R.id.buttonLogin)
-        val registerbtn = findViewById<TextView>(R.id.registerbtn)
         val forgetPasswordButton = findViewById<TextView>(R.id.forgetbtn)
+        val termsConditionsTextView = findViewById<TextView>(R.id.tv_terms_conditions)
 
+
+        // การตั้งค่าสีข้อความสำหรับ Terms & Conditions
+        val spannable = SpannableString("By signing up, you are agreeing to our Terms & \nConditions")
+        val termsColor = ForegroundColorSpan(Color.parseColor("#0000FF")) // สีน้ำเงินเข้ม
+        spannable.setSpan(termsColor, 39, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        termsConditionsTextView.text = spannable
+
+
+
+        // การทำงานเมื่อผู้ใช้กดปุ่มเข้าสู่ระบบ
         buttonLogin.setOnClickListener {
             val username = editTextUsername.text.toString()
             val password = editTextPassword.text.toString()
@@ -90,12 +106,6 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-
-
-        registerbtn.setOnClickListener {
-            val intent = Intent(this, RegisterActivity1::class.java)
-            startActivity(intent)
         }
 
         forgetPasswordButton.setOnClickListener {

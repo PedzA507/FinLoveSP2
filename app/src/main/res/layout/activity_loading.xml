@@ -7,31 +7,39 @@
     android:background="@drawable/newbg"
     tools:context=".LoadingActivity">
 
-
-    <ProgressBar
-
-        android:id="@+id/progressBar"
-        android:layout_width="314dp"
-        android:layout_height="283dp"
-        android:indeterminate="true"
-        android:indeterminateDrawable="@drawable/ic_launcher_foreground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/loadingText"
+    <!-- จุดเคลื่อนที่ -->
+    <LinearLayout
+        android:id="@+id/dot_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Loading..."
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBar" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5"> <!-- อยู่กลางจอในแนวตั้ง -->
+
+        <!-- จุดเคลื่อนที่ -->
+        <View
+            android:id="@+id/dot1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/black_dot" />
+
+        <View
+            android:id="@+id/dot2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/black_dot" />
+
+        <View
+            android:id="@+id/dot3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/black_dot" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
