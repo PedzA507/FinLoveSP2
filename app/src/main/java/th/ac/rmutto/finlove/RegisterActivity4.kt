@@ -19,7 +19,7 @@ import java.util.Calendar
 
 class RegisterActivity4 : AppCompatActivity() {
 
-    private lateinit var selectedEducation: String
+    private var selectedEducation: String? = null // เปลี่ยนเป็น nullable
     private var selectedDateOfBirth: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +69,11 @@ class RegisterActivity4 : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (selectedEducation == null) {
+                Toast.makeText(this, "กรุณาเลือกระดับการศึกษาก่อน", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
             val userID = intent.getIntExtra("userID", -1)
             if (userID == -1) {
                 Toast.makeText(this@RegisterActivity4, "ไม่พบ userID", Toast.LENGTH_LONG).show()
@@ -76,7 +81,7 @@ class RegisterActivity4 : AppCompatActivity() {
             }
 
             // แปลง selectedEducation เป็น educationID
-            val educationID = getEducationID(selectedEducation)
+            val educationID = getEducationID(selectedEducation!!)
             if (educationID == -1) {
                 Toast.makeText(this, "ไม่พบระดับการศึกษาที่ถูกต้อง", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
