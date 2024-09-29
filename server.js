@@ -484,8 +484,12 @@ app.post('/api/user/update/:id', async function(req, res) {
 
         const currentUser = userResult[0];
 
+        // ตรวจสอบว่า username ไม่ใช่ค่าว่าง
+        if (!username || username.trim() === "") {
+            return res.status(400).send({ message: "ชื่อผู้ใช้ไม่สามารถว่างได้", status: false });
+        }
+
         // Use current data if no new data is provided
-        username = username || currentUser.username;
         email = email || currentUser.email;
         firstname = firstname || currentUser.firstname;
         lastname = lastname || currentUser.lastname;
@@ -557,6 +561,7 @@ app.post('/api/user/update/:id', async function(req, res) {
 
 
 
+
 // API สำหรับการอัปเดตรูปภาพและข้อมูลผู้ใช้ (PUT)
 app.put('/api/user/update/:id', upload.single('image'), async function (req, res) {
     const { id } = req.params;
@@ -564,6 +569,11 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
     const image = req.file ? req.file.filename : null;
 
     try {
+        // ตรวจสอบว่า username ไม่เป็นค่าว่าง
+        if (!username || username.trim() === "") {
+            return res.status(400).send({ message: "Username ไม่สามารถเว้นว่างได้", status: false });
+        }
+
         // Fetch current user data
         const [userResult] = await db.promise().query("SELECT * FROM User WHERE UserId = ?", [id]);
         if (userResult.length === 0) {
@@ -640,6 +650,7 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
         res.status(500).send({ message: "การอัปเดตข้อมูลผู้ใช้ล้มเหลว", status: false });
     }
 });
+
 
 
 
