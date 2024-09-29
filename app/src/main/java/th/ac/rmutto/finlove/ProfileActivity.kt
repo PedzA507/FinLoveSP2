@@ -310,10 +310,11 @@ class ProfileActivity : AppCompatActivity() {
                     .addFormDataPart("gender", selectedGender)
                     .addFormDataPart("education", selectedEducation)
                     .addFormDataPart("goal", selectedGoal)
-                    .addFormDataPart("preference", selectedPreference)
+                    .addFormDataPart("preferences", selectedPreference)
                     .addFormDataPart("height", textViewHeight.text.toString())
                     .addFormDataPart("home", textViewHome.text.toString())
                     .addFormDataPart("DateBirth", selectedDateOfBirth ?: "")
+
 
                 // เพิ่มรูปภาพลงใน request ถ้าเลือกภาพมา
                 if (selectedImageUri != null) {
