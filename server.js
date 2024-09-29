@@ -493,16 +493,16 @@ app.post('/api/user/update/:id', async function(req, res) {
         height = height || currentUser.height;
         home = home || currentUser.home;
 
-        // Handle DateBirth
-        if (DateBirth) {
+        // Handle DateBirth: ถ้าไม่มีการส่งมา ใช้ค่าปัจจุบันในฐานข้อมูล
+        if (DateBirth && DateBirth !== '') {
             DateBirth = new Date(DateBirth).toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
         } else {
-            DateBirth = currentUser.DateBirth;
+            DateBirth = currentUser.DateBirth; // Keep old DateBirth if not updated
         }
 
         // Translate gender name to ID
         let genderID = currentUser.GenderID;
-        if (gender) {
+        if (gender && gender !== '') {
             const [genderResult] = await db.promise().query("SELECT GenderID FROM gender WHERE Gender_Name = ?", [gender]);
             if (genderResult.length === 0) {
                 return res.status(404).send({ message: "ไม่พบเพศที่ระบุ", status: false });
@@ -512,7 +512,7 @@ app.post('/api/user/update/:id', async function(req, res) {
 
         // Translate education name to ID
         let educationID = currentUser.educationID;
-        if (education) {
+        if (education && education !== '') {
             const [educationResult] = await db.promise().query("SELECT EducationID FROM education WHERE EducationName = ?", [education]);
             if (educationResult.length === 0) {
                 return res.status(404).send({ message: "ไม่พบการศึกษาที่ระบุ", status: false });
@@ -522,7 +522,7 @@ app.post('/api/user/update/:id', async function(req, res) {
 
         // Translate goal name to ID
         let goalID = currentUser.goalID;
-        if (goal) {
+        if (goal && goal !== '') {
             const [goalResult] = await db.promise().query("SELECT goalID FROM goal WHERE goalName = ?", [goal]);
             if (goalResult.length === 0) {
                 return res.status(404).send({ message: "ไม่พบเป้าหมายที่ระบุ", status: false });
@@ -532,7 +532,7 @@ app.post('/api/user/update/:id', async function(req, res) {
 
         // Translate preference name to ID
         let PreferenceID = currentUser.PreferenceID;
-        if (preferences) {
+        if (preferences && preferences !== '') {
             const [preferenceResult] = await db.promise().query("SELECT PreferenceID FROM preferences WHERE PreferenceNames = ?", [preferences]);
             if (preferenceResult.length === 0) {
                 return res.status(404).send({ message: "ไม่พบตัวเลือกที่ระบุ", status: false });
@@ -557,7 +557,6 @@ app.post('/api/user/update/:id', async function(req, res) {
 
 
 
-// API สำหรับการอัปเดตรูปภาพของผู้ใช้ (PUT)
 // API สำหรับการอัปเดตรูปภาพและข้อมูลผู้ใช้ (PUT)
 app.put('/api/user/update/:id', upload.single('image'), async function (req, res) {
     const { id } = req.params;
