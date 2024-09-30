@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/newbg"
+    tools:context=".ChangePreferenceActivity">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="184dp"
+        android:text="คุณชอบอะไร"
+        android:textAlignment="center"
+        android:textColor="#00BCD4"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonOption1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/button_selector"
+        android:text="ดูหนัง"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonOption3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <Button
+        android:id="@+id/buttonOption2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/button_selector"
+        android:text="ฟังเพลง"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintStart_toEndOf="@+id/buttonOption3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <Button
+        android:id="@+id/buttonOption3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/button_selector"
+        android:text="เล่นกีฬา"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toStartOf="@+id/buttonOption2"
+        app:layout_constraintStart_toEndOf="@+id/buttonOption1"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <!-- ปุ่ม Next -->
+    <Button
+        android:id="@+id/buttonsave"
+        android:layout_width="93dp"
+        android:layout_height="93dp"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/cyclebutton"
+        android:text="Save"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonOption3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

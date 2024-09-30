@@ -37,7 +37,7 @@ class LoadingActivity : AppCompatActivity() {
                 startActivity(it)
                 finish()
             }
-        }, 3000) // เพิ่มเวลาการโหลดเป็น 3 วินาทีเพื่อให้เห็น Animation ชัดเจน
+        }, 1500) // เพิ่มเวลาการโหลดเป็น 3 วินาทีเพื่อให้เห็น Animation ชัดเจน
     }
 
     private fun startDotAnimation() {
