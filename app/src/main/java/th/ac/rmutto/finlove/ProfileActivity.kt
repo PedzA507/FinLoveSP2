@@ -197,12 +197,19 @@ class ProfileActivity : AppCompatActivity() {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
             selectedImageUri = data.data
-            imageViewProfile.setImageURI(selectedImageUri)
+
+            // แสดงภาพที่เลือกทันทีใน imageViewProfile
+            Glide.with(this)
+                .load(selectedImageUri)
+                .placeholder(R.drawable.img_1)  // ภาพขณะโหลด
+                .error(R.drawable.error)        // ภาพเมื่อเกิดข้อผิดพลาด
+                .into(imageViewProfile)
         } else if (requestCode == REQUEST_CODE_CHANGE_PREFERENCES && resultCode == RESULT_OK && data != null) {
             val updatedPreferences = data.getStringExtra("preferences")
             updateUserPreferences(updatedPreferences)
         }
     }
+
 
     private fun updateUserPreferences(preferences: String?) {
         preferenceContainer.removeAllViews()
