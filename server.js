@@ -630,7 +630,6 @@ app.post('/api/user/update_preferences/:id', async function (req, res) {
 
 
 
-// API สำหรับการอัปเดตรูปภาพและข้อมูลผู้ใช้ (PUT)
 app.put('/api/user/update/:id', upload.single('image'), async function (req, res) {
     const { id } = req.params;
     let { username, email, firstname, lastname, nickname, gender, interestGender, height, home, DateBirth, education, goal, preferences } = req.body;
@@ -700,16 +699,21 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
         // Handle image update
         let currentImageFile = image;
         if (!currentImageFile) {
-            currentImageFile = currentUser.imageFile;
+            // ถ้าไม่มีภาพใหม่และผู้ใช้ไม่มีภาพเก่าอยู่ในระบบ ให้ currentImageFile เป็นค่าว่าง
+            currentImageFile = currentUser.imageFile || '';
         } else {
+            // ถ้ามีการอัปโหลดภาพใหม่ ให้ทำการตั้งชื่อไฟล์ใหม่และอัปเดต
             const ext = path.extname(req.file.originalname);
             const newFileName = `${uuidv4()}${ext}`;
             fs.renameSync(req.file.path, path.join('uploads', newFileName));
             currentImageFile = newFileName;
 
-            const oldImagePath = path.join(__dirname, 'uploads', currentUser.imageFile);
-            if (fs.existsSync(oldImagePath)) {
-                fs.unlinkSync(oldImagePath);
+            // ลบภาพเก่าถ้ามีอยู่
+            if (currentUser.imageFile && currentUser.imageFile !== '') {
+                const oldImagePath = path.join(__dirname, 'uploads', currentUser.imageFile);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath);
+                }
             }
         }
 
@@ -732,6 +736,7 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
         res.status(500).send({ message: "การอัปเดตข้อมูลผู้ใช้ล้มเหลว", status: false });
     }
 });
+
 
 
 
