@@ -16,9 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
-        android:shadowColor="#BC000000"
-        android:shadowDy="8"
-        android:shadowRadius="4"
         android:text="FINLOVE"
         android:textColor="@color/teal_200"
         android:textSize="60sp"
@@ -30,19 +27,21 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
 
-    <android.widget.Button
+
+    <android.widget.ImageButton
         android:id="@+id/btn_next"
-        android:layout_width="93dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="344dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="368dp"
         android:layout_marginEnd="7dp"
         android:background="@drawable/cyclebutton"
-        android:text="NEXT"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:contentDescription="Next"
+        android:scaleType="centerInside"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:src="@drawable/ic_arrow_right"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.89"
+        app:layout_constraintHorizontal_bias="0.911"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/registerTitle" />
 

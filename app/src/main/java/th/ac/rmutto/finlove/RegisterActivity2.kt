@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +25,7 @@ class RegisterActivity2 : AppCompatActivity() {
         val editTextFirstname = findViewById<EditText>(R.id.editTextFirstname)
         val editTextLastname = findViewById<EditText>(R.id.editTextLastname)
         val editTextNickname = findViewById<EditText>(R.id.editTextNickname)
-        val buttonNextStep2 = findViewById<Button>(R.id.buttonNextStep2)
+        val buttonNextStep2 = findViewById<ImageButton>(R.id.buttonNextStep2)
 
         buttonNextStep2.setOnClickListener {
             val firstname = editTextFirstname.text.toString()

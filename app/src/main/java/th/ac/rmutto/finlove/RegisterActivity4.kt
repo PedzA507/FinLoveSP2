@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +33,7 @@ class RegisterActivity4 : AppCompatActivity() {
         val buttonPhd = findViewById<Button>(R.id.buttonPhd)
         val editTextHome = findViewById<EditText>(R.id.editTextHome)
         val buttonSelectDate = findViewById<Button>(R.id.buttonSelectDate)
-        val buttonNextStep4 = findViewById<Button>(R.id.buttonNextStep4)
+        val buttonNextStep4 = findViewById<ImageButton>(R.id.buttonNextStep4)
 
         // ฟังก์ชันสำหรับจัดการการคลิกปุ่มระดับการศึกษา
         setupEducationButton(buttonHighSchool, "มัธยมศึกษา")

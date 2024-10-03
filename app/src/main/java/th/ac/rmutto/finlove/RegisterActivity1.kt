@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +34,7 @@ class RegisterActivity1 : AppCompatActivity() {
         val editTextEmail = findViewById<EditText>(R.id.editTextEmail)
         val editTextUsername = findViewById<EditText>(R.id.editTextUsername)
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
-        val buttonNext = findViewById<Button>(R.id.buttonNext)
+        val buttonNext = findViewById<ImageButton>(R.id.buttonNext)
 
         buttonNext.setOnClickListener {
             val email = editTextEmail.text.toString()

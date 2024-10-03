@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +29,7 @@ class RegisterActivity3 : AppCompatActivity() {
         val buttonOther = findViewById<Button>(R.id.buttonOther)
         val editTextHeight = findViewById<EditText>(R.id.editTextHeight)
         val editTextPhoneNumber = findViewById<EditText>(R.id.editTextPhoneNumber)
-        val buttonNextStep3 = findViewById<Button>(R.id.buttonNextStep3)
+        val buttonNextStep3 = findViewById<ImageButton>(R.id.buttonNextStep3)
 
         // ฟังก์ชันสำหรับจัดการการคลิกปุ่มเพศ
         setupGenderButton(buttonMale, "Male")

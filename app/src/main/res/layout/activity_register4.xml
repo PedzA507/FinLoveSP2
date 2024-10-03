@@ -1,118 +1,138 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/newbg"
     tools:context=".RegisterActivity4">
 
+    <!-- หัวข้อเกี่ยวกับคุณ -->
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="180dp"
         android:text="เกี่ยวกับคุณ"
-        android:shadowColor="#BC000000"
-        android:shadowDy="8"
-        android:shadowRadius="4"
         android:textAlignment="center"
-        android:textColor="#00BCD4"
-        android:textSize="48sp"
+        android:textColor="@color/teal_200"
+        android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- ปุ่มตัวเลือกระดับการศึกษา มัธยมศึกษา -->
+    <!-- ป้ายแสดงระดับการศึกษา -->
+    <TextView
+        android:id="@+id/textViewEducation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ระดับการศึกษา"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="28dp" />
+
+    <!-- ปุ่มระดับการศึกษา -->
     <Button
         android:id="@+id/buttonHighSchool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:background="@drawable/button_selector"
         android:text="มัธยมศึกษา"
         android:textColor="@drawable/text_selector"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/buttonBachelor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+        app:layout_constraintTop_toBottomOf="@id/textViewEducation" />
 
-    <!-- ปุ่มตัวเลือกระดับการศึกษา ปริญญาตรี -->
     <Button
         android:id="@+id/buttonBachelor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:background="@drawable/button_selector"
         android:text="ปริญญาตรี"
         android:textColor="@drawable/text_selector"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/buttonHighSchool"
-        app:layout_constraintEnd_toStartOf="@+id/buttonMaster"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+        app:layout_constraintTop_toBottomOf="@id/textViewEducation" />
 
-    <!-- ปุ่มตัวเลือกระดับการศึกษา ปริญญาโท -->
     <Button
         android:id="@+id/buttonMaster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/button_selector"
         android:text="ปริญญาโท"
         android:textColor="@drawable/text_selector"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/buttonBachelor"
-        app:layout_constraintEnd_toStartOf="@+id/buttonPhd"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+        app:layout_constraintTop_toBottomOf="@id/textViewEducation" />
 
-    <!-- ปุ่มตัวเลือกระดับการศึกษา ปริญญาเอก -->
     <Button
         android:id="@+id/buttonPhd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:background="@drawable/button_selector"
         android:text="ปริญญาเอก"
         android:textColor="@drawable/text_selector"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/buttonMaster"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+        app:layout_constraintTop_toBottomOf="@id/textViewEducation"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- ปุ่มกำลังทำงาน -->
+    <Button
+        android:id="@+id/buttonWorking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_selector"
+        android:text="กำลังทำงาน"
+        android:textColor="@drawable/text_selector"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/buttonHighSchool"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ที่อยู่ -->
     <EditText
         android:id="@+id/editTextHome"
         android:layout_width="300dp"
         android:layout_height="55dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/edittext"
-        android:hint="Home Address"
+        android:hint="อาศัยอยู่ที่"
         android:paddingLeft="16dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPhd"
-        app:layout_constraintWidth_percent="0.7" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonWorking" />
 
+    <!-- วันเดือนปีเกิด -->
     <Button
         android:id="@+id/buttonSelectDate"
         android:layout_width="300dp"
         android:layout_height="55dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/edittext"
-        android:text="เลือก วัน/เดือน/ปีเกิด"
+        android:text="วัน/เดือน/ปีเกิด"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextHome"
-        app:layout_constraintWidth_percent="0.7" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextHome" />
 
-    <Button
+    <!-- ปุ่มถัดไป -->
+    <ImageButton
         android:id="@+id/buttonNextStep4"
-        android:layout_width="93dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="64dp"
         android:background="@drawable/cyclebutton"
-        android:text="Next"
-        android:textColor="#FFFFFF"
+        android:src="@drawable/ic_arrow_right"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonSelectDate" />
