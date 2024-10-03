@@ -9,7 +9,6 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
-
 const app = express();
 const saltRounds = 10;
 
@@ -36,7 +35,6 @@ db.connect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
-
 
 // Nodemailer Transporter Configuration
 const transporter = nodemailer.createTransport({
@@ -67,16 +65,20 @@ app.post('/api/login', async function(req, res) {
 
             // ตรวจสอบสถานะของบัญชีว่าถูกล็อกหรือไม่
             if (isActive !== 1) {
+                // อัปเดต lastAttemptTime ทุกครั้งที่มีการพยายามเข้าสู่ระบบ
+                await db.promise().query("UPDATE User SET lastAttemptTime = NOW() WHERE UserId = ?", [user.UserId]);
                 return res.send({ "message": "บัญชีนี้ถูกปิดใช้งาน", "status": false });
             }
 
             // ตรวจสอบจำนวนครั้งในการพยายามเข้าสู่ระบบในช่วงเวลา 24 ชั่วโมง
             const now = new Date();
-            const lastAttempt = new Date(lastAttemptTime);
+            const lastAttempt = lastAttemptTime ? new Date(lastAttemptTime) : new Date(0); // ถ้าไม่มีค่า lastAttemptTime ให้ใช้วันที่ 0
             const diffTime = Math.abs(now - lastAttempt);
             const diffHours = Math.ceil(diffTime / (1000 * 60 * 60)); // แปลงเป็นชั่วโมง
 
             if (loginAttempt > 5 && diffHours < 24) {
+                // อัปเดต lastAttemptTime ทุกครั้งที่มีการพยายามเข้าสู่ระบบ
+                await db.promise().query("UPDATE User SET lastAttemptTime = NOW() WHERE UserId = ?", [user.UserId]);
                 return res.send({ 
                     "message": "บัญชีคุณถูกล็อคเนื่องจากมีการพยายามเข้าสู่ระบบเกินกำหนด", 
                     "status": false 
@@ -88,43 +90,51 @@ app.post('/api/login', async function(req, res) {
 
             if (match) {
                 // รีเซ็ตจำนวนครั้งการพยายามเข้าสู่ระบบและ lastAttemptTime
-                const updateSql = "UPDATE User SET loginAttempt = 0, lastAttemptTime = NULL, isActive = 1 WHERE UserId = ?";
-                await db.promise().query(updateSql, [user.UserId]);
+                const updateSql = "UPDATE User SET loginAttempt = 0, lastAttemptTime = NOW(), isActive = 1 WHERE UserId = ?";
+                const [updateResult] = await db.promise().query(updateSql, [user.UserId]);
 
-                res.send({ 
-                    "message": "เข้าสู่ระบบสำเร็จ", 
-                    "status": true, 
-                    "userID": user.UserId 
-                });
+                // ตรวจสอบว่ามีการอัปเดตสำเร็จหรือไม่
+                if (updateResult.affectedRows > 0) {
+                    return res.send({ 
+                        "message": "เข้าสู่ระบบสำเร็จ", 
+                        "status": true, 
+                        "userID": user.UserId 
+                    });
+                } else {
+                    return res.send({ "message": "เกิดข้อผิดพลาดในการอัปเดตข้อมูล", "status": false });
+                }
             } else {
                 // เพิ่มจำนวนครั้งที่พยายามเข้าสู่ระบบและอัปเดต lastAttemptTime
                 const updateSql = "UPDATE User SET loginAttempt = loginAttempt + 1, lastAttemptTime = NOW() WHERE UserId = ?";
-                await db.promise().query(updateSql, [user.UserId]);
+                const [updateResult] = await db.promise().query(updateSql, [user.UserId]);
 
-                if (loginAttempt >= 2) {
-                    res.send({ 
-                        "message": "บัญชีคุณถูกล็อคเนื่องจากมีการพยายามเข้าสู่ระบบเกินกำหนด", 
-                        "status": false 
-                    });
+                // ตรวจสอบว่ามีการอัปเดตสำเร็จหรือไม่
+                if (updateResult.affectedRows > 0) {
+                    if (loginAttempt >= 2) {
+                        return res.send({ 
+                            "message": "บัญชีคุณถูกล็อคเนื่องจากมีการพยายามเข้าสู่ระบบเกินกำหนด", 
+                            "status": false 
+                        });
+                    } else {
+                        return res.send({ "message": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", "status": false });
+                    }
                 } else {
-                    res.send({ "message": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", "status": false });
+                    return res.send({ "message": "เกิดข้อผิดพลาดในการอัปเดตข้อมูล", "status": false });
                 }
             }
         } else {
-            res.send({ "message": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", "status": false });
+            return res.send({ "message": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", "status": false });
         }
     } catch (err) {
         console.error('Error during login process:', err);
-        res.status(500).send({ "message": "เกิดข้อผิดพลาดในการเชื่อมต่อ", "status": false });
+        return res.status(500).send({ "message": "เกิดข้อผิดพลาดในการเชื่อมต่อ", "status": false });
     }
 });
-
-
 
 // Logout endpoint
 app.post('/api/logout/:id', async (req, res) => {
     const { id } = req.params;
-    const updateSql = "UPDATE User SET isActive = 1, loginAttempt = 0, lastAttemptTime = NULL WHERE UserId = ?";
+    const updateSql = "UPDATE User SET isActive = 1, loginAttempt = 0 WHERE UserId = ?";
 
     try {
         await db.promise().query(updateSql, [id]);
@@ -135,29 +145,34 @@ app.post('/api/logout/:id', async (req, res) => {
     }
 });
 
-
-
-
 // API สำหรับการลงทะเบียน (ขั้นตอนที่ 1)
 app.post('/api/register1', async function(req, res) {
     const { email, username, password } = req.body;
-    const sqlCheck = "SELECT * FROM User WHERE username = ?";
+    
+    // ตรวจสอบว่ามีชื่อผู้ใช้หรืออีเมลซ้ำหรือไม่
+    const sqlCheck = "SELECT * FROM User WHERE username = ? OR email = ?";
 
     try {
-        const result = await db.promise().query(sqlCheck, [username]);
+        const result = await db.promise().query(sqlCheck, [username, email]);
         if (result[0].length > 0) {
-            res.send({ "message": "ชื่อผู้ใช้นี้มีอยู่แล้ว", "status": false });
+            const existingUser = result[0][0];
+            if (existingUser.username === username) {
+                return res.send({ "message": "ชื่อผู้ใช้นี้มีอยู่แล้ว", "status": false });
+            } else if (existingUser.email === email) {
+                return res.send({ "message": "อีเมลนี้มีอยู่แล้ว", "status": false });
+            }
         } else {
             const hashedPassword = await bcrypt.hash(password, saltRounds);
             const sqlInsert = "INSERT INTO User(username, password, email) VALUES (?, ?, ?);";
             const insertResult = await db.promise().query(sqlInsert, [username, hashedPassword, email]);
-            res.send({ "message": "ลงทะเบียนสำเร็จ", "status": true, "userID": insertResult[0].insertId });
+            return res.send({ "message": "ลงทะเบียนสำเร็จ", "status": true, "userID": insertResult[0].insertId });
         }
     } catch (err) {
         console.error('Database error:', err);
-        res.status(500).send({ "message": "เกิดข้อผิดพลาดในการลงทะเบียน", "status": false });
+        return res.status(500).send({ "message": "เกิดข้อผิดพลาดในการลงทะเบียน", "status": false });
     }
 });
+
 
 
 
@@ -357,7 +372,7 @@ app.post('/api/request-pin', async (req, res) => {
 
         await transporter.sendMail(mailOptions);
 
-        res.send({ message: "PIN ถูกส่งไปยังอีเมลของคุณ", status: true });
+        res.send("PIN ถูกส่งไปยังอีเมลของคุณ");
     } catch (err) {
         console.error('Error sending PIN:', err);
         res.status(500).send({ message: "เกิดข้อผิดพลาดในการส่ง PIN", status: false });
