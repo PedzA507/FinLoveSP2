@@ -8,6 +8,7 @@ data class User(
     val lastName: String,
     val nickname: String,
     val gender: String,
+    val interestGender: String,
     val height: Double,
     val home: String,
     val dateBirth: String,

@@ -20,7 +20,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
@@ -38,15 +37,19 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var textViewHome: EditText
     private lateinit var buttonSelectDateProfile: Button
     private lateinit var imageViewProfile: ImageView
+    private lateinit var spinnerInterestGender: Spinner
 
-    // Spinners for education, goal and preference
+    // Spinners for education, goal
     private lateinit var spinnerEducation: Spinner
     private lateinit var spinnerGoal: Spinner
-    private lateinit var spinnerPreference: Spinner
+
+    // Layout for preferences
+    private lateinit var preferenceContainer: LinearLayout
 
     private lateinit var buttonEditProfile: ImageButton
     private lateinit var buttonSaveProfile: Button
     private lateinit var buttonChangeImage: Button
+    private lateinit var buttonEditPreferences: Button
     private lateinit var buttonLogout: Button
     private lateinit var buttonDeleteAccount: Button
     private lateinit var toolbar: Toolbar
@@ -54,6 +57,7 @@ class ProfileActivity : AppCompatActivity() {
     private var selectedDateOfBirth: String? = null
     private var isEditing = false
     private val PICK_IMAGE_REQUEST = 1
+    private val REQUEST_CODE_CHANGE_PREFERENCES = 1001
 
     private lateinit var originalUser: User // Original user data
     private lateinit var currentUser: User // Edited user data
@@ -82,15 +86,18 @@ class ProfileActivity : AppCompatActivity() {
         textViewFirstName = findViewById(R.id.textViewFirstName)
         textViewLastName = findViewById(R.id.textViewLastName)
         spinnerGender = findViewById(R.id.spinnerGender)
+        spinnerInterestGender = findViewById(R.id.spinnerInterestGender)
         textViewHeight = findViewById(R.id.textViewHeight)
         textViewHome = findViewById(R.id.textViewHome)
         buttonSelectDateProfile = findViewById(R.id.buttonSelectDateProfile)
         imageViewProfile = findViewById(R.id.imageViewProfile)
 
-        // Initialize new Spinners
+        // Initialize Spinners
         spinnerEducation = findViewById(R.id.spinnerEducation)
         spinnerGoal = findViewById(R.id.spinnerGoal)
-        spinnerPreference = findViewById(R.id.spinnerPreference)
+
+        // Initialize preference container
+        preferenceContainer = findViewById(R.id.preferenceContainer)
 
         // Initialize buttons
         buttonChangeImage = findViewById(R.id.buttonChangeImage)
@@ -98,6 +105,7 @@ class ProfileActivity : AppCompatActivity() {
         buttonSaveProfile = findViewById(R.id.buttonSaveProfile)
         buttonLogout = findViewById(R.id.buttonLogout)
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount)
+        buttonEditPreferences = findViewById(R.id.buttonEditPreferences)
 
         // Set adapters for Spinners
         setupSpinners()
@@ -105,10 +113,11 @@ class ProfileActivity : AppCompatActivity() {
         // Initially hide buttons and some fields
         buttonChangeImage.visibility = View.GONE
         buttonSaveProfile.visibility = View.GONE
+        buttonEditPreferences.visibility = View.GONE // Initially hide the preferences button
 
         // Initially disable editing for gender and preferences
         spinnerGender.isEnabled = false
-        spinnerPreference.isEnabled = false
+        spinnerInterestGender.isEnabled = false
 
         // Initially hide all fields except profile image, firstname, lastname, nickname, and gender
         hideFieldsForViewingMode()
@@ -120,14 +129,11 @@ class ProfileActivity : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                // ตั้งค่าให้ไม่มีเวลาในรูปแบบ YYYY-MM-DD
                 selectedDateOfBirth = "$selectedYear-${String.format("%02d", selectedMonth + 1)}-${String.format("%02d", selectedDay)}"
                 buttonSelectDateProfile.text = selectedDateOfBirth
             }, year, month, day)
 
-            // กำหนดวันที่สูงสุดที่เลือกได้คือวันที่ปัจจุบัน
             datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
-
             datePickerDialog.show()
         }
 
@@ -136,64 +142,89 @@ class ProfileActivity : AppCompatActivity() {
                 .setTitle("Delete Account")
                 .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
                 .setPositiveButton("YES") { _, _ ->
-                    deleteUser(userID) // Call deleteUser function to delete account
+                    deleteUser(userID)
                 }
                 .setNegativeButton("NO", null)
                 .show()
         }
 
-        // Edit profile functionality
         buttonEditProfile.setOnClickListener {
             isEditing = !isEditing
             if (isEditing) {
                 setEditingEnabled(true)
-                spinnerGender.isEnabled = true // Enable gender selection when editing
-                spinnerPreference.isEnabled = true // Enable preference selection when editing
+                spinnerGender.isEnabled = true
+                spinnerInterestGender.isEnabled = true
                 buttonChangeImage.visibility = View.VISIBLE
                 buttonSaveProfile.visibility = View.VISIBLE
+                buttonEditPreferences.visibility = View.VISIBLE
 
-                currentUser = originalUser.copy() // Clone original data for editing
-                showAllFields() // Show all fields for editing
+                currentUser = originalUser.copy()
+                showAllFields()
             } else {
                 setEditingEnabled(false)
-                spinnerGender.isEnabled = false // Disable gender selection when not editing
-                spinnerPreference.isEnabled = false // Disable preference selection when not editing
+                spinnerGender.isEnabled = false
+                spinnerInterestGender.isEnabled = false
                 buttonChangeImage.visibility = View.GONE
                 buttonSaveProfile.visibility = View.GONE
-                restoreOriginalUserInfo() // Restore original data
-                hideFieldsForViewingMode() // Hide fields not in viewing mode
+                buttonEditPreferences.visibility = View.GONE
+                restoreOriginalUserInfo()
+                hideFieldsForViewingMode()
             }
         }
 
-        // Save profile functionality
         buttonSaveProfile.setOnClickListener {
             saveUserInfo(userID)
         }
 
-        // Change image functionality
         buttonChangeImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
 
-        // Logout functionality
+        buttonEditPreferences.setOnClickListener {
+            val intent = Intent(this, ChangePreferenceActivity::class.java)
+            intent.putExtra("userID", userID)
+            startActivityForResult(intent, REQUEST_CODE_CHANGE_PREFERENCES)
+        }
+
         buttonLogout.setOnClickListener {
             logoutUser(userID)
         }
     }
 
-    // Handle the result of image selection
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
-            selectedImageUri = data.data // เก็บ Uri ของรูปภาพที่เลือก
-            imageViewProfile.setImageURI(selectedImageUri) // แสดงภาพที่เลือกใน ImageView
+            selectedImageUri = data.data
+
+            // แสดงภาพที่เลือกทันทีใน imageViewProfile
+            Glide.with(this)
+                .load(selectedImageUri)
+                .placeholder(R.drawable.img_1)  // ภาพขณะโหลด
+                .error(R.drawable.error)        // ภาพเมื่อเกิดข้อผิดพลาด
+                .into(imageViewProfile)
+        } else if (requestCode == REQUEST_CODE_CHANGE_PREFERENCES && resultCode == RESULT_OK && data != null) {
+            val updatedPreferences = data.getStringExtra("preferences")
+            updateUserPreferences(updatedPreferences)
+        }
+    }
+
+
+    private fun updateUserPreferences(preferences: String?) {
+        preferenceContainer.removeAllViews()
+
+        val preferencesArray = preferences?.split(",") ?: listOf()
+        for (preference in preferencesArray) {
+            val preferenceTextView = TextView(this)
+            preferenceTextView.text = preference
+            preferenceTextView.setBackgroundResource(R.drawable.rounded_preference_box)
+            preferenceTextView.setPadding(16, 16, 16, 16)
+            preferenceContainer.addView(preferenceTextView)
         }
     }
 
     private fun setupSpinners() {
-        // Setup the education spinner
         val educationAdapter = ArrayAdapter.createFromResource(
             this,
             R.array.education_levels,
@@ -202,7 +233,6 @@ class ProfileActivity : AppCompatActivity() {
         educationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerEducation.adapter = educationAdapter
 
-        // Setup the goal spinner
         val goalAdapter = ArrayAdapter.createFromResource(
             this,
             R.array.goal_options,
@@ -211,16 +241,6 @@ class ProfileActivity : AppCompatActivity() {
         goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerGoal.adapter = goalAdapter
 
-        // Setup the preference spinner
-        val preferenceAdapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.preference_options,
-            android.R.layout.simple_spinner_item
-        )
-        preferenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerPreference.adapter = preferenceAdapter
-
-        // Setup the gender spinner
         val genderAdapter = ArrayAdapter.createFromResource(
             this,
             R.array.gender_array,
@@ -228,7 +248,16 @@ class ProfileActivity : AppCompatActivity() {
         )
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerGender.adapter = genderAdapter
+
+        val interestGenderAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.interest_gender_array,
+            android.R.layout.simple_spinner_item
+        )
+        interestGenderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerInterestGender.adapter = interestGenderAdapter
     }
+
 
     private fun fetchUserInfo(userID: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -272,7 +301,20 @@ class ProfileActivity : AppCompatActivity() {
         textViewHome.setText(user.home)
         buttonSelectDateProfile.text = user.dateBirth
 
-        // Set Spinner selections safely
+        // เคลียร์ preferenceContainer ก่อนเพิ่มค่าลงไปใหม่
+        preferenceContainer.removeAllViews()
+
+        // แยก preferences ออกมาและสร้างกล่องแยกแต่ละกล่อง
+        val preferencesArray = user.preferences?.split(",") ?: listOf()
+        for (preference in preferencesArray) {
+            val preferenceTextView = TextView(this)
+            preferenceTextView.text = preference
+            preferenceTextView.setBackgroundResource(R.drawable.rounded_preference_box)
+            preferenceTextView.setPadding(16, 16, 16, 16)
+            preferenceContainer.addView(preferenceTextView)
+        }
+
+        // ตั้งค่า Spinner selections สำหรับ Gender, Education, Goal, Interest Gender
         val genderIndex = resources.getStringArray(R.array.gender_array).indexOf(user.gender)
         if (genderIndex >= 0) {
             spinnerGender.setSelection(genderIndex)
@@ -288,9 +330,9 @@ class ProfileActivity : AppCompatActivity() {
             spinnerGoal.setSelection(goalIndex)
         }
 
-        val preferenceIndex = resources.getStringArray(R.array.preference_options).indexOf(user.preferences)
-        if (preferenceIndex >= 0) {
-            spinnerPreference.setSelection(preferenceIndex)
+        val interestGenderIndex = resources.getStringArray(R.array.interest_gender_array).indexOf(user.interestGender)
+        if (interestGenderIndex >= 0) {
+            spinnerInterestGender.setSelection(interestGenderIndex)
         }
 
         user.imageFile?.let { loadImage(it, imageViewProfile) }
@@ -306,9 +348,9 @@ class ProfileActivity : AppCompatActivity() {
                 val client = OkHttpClient()
 
                 val selectedGender = spinnerGender.selectedItem.toString()
+                val selectedInterestGender = spinnerInterestGender.selectedItem.toString()
                 val selectedEducation = spinnerEducation.selectedItem.toString()
                 val selectedGoal = spinnerGoal.selectedItem.toString()
-                val selectedPreference = spinnerPreference.selectedItem.toString()
 
                 // ตรวจสอบว่ามีการเลือกวันที่หรือไม่ ถ้าไม่เลือก ให้ส่งค่าว่างไป
                 val formattedDateBirth = if (selectedDateOfBirth.isNullOrBlank()) null else selectedDateOfBirth?.substring(0, 10)
@@ -321,9 +363,9 @@ class ProfileActivity : AppCompatActivity() {
                     .addFormDataPart("firstname", textViewFirstName.text.toString())
                     .addFormDataPart("lastname", textViewLastName.text.toString())
                     .addFormDataPart("gender", selectedGender)
+                    .addFormDataPart("interestGender", selectedInterestGender)
                     .addFormDataPart("education", selectedEducation)
                     .addFormDataPart("goal", selectedGoal)
-                    .addFormDataPart("preferences", selectedPreference)
                     .addFormDataPart("height", textViewHeight.text.toString())
                     .addFormDataPart("home", textViewHome.text.toString())
 
@@ -366,9 +408,10 @@ class ProfileActivity : AppCompatActivity() {
 
                         setEditingEnabled(false)
                         spinnerGender.isEnabled = false // Disable gender after saving
-                        spinnerPreference.isEnabled = false // Disable preference after saving
+                        spinnerInterestGender.isEnabled = false // Disable interest gender after saving
                         buttonChangeImage.visibility = View.GONE
                         buttonSaveProfile.visibility = View.GONE
+                        buttonEditPreferences.visibility = View.GONE
                         hideFieldsForViewingMode()
                     } else {
                         val errorResponse = response.body?.string()
@@ -392,9 +435,9 @@ class ProfileActivity : AppCompatActivity() {
         textViewFirstName.isEnabled = enabled
         textViewLastName.isEnabled = enabled
         spinnerGender.isEnabled = enabled
+        spinnerInterestGender.isEnabled = enabled
         spinnerEducation.isEnabled = enabled
         spinnerGoal.isEnabled = enabled
-        spinnerPreference.isEnabled = enabled
         textViewHeight.isEnabled = enabled
         textViewHome.isEnabled = enabled
         buttonSelectDateProfile.isEnabled = enabled
@@ -410,7 +453,6 @@ class ProfileActivity : AppCompatActivity() {
         buttonSelectDateProfile.visibility = View.VISIBLE
         spinnerGoal.visibility = View.VISIBLE
         spinnerEducation.visibility = View.VISIBLE
-        spinnerPreference.visibility = View.VISIBLE
     }
 
     private fun hideFieldsForViewingMode() {
@@ -422,7 +464,6 @@ class ProfileActivity : AppCompatActivity() {
         spinnerGoal.visibility = View.GONE
         spinnerEducation.visibility = View.GONE
     }
-
 
     private fun loadImage(url: String, imageView: ImageView) {
         Glide.with(this)
@@ -442,6 +483,7 @@ class ProfileActivity : AppCompatActivity() {
             firstName = jsonObject.optString("firstname", ""),
             lastName = jsonObject.optString("lastname", ""),
             gender = jsonObject.optString("gender", ""),
+            interestGender = jsonObject.optString("interestGender", ""),
             education = jsonObject.optString("education", ""),
             goal = jsonObject.optString("goal", ""),
             preferences = jsonObject.optString("preferences", ""),

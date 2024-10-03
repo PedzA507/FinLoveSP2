@@ -3,7 +3,7 @@
     <string name="title_Main">Main</string>
     <string name="title_Message">Message</string>
     <string name="title_Profile">Profile</string>
-    <string name="root_url">http://192.168.1.39:4000</string>
+    <string name="root_url">http://10.13.1.219:4000</string>
     <string-array name="education_levels">
         <item>มัธยมศึกษา</item>
         <item>ปริญญาตรี</item>
@@ -30,4 +30,11 @@
         <item>Female</item>
         <item>Other</item>
     </string-array>
+
+    <string-array name="interest_gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

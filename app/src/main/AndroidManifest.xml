@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Finlove.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".ChangePreferenceActivity"
+            android:exported="false" />
+        <activity
             android:name=".MyAppGlideModule"
             android:exported="false" />
         <activity
