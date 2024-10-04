@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_selector"
-        android:text="ลดน้ำหนัก"
+        android:text="หาคู่รักที่จริงใจ"
         android:textColor="@drawable/text_selector"
         app:layout_constraintEnd_toStartOf="@+id/buttonGoal2"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_selector"
-        android:text="เพิ่มกล้ามเนื้อ"
+        android:text="หาคู่เดทช่วงสั้นๆ"
         android:textColor="@drawable/text_selector"
         app:layout_constraintStart_toEndOf="@+id/buttonGoal1"
         app:layout_constraintEnd_toStartOf="@+id/buttonGoal3"
@@ -59,13 +59,26 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_selector"
-        android:text="ออกกำลังกายเพื่อสุขภาพ"
+        android:text="หาเพื่อนใหม่"
         android:textColor="@drawable/text_selector"
         app:layout_constraintStart_toEndOf="@+id/buttonGoal2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
 
     <!-- ปุ่ม Next -->
+
+    <Button
+        android:id="@+id/buttonGoal4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/button_selector"
+        android:text="ยังไม่แน่ใจ"
+        android:textColor="@drawable/text_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonGoal2"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
+
     <Button
         android:id="@+id/buttonNextStep6"
         android:layout_width="93dp"

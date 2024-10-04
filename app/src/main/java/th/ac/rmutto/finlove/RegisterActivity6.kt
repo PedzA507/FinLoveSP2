@@ -25,12 +25,14 @@ class RegisterActivity6 : AppCompatActivity() {
         val buttonGoal1 = findViewById<Button>(R.id.buttonGoal1)
         val buttonGoal2 = findViewById<Button>(R.id.buttonGoal2)
         val buttonGoal3 = findViewById<Button>(R.id.buttonGoal3)
+        val buttonGoal4 = findViewById<Button>(R.id.buttonGoal4)
         val buttonNextStep6 = findViewById<Button>(R.id.buttonNextStep6)
 
         // ฟังก์ชันสำหรับจัดการการคลิกปุ่มเป้าหมาย
-        setupGoalButton(buttonGoal1, "ลดน้ำหนัก")
-        setupGoalButton(buttonGoal2, "เพิ่มกล้ามเนื้อ")
-        setupGoalButton(buttonGoal3, "ออกกำลังกายเพื่อสุขภาพ")
+        setupGoalButton(buttonGoal1, "หาคู่รักที่จริงใจ")
+        setupGoalButton(buttonGoal2, "หาคู่เดทช่วงสั้นๆ")
+        setupGoalButton(buttonGoal3, "หาเพื่อนใหม่")
+        setupGoalButton(buttonGoal4, "ยังไม่แน่ใจ")
 
         buttonNextStep6.setOnClickListener {
             if (selectedGoalID == null) {
@@ -81,9 +83,10 @@ class RegisterActivity6 : AppCompatActivity() {
     // ฟังก์ชันสำหรับแปลง goal เป็น goalID
     private fun getGoalID(goal: String): Int {
         return when (goal) {
-            "ลดน้ำหนัก" -> 1
-            "เพิ่มกล้ามเนื้อ" -> 2
-            "ออกกำลังกายเพื่อสุขภาพ" -> 3
+            "หาคู่รักที่จริงใจ" -> 1
+            "หาคู่เดทช่วงสั้นๆ" -> 2
+            "หาเพื่อนใหม่" -> 3
+            "ยังไม่แน่ใจ" -> 4
             else -> -1
         }
     }

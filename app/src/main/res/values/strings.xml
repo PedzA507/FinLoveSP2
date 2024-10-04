@@ -3,26 +3,37 @@
     <string name="title_Main">Main</string>
     <string name="title_Message">Message</string>
     <string name="title_Profile">Profile</string>
-    <string name="root_url">http://10.13.1.219:4000</string>
+    <string name="root_url">http://192.168.1.49:4000</string>
     <string-array name="education_levels">
         <item>มัธยมศึกษา</item>
         <item>ปริญญาตรี</item>
         <item>ปริญญาโท</item>
         <item>ปริญญาเอก</item>
+        <item>กำลังทำงาน</item>
     </string-array>
 
     <!-- Goal options -->
     <string-array name="goal_options">
-        <item>ลดน้ำหนัก</item>
-        <item>เพิ่มกล้ามเนื้อ</item>
-        <item>ออกกำลังกายเพื่อสุขภาพ</item>
+        <item>หาคู่รักที่จริงใจ</item>
+        <item>หาคู่เดทช่วงสั้นๆ</item>
+        <item>หาเพื่อนใหม่</item>
+        <item>ยังไม่แน่ใจ</item>
     </string-array>
 
     <!-- Preference options -->
     <string-array name="preference_options">
-        <item>ดูหนัง</item>
-        <item>ฟังเพลง</item>
+        <item>ฟุตบอล</item>
+        <item>ภาพยนตร์</item>
+        <item>ท่องเที่ยว</item>
+        <item>อนิเมชั่น</item>
+        <item>ช็อปปิ้ง</item>
+        <item>เล่นดนตรี</item>
         <item>เล่นกีฬา</item>
+        <item>เล่นเกม</item>
+        <item>อ่านหนังสือ</item>
+        <item>ปาร์ตี้</item>
+        <item>สายควัน</item>
+        <item>ออกกำลังกาย</item>
     </string-array>
 
     <string-array name="gender_array">

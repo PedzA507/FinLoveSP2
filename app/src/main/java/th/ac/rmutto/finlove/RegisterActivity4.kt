@@ -40,6 +40,8 @@ class RegisterActivity4 : AppCompatActivity() {
         setupEducationButton(buttonBachelor, "ปริญญาตรี")
         setupEducationButton(buttonMaster, "ปริญญาโท")
         setupEducationButton(buttonPhd, "ปริญญาเอก")
+        setupEducationButton(buttonPhd, "กำลังทำงาน")
+
 
         // Set up DatePickerDialog
         buttonSelectDate.setOnClickListener {
@@ -132,6 +134,7 @@ class RegisterActivity4 : AppCompatActivity() {
             "ปริญญาตรี" -> 2
             "ปริญญาโท" -> 3
             "ปริญญาเอก" -> 4
+            "กำลังทำงาน" -> 5
             else -> -1
         }
     }
@@ -143,6 +146,7 @@ class RegisterActivity4 : AppCompatActivity() {
             findViewById<Button>(R.id.buttonBachelor).isSelected = false
             findViewById<Button>(R.id.buttonMaster).isSelected = false
             findViewById<Button>(R.id.buttonPhd).isSelected = false
+            findViewById<Button>(R.id.buttonWorking).isSelected = false
 
             // ตั้งค่าสำหรับปุ่มที่ถูกเลือก
             button.isSelected = true

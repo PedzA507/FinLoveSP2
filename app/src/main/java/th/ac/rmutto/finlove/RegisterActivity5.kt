@@ -31,9 +31,18 @@ class RegisterActivity5 : AppCompatActivity() {
         val buttonNextStep5 = findViewById<Button>(R.id.buttonNextStep5)
 
         // ฟังก์ชันสำหรับจัดการการคลิกปุ่ม
-        setupButton(buttonOption1, "ดูหนัง")
-        setupButton(buttonOption2, "ฟังเพลง")
-        setupButton(buttonOption3, "เล่นกีฬา")
+        setupButton(buttonOption1, "ฟุตบอล")
+        setupButton(buttonOption2, "ภาพยนตร์")
+        setupButton(buttonOption3, "ท่องเที่ยว")
+        setupButton(buttonOption1, "อนิเมชั่น")
+        setupButton(buttonOption2, "ช็อปปิ้ง")
+        setupButton(buttonOption3, "เล่นดนตรี")
+        setupButton(buttonOption1, "เล่นกีฬา")
+        setupButton(buttonOption2, "เล่นเกม")
+        setupButton(buttonOption3, "อ่านหนังสือ")
+        setupButton(buttonOption1, "ปาร์ตี้")
+        setupButton(buttonOption2, "สายควัน")
+        setupButton(buttonOption3, "ออกกำลังกาย")
 
         buttonNextStep5.setOnClickListener {
             if (selectedPreferences.isEmpty()) {
@@ -94,9 +103,18 @@ class RegisterActivity5 : AppCompatActivity() {
     // ฟังก์ชันสำหรับแปลง preference เป็น preferenceID ที่ถูกต้อง
     private fun getPreferenceID(preference: String): Int {
         return when (preference) {
-            "ดูหนัง" -> 1 // คืนค่าเป็น Int ของ PreferenceID
-            "ฟังเพลง" -> 2
-            "เล่นกีฬา" -> 3
+            "ฟุตบอล" -> 1
+            "ภาพยนตร์" -> 2
+            "ท่องเที่ยว" -> 3
+            "อนิเมชั่น" -> 4
+            "ช็อปปิ้ง" -> 5
+            "เล่นดนตรี" -> 6
+            "เล่นกีฬา" -> 7
+            "เล่นเกม" -> 8
+            "อ่านหนังสือ" -> 9
+            "ปาร์ตี้" -> 10
+            "สายควัน" -> 11
+            "ออกกำลังกาย" -> 12
             else -> -1
         }
     }
