@@ -31,6 +31,7 @@ class RegisterActivity4 : AppCompatActivity() {
         val buttonBachelor = findViewById<Button>(R.id.buttonBachelor)
         val buttonMaster = findViewById<Button>(R.id.buttonMaster)
         val buttonPhd = findViewById<Button>(R.id.buttonPhd)
+        val buttonWorking = findViewById<Button>(R.id.buttonWorking)
         val editTextHome = findViewById<EditText>(R.id.editTextHome)
         val buttonSelectDate = findViewById<Button>(R.id.buttonSelectDate)
         val buttonNextStep4 = findViewById<ImageButton>(R.id.buttonNextStep4)
@@ -40,7 +41,7 @@ class RegisterActivity4 : AppCompatActivity() {
         setupEducationButton(buttonBachelor, "ปริญญาตรี")
         setupEducationButton(buttonMaster, "ปริญญาโท")
         setupEducationButton(buttonPhd, "ปริญญาเอก")
-        setupEducationButton(buttonPhd, "กำลังทำงาน")
+        setupEducationButton(buttonWorking, "กำลังทำงาน")
 
 
         // Set up DatePickerDialog

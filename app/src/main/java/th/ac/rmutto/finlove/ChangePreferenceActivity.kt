@@ -31,9 +31,9 @@ class ChangePreferenceActivity : AppCompatActivity() {
         val buttonSave = findViewById<Button>(R.id.buttonsave)
 
         // ฟังก์ชันสำหรับจัดการการคลิกปุ่ม
-        setupButton(buttonOption1, "ดูหนัง")
-        setupButton(buttonOption2, "ฟังเพลง")
-        setupButton(buttonOption3, "เล่นกีฬา")
+        setupButton(buttonOption1, "ฟุตบอล")
+        setupButton(buttonOption2, "ภาพยนตร์")
+        setupButton(buttonOption3, "ท่องเที่ยว")
 
         buttonSave.setOnClickListener {
             if (selectedPreferences.isEmpty()) {
@@ -94,9 +94,9 @@ class ChangePreferenceActivity : AppCompatActivity() {
     // ฟังก์ชันสำหรับแปลง preference เป็น preferenceID ที่ถูกต้อง
     private fun getPreferenceID(preference: String): Int {
         return when (preference) {
-            "ดูหนัง" -> 1
-            "ฟังเพลง" -> 2
-            "เล่นกีฬา" -> 3
+            "ฟุตบอล" -> 1
+            "ภาพยนตร์" -> 2
+            "ท่องเที่ยว" -> 3
             else -> -1
         }
     }
