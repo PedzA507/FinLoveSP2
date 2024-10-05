@@ -148,7 +148,7 @@ app.post('/api/logout/:id', async (req, res) => {
 // API สำหรับการลงทะเบียน (ขั้นตอนที่ 1)
 app.post('/api/register1', async function(req, res) {
     const { email, username, password } = req.body;
-    
+
     // ตรวจสอบว่ามีชื่อผู้ใช้หรืออีเมลซ้ำหรือไม่
     const sqlCheck = "SELECT * FROM User WHERE username = ? OR email = ?";
 
@@ -162,10 +162,16 @@ app.post('/api/register1', async function(req, res) {
                 return res.send({ "message": "อีเมลนี้มีอยู่แล้ว", "status": false });
             }
         } else {
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
-            const sqlInsert = "INSERT INTO User(username, password, email) VALUES (?, ?, ?);";
-            const insertResult = await db.promise().query(sqlInsert, [username, hashedPassword, email]);
-            return res.send({ "message": "ลงทะเบียนสำเร็จ", "status": true, "userID": insertResult[0].insertId });
+            // เก็บข้อมูลของผู้ใช้ในหน่วยความจำ, session หรือส่งกลับไปที่แอป
+            return res.send({ 
+                "message": "ข้อมูลได้รับการเก็บไว้เรียบร้อย", 
+                "status": true,
+                "tempData": {
+                    "email": email,
+                    "username": username,
+                    "password": password // เก็บรหัสผ่านก่อน hash ไว้ก่อน
+                }
+            });
         }
     } catch (err) {
         console.error('Database error:', err);
@@ -173,97 +179,258 @@ app.post('/api/register1', async function(req, res) {
     }
 });
 
-
-
-
 // API สำหรับการลงทะเบียน (ขั้นตอนที่ 2)
 app.post('/api/register2', async function(req, res) {
-    const { firstname, lastname, nickname, userID } = req.body;
+    // ดึงข้อมูลจาก body
+    const { tempData, firstname, lastname, nickname } = req.body;
 
-    if (!userID || !firstname || !lastname || !nickname) {
-        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
+    // ตรวจสอบว่ามี tempData หรือไม่
+    if (!tempData) {
+        return res.status(400).send({ message: "tempData ไม่ถูกต้อง", status: false });
     }
 
-    const sqlUpdate = "UPDATE User SET firstname = ?, lastname = ?, nickname = ? WHERE UserId = ?";
+    // ดึงข้อมูลจาก tempData
+    const { email, username, password } = tempData;
 
-    try {
-        await db.promise().query(sqlUpdate, [firstname, lastname, nickname, userID]);
-        res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
-    } catch (err) {
-        console.error('Database update error:', err);
-        res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
+    // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
+    if (!email || !username || !password || !firstname || !lastname || !nickname) {
+        return res.status(400).send({ message: "ข้อมูลไม่ครบถ้วน", status: false });
     }
+
+    // เก็บข้อมูลทั้งหมดไว้ใน tempData เพื่อส่งกลับไปที่แอปโดยไม่บันทึกลง database
+    const tempUserData = {
+        email: email,
+        username: username,
+        password: password,
+        firstname: firstname,
+        lastname: lastname,
+        nickname: nickname
+    };
+
+    // ส่ง tempData กลับไปที่แอปเพื่อเก็บข้อมูลในขั้นตอนที่ 2
+    return res.send({
+        "message": "ข้อมูลได้รับการเก็บไว้ชั่วคราว รอการบันทึกในขั้นตอนที่ 3",
+        "status": true,
+        "tempData": tempUserData
+    });
 });
-
 
 
 // API สำหรับการลงทะเบียน (ขั้นตอนที่ 3)
 app.post('/api/register3', async function(req, res) {
-    const { gender, height, phonenumber, userID } = req.body;
+    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber } = req.body;
 
-    if (!userID || !gender || !height || !phonenumber) {
+    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber) {
+        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
+    }
+
+    // เก็บข้อมูลทั้งหมดและส่งกลับไปที่ client
+    const tempData = {
+        email: email,
+        username: username,
+        password: password,
+        firstname: firstname,
+        lastname: lastname,
+        nickname: nickname,
+        gender: gender,
+        height: height,
+        phonenumber: phonenumber
+    };
+
+    // ส่งข้อมูลกลับไปเพื่อเก็บชั่วคราว รอการบันทึกในขั้นตอนที่ 4
+    return res.send({
+        "message": "ข้อมูลถูกเก็บไว้ชั่วคราว รอการบันทึกในขั้นตอนที่ 4",
+        "status": true,
+        "tempData": tempData
+    });
+});
+
+
+app.post('/api/register4', async function(req, res) {
+    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, DateBirth, educationID } = req.body;
+
+    // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
+    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber || !home || !DateBirth || !educationID) {
+        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
+    }
+
+    // เก็บข้อมูลทั้งหมดใน tempData และส่งกลับไปที่ client โดยไม่บันทึกลงฐานข้อมูลในขั้นตอนนี้
+    const tempData = {
+        email: email,
+        username: username,
+        password: password,
+        firstname: firstname,
+        lastname: lastname,
+        nickname: nickname,
+        gender: gender,
+        height: height,
+        phonenumber: phonenumber,
+        home: home,
+        DateBirth: DateBirth,
+        educationID: educationID
+    };
+
+    // ส่งข้อมูลกลับไปเพื่อเก็บชั่วคราว รอการบันทึกในขั้นตอนที่ 5
+    return res.send({
+        "message": "ข้อมูลถูกเก็บไว้ชั่วคราว รอการบันทึกในขั้นตอนที่ 5",
+        "status": true,
+        "tempData": tempData
+    });
+});
+
+
+app.post('/api/register5', async function(req, res) {
+    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, DateBirth, educationID, preferences } = req.body;
+
+    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber || !home || !DateBirth || !educationID || !preferences) {
+        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
+    }
+
+    // เก็บข้อมูลทั้งหมดใน tempData และส่งกลับไปที่ client โดยไม่บันทึกลงฐานข้อมูลในขั้นตอนนี้
+    const tempData = {
+        email: email,
+        username: username,
+        password: password,
+        firstname: firstname,
+        lastname: lastname,
+        nickname: nickname,
+        gender: gender,
+        height: height,
+        phonenumber: phonenumber,
+        home: home,
+        DateBirth: DateBirth,
+        educationID: educationID,
+        preferences: preferences
+    };
+
+    // ส่งข้อมูลกลับไปเพื่อเก็บชั่วคราว รอการบันทึกในขั้นตอนที่ 6
+    return res.send({
+        "message": "ข้อมูลถูกเก็บไว้ชั่วคราว รอการบันทึกในขั้นตอนที่ 6",
+        "status": true,
+        "tempData": tempData
+    });
+});
+
+app.post('/api/register6', async function(req, res) {
+    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID } = req.body;
+
+    // ตรวจสอบข้อมูลว่าครบถ้วนหรือไม่
+    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber || !home || !dateOfBirth || !educationID || !preferences || !goalID) {
+        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
+    }
+
+    // เก็บข้อมูลทั้งหมดใน tempData และส่งกลับไปที่ client โดยไม่บันทึกลงฐานข้อมูลในขั้นตอนนี้
+    const tempData = {
+        email: email,
+        username: username,
+        password: password,
+        firstname: firstname,
+        lastname: lastname,
+        nickname: nickname,
+        gender: gender,
+        height: height,
+        phonenumber: phonenumber,
+        home: home,
+        dateOfBirth: dateOfBirth,
+        educationID: educationID,
+        preferences: preferences,
+        goalID: goalID
+    };
+
+    // ส่งข้อมูลกลับไปเพื่อเก็บชั่วคราว รอการบันทึกในขั้นตอนต่อไป
+    return res.send({
+        "message": "ข้อมูลถูกเก็บไว้ชั่วคราว รอการบันทึกในขั้นตอนที่ 7",
+        "status": true,
+        "tempData": tempData
+    });
+});
+
+app.post('/api/register7', async function(req, res) {
+    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID  } = req.body;
+
+    // Log ข้อมูลที่ได้รับจากฝั่ง Android
+    console.log("Received data: ", req.body);
+
+    // ตรวจสอบข้อมูลว่าครบถ้วนหรือไม่
+    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber || !home || !dateOfBirth || !educationID || !preferences || !goalID || !interestGenderID ) {
+        console.log("ข้อมูลไม่ครบถ้วน");
+        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
+    }
+
+    // เก็บข้อมูลทั้งหมดใน tempData และส่งกลับไปที่ client โดยไม่บันทึกลงฐานข้อมูลในขั้นตอนนี้
+    const tempData = {
+        email: email,
+        username: username,
+        password: password,
+        firstname: firstname,
+        lastname: lastname,
+        nickname: nickname,
+        gender: gender,
+        height: height,
+        phonenumber: phonenumber,
+        home: home,
+        dateOfBirth: dateOfBirth,
+        educationID: educationID,
+        preferences: preferences,
+        goalID: goalID,
+        interestGenderID : interestGenderID 
+    };
+
+    // ส่งข้อมูลกลับไปเพื่อเก็บชั่วคราว รอการบันทึกในขั้นตอนถัดไป
+    return res.send({
+        "message": "ข้อมูลถูกเก็บไว้ชั่วคราว รอการบันทึกในขั้นตอนถัดไป",
+        "status": true,
+        "tempData": tempData
+    });
+});
+
+app.post('/api/register8', upload.single('imageFile'), async function(req, res) {
+    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID  } = req.body;
+    const fileName = req.file ? req.file.filename : null;
+
+    // ตรวจสอบข้อมูลว่าครบถ้วนหรือไม่
+    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber || !home || !dateOfBirth || !educationID || !preferences || !goalID || !interestGenderID  || !fileName) {
+        console.log("ข้อมูลไม่ครบถ้วน", {
+            email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID , fileName
+        });
         return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
     }
 
     try {
-        const [results] = await db.promise().query("SELECT GenderID FROM gender WHERE Gender_Name = ?", [gender]);
+        // ทำการ hash รหัสผ่าน
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        if (results.length === 0) {
+        // ค้นหา GenderID
+        const [genderResult] = await db.promise().query("SELECT GenderID FROM gender WHERE Gender_Name = ?", [gender]);
+
+        if (genderResult.length === 0) {
+            console.log("ไม่พบข้อมูลเพศที่ระบุ");
             return res.status(404).send({ "message": "ไม่พบข้อมูลเพศที่ระบุ", "status": false });
         }
 
-        const genderID = results[0].GenderID;
-        await db.promise().query("UPDATE User SET GenderID = ?, height = ?, phonenumber = ? WHERE UserId = ?", [genderID, height, phonenumber, userID]);
-        res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
-    } catch (err) {
-        console.error('Database error:', err);
-        res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
-    }
-});
+        const genderID = genderResult[0].GenderID;
 
-app.post('/api/register4', async function(req, res) {
-    const { educationID, home, DateBirth, userID } = req.body;
+        // Log ข้อมูลก่อนการบันทึกลง database
+        console.log("Inserting data into User: ", {
+            username, hashedPassword, email, firstname, lastname, nickname, genderID, height, phonenumber, home, dateOfBirth, educationID, goalID, fileName
+        });
 
-    if (!userID || !educationID || !home || !DateBirth) {
-        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
-    }
+        // บันทึกข้อมูลผู้ใช้
+        const sqlInsert = `
+            INSERT INTO User (username, password, email, firstname, lastname, nickname, GenderID, height, phonenumber, home, DateBirth, EducationID, goalID, imageFile)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        const [insertResult] = await db.promise().query(sqlInsert, [username, hashedPassword, email, firstname, lastname, nickname, genderID, height, phonenumber, home, dateOfBirth, educationID, goalID, fileName]);
 
-    try {
-        // Update home, DateBirth, and educationID in the User table
-        await db.promise().query("UPDATE User SET home = ?, DateBirth = ?, educationID = ? WHERE UserId = ?", [home, DateBirth, educationID, userID]);
+        const userID = insertResult.insertId;
 
-        res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
-    } catch (err) {
-        console.error('Database update error:', err);
-        res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
-    }
-});
-
-app.post('/api/register5', async function(req, res) {
-    const { preferences, userID } = req.body;
-
-    if (!preferences || !userID) {
-        console.log("Missing preferences or userID");
-        return res.status(400).send({ "message": "ไม่ได้รับข้อมูล preferences หรือ userID", "status": false });
-    }
-
-    const PreferenceIDArray = preferences.split(',').map(Number); // แปลงเป็นตัวเลข Array
-    console.log("Received preferences:", PreferenceIDArray);
-    console.log("Received userID:", userID);
-
-    if (PreferenceIDArray.includes(NaN)) {
-        console.log("Invalid preference ID");
-        return res.status(400).send({ "message": "ไม่พบ PreferenceID สำหรับบางตัวเลือก", "status": false });
-    }
-
-    try {
-        // ลบ preferences เดิมในตาราง userpreferences
-        await db.promise().query("DELETE FROM userpreferences WHERE UserID = ?", [userID]);
-
-        // เพิ่ม preferences ใหม่เข้าไปในตาราง userpreferences
-        for (const preferenceID of PreferenceIDArray) {
+        // บันทึก preferences
+        const preferenceIDs = preferences.split(',').map(id => parseInt(id));
+        for (const preferenceID of preferenceIDs) {
             await db.promise().query("INSERT INTO userpreferences (UserID, PreferenceID) VALUES (?, ?)", [userID, preferenceID]);
         }
+
+        console.log(`Preferences saved for user ${userID}: `, preferenceIDs);
 
         res.send({ "message": "ลงทะเบียนสำเร็จ", "status": true });
     } catch (err) {
@@ -272,69 +439,6 @@ app.post('/api/register5', async function(req, res) {
     }
 });
 
-
-
-
-
-// API สำหรับการลงทะเบียน (ขั้นตอนที่ 6)
-app.post('/api/register6', async function(req, res) {
-    const { goalID, userID } = req.body;
-
-    if (!userID || !goalID) {
-        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
-    }
-
-    try {
-        // อัปเดต goalID ในตาราง User โดยตรง
-        await db.promise().query("UPDATE User SET goalID = ? WHERE UserId = ?", [goalID, userID]);
-
-        res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
-    } catch (err) {
-        console.error('Database update error:', err);
-        res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
-    }
-});
-
-
-
-app.post('/api/register7', async function(req, res) {
-    const { interestedGenderID, userID } = req.body;
-
-    if (!userID || !interestedGenderID) {
-        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
-    }
-
-    try {
-        // บันทึก interestedGenderID ลงในตาราง User
-        await db.promise().query("UPDATE User SET interestGenderID = ? WHERE UserId = ?", [interestedGenderID, userID]);
-
-        res.send({ "message": "ข้อมูลบันทึกแล้ว", "status": true });
-    } catch (err) {
-        console.error('Database update error:', err);
-        res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
-    }
-});
-
-
-
-
-// API สำหรับการลงทะเบียน (ขั้นตอนที่ 8)
-app.post('/api/register8', upload.single('imageFile'), async function(req, res) {
-    const { userID } = req.body;
-    const fileName = req.file ? req.file.filename : null;
-
-    if (!userID || !fileName) {
-        return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
-    }
-
-    try {
-        await db.promise().query("UPDATE User SET imageFile = ? WHERE UserId = ?", [fileName, userID]);
-        res.send({ "message": "ชื่อไฟล์ถูกบันทึกแล้ว", "status": true });
-    } catch (err) {
-        console.error('Database update error:', err);
-        res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
-    }
-});
 
 app.post('/api/request-pin', async (req, res) => {
     const { email } = req.body;
@@ -452,6 +556,29 @@ app.post('/api/reset-password', async (req, res) => {
         res.status(500).send({ message: "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน", status: false });
     }
 });
+
+
+// แสดงข้อมูลผู้ใช้ทั้งหมด
+app.get('/api/user', function(req, res){        
+    const sql = "SELECT username, imageFile, preferences FROM user";
+    db.query(sql, function(err, result) {
+        if (err) throw err;
+        
+        if(result.length > 0){
+            res.send(result);
+        }else{
+            res.send( {'message':'ไม่พบข้อมูลผู้ใช้','status':false} );
+        }        
+    });
+});
+
+// แสดงรูปภาพของผู้ใช้
+app.get('/api/user/image/:filename', function(req, res){
+    const filepath = path.join(__dirname, 'uploads', req.params.filename);  
+    res.sendFile(filepath);
+});
+
+
 
 
 
