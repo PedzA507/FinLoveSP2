@@ -2,22 +2,13 @@ package th.ac.rmutto.finlove
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 
 class RegisterActivity5 : AppCompatActivity() {
 
-    private lateinit var selectedPreferences: MutableList<Int> // ต้องเป็น Int เพราะเราจะเก็บ PreferenceID
+    private lateinit var selectedPreferences: MutableList<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,19 +21,9 @@ class RegisterActivity5 : AppCompatActivity() {
         val buttonOption3 = findViewById<Button>(R.id.buttonOption3)
         val buttonNextStep5 = findViewById<Button>(R.id.buttonNextStep5)
 
-        // ฟังก์ชันสำหรับจัดการการคลิกปุ่ม
         setupButton(buttonOption1, "ฟุตบอล")
         setupButton(buttonOption2, "ภาพยนตร์")
         setupButton(buttonOption3, "ท่องเที่ยว")
-        //setupButton(buttonOption4, "อนิเมชั่น")
-        //setupButton(buttonOption5, "ช็อปปิ้ง")
-        //setupButton(buttonOption6, "เล่นดนตรี")
-        //setupButton(buttonOption7, "เล่นกีฬา")
-        //setupButton(buttonOption8, "เล่นเกม")
-        //setupButton(buttonOption9, "อ่านหนังสือ")
-        //setupButton(buttonOption10, "ปาร์ตี้")
-        //setupButton(buttonOption11, "สายควัน")
-        //setupButton(buttonOption12, "ออกกำลังกาย")
 
         buttonNextStep5.setOnClickListener {
             if (selectedPreferences.isEmpty()) {
@@ -50,72 +31,41 @@ class RegisterActivity5 : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val preferencesString = selectedPreferences.joinToString(",") // แปลงเป็น comma-separated ID string
-            Log.d("RegisterActivity5", "Selected preferences: $preferencesString")
+            val preferencesString = selectedPreferences.joinToString(",")
+            val email = intent.getStringExtra("email")
+            val username = intent.getStringExtra("username")
+            val password = intent.getStringExtra("password")
+            val firstname = intent.getStringExtra("firstname")
+            val lastname = intent.getStringExtra("lastname")
+            val nickname = intent.getStringExtra("nickname")
+            val gender = intent.getStringExtra("gender")
+            val height = intent.getStringExtra("height")
+            val phonenumber = intent.getStringExtra("phonenumber")
+            val dateOfBirth = intent.getStringExtra("dateOfBirth")
+            val educationID = intent.getIntExtra("educationID", -1)
+            val home = intent.getStringExtra("home")
 
-            val userID = intent.getIntExtra("userID", -1)
-            if (userID == -1) {
-                Toast.makeText(this@RegisterActivity5, "ไม่พบ userID", Toast.LENGTH_LONG).show()
+            if (educationID == -1) {
+                Toast.makeText(this, "ไม่พบข้อมูล EducationID", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            Log.d("RegisterActivity5", "UserID: $userID")
-
-            val url = getString(R.string.root_url) + "/api/register5"
-            Log.d("RegisterActivity5", "API URL: $url")
-
-            val formBody: RequestBody = FormBody.Builder()
-                .add("preferences", preferencesString)
-                .add("userID", userID.toString())
-                .build()
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val request: Request = Request.Builder()
-                        .url(url)
-                        .post(formBody)
-                        .build()
-
-                    val response = OkHttpClient().newCall(request).execute()
-
-                    withContext(Dispatchers.Main) {
-                        if (response.isSuccessful) {
-                            Log.d("RegisterActivity5", "Response successful")
-                            // Go to RegisterActivity6
-                            val intent = Intent(this@RegisterActivity5, RegisterActivity6::class.java)
-                            intent.putExtra("userID", userID)
-                            startActivity(intent)
-                        } else {
-                            Log.e("RegisterActivity5", "Response error: ${response.code}")
-                            Toast.makeText(this@RegisterActivity5, "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("RegisterActivity5", "Error: ${e.message}")
-                        Toast.makeText(this@RegisterActivity5, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-    }
-
-    // ฟังก์ชันสำหรับแปลง preference เป็น preferenceID ที่ถูกต้อง
-    private fun getPreferenceID(preference: String): Int {
-        return when (preference) {
-            "ฟุตบอล" -> 1
-            "ภาพยนตร์" -> 2
-            "ท่องเที่ยว" -> 3
-            "อนิเมชั่น" -> 4
-            "ช็อปปิ้ง" -> 5
-            "เล่นดนตรี" -> 6
-            "เล่นกีฬา" -> 7
-            "เล่นเกม" -> 8
-            "อ่านหนังสือ" -> 9
-            "ปาร์ตี้" -> 10
-            "สายควัน" -> 11
-            "ออกกำลังกาย" -> 12
-            else -> -1
+            // ส่งข้อมูลไปยัง RegisterActivity6 โดยไม่บันทึกข้อมูลใน RegisterActivity5
+            val intent = Intent(this@RegisterActivity5, RegisterActivity6::class.java)
+            intent.putExtra("email", email)
+            intent.putExtra("username", username)
+            intent.putExtra("password", password)
+            intent.putExtra("firstname", firstname)
+            intent.putExtra("lastname", lastname)
+            intent.putExtra("nickname", nickname)
+            intent.putExtra("gender", gender)
+            intent.putExtra("height", height)
+            intent.putExtra("phonenumber", phonenumber)
+            intent.putExtra("dateOfBirth", dateOfBirth)
+            intent.putExtra("educationID", educationID)
+            intent.putExtra("home", home)
+            intent.putExtra("preferences", preferencesString)
+            startActivity(intent)
         }
     }
 
@@ -123,18 +73,22 @@ class RegisterActivity5 : AppCompatActivity() {
         button.setOnClickListener {
             val preferenceID = getPreferenceID(preference)
 
-            if (preferenceID == -1) {
-                Toast.makeText(this, "ไม่พบ preference ที่ถูกต้อง", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
             if (button.isSelected) {
                 button.isSelected = false
-                selectedPreferences.remove(preferenceID) // เอา PreferenceID ออกจาก List
+                selectedPreferences.remove(preferenceID)
             } else {
                 button.isSelected = true
-                selectedPreferences.add(preferenceID) // เพิ่ม PreferenceID ลงใน List
+                selectedPreferences.add(preferenceID)
             }
+        }
+    }
+
+    private fun getPreferenceID(preference: String): Int {
+        return when (preference) {
+            "ฟุตบอล" -> 1
+            "ภาพยนตร์" -> 2
+            "ท่องเที่ยว" -> 3
+            else -> -1
         }
     }
 }

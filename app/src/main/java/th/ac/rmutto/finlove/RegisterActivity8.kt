@@ -41,9 +41,25 @@ class RegisterActivity8 : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val userID = intent.getIntExtra("userID", -1)
-            if (userID == -1) {
-                Toast.makeText(this@RegisterActivity8, "ไม่พบ userID", Toast.LENGTH_LONG).show()
+            // รับข้อมูลทั้งหมดจาก Intent
+            val email = intent.getStringExtra("email")
+            val username = intent.getStringExtra("username")
+            val password = intent.getStringExtra("password")
+            val firstname = intent.getStringExtra("firstname")
+            val lastname = intent.getStringExtra("lastname")
+            val nickname = intent.getStringExtra("nickname")
+            val gender = intent.getStringExtra("gender")
+            val height = intent.getStringExtra("height")
+            val phonenumber = intent.getStringExtra("phonenumber")
+            val dateOfBirth = intent.getStringExtra("dateOfBirth")
+            val educationID = intent.getIntExtra("educationID", -1)
+            val home = intent.getStringExtra("home")
+            val preferences = intent.getStringExtra("preferences")
+            val goalID = intent.getIntExtra("goalID", -1) // ดึง goalID จาก Intent
+            val interestGenderID = intent.getIntExtra("interestGenderID", -1) // ดึง interestGenderID
+
+            if (educationID == -1 || email.isNullOrEmpty() || username.isNullOrEmpty() || goalID == -1 || interestGenderID == -1) {
+                Toast.makeText(this@RegisterActivity8, "ข้อมูลไม่ครบถ้วน", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
@@ -51,7 +67,27 @@ class RegisterActivity8 : AppCompatActivity() {
             if (file != null) {
                 val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
                 val body = MultipartBody.Part.createFormData("imageFile", file.name, requestFile)
-                val userIdPart = RequestBody.create(MultipartBody.FORM, userID.toString())
+
+                // สร้าง JSON Object สำหรับข้อมูลทั้งหมด
+                val jsonBody = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("email", email!!)
+                    .addFormDataPart("username", username!!)
+                    .addFormDataPart("password", password!!)
+                    .addFormDataPart("firstname", firstname!!)
+                    .addFormDataPart("lastname", lastname!!)
+                    .addFormDataPart("nickname", nickname!!)
+                    .addFormDataPart("gender", gender!!)
+                    .addFormDataPart("height", height!!)
+                    .addFormDataPart("phonenumber", phonenumber!!)
+                    .addFormDataPart("dateOfBirth", dateOfBirth!!)
+                    .addFormDataPart("educationID", educationID.toString())
+                    .addFormDataPart("home", home!!)
+                    .addFormDataPart("preferences", preferences!!)
+                    .addFormDataPart("goalID", goalID.toString())
+                    .addFormDataPart("interestGenderID", interestGenderID.toString()) // เพิ่ม interestGenderID
+                    .addPart(body) // เพิ่มไฟล์ภาพใน Body
+                    .build()
 
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
@@ -60,18 +96,14 @@ class RegisterActivity8 : AppCompatActivity() {
                         val url = "$rootUrl/api/register8" // ประกอบ URL กับ path ที่ต้องการ
                         val request = Request.Builder()
                             .url(url)
-                            .post(MultipartBody.Builder()
-                                .setType(MultipartBody.FORM)
-                                .addPart(MultipartBody.Part.createFormData("userID", userID.toString()))
-                                .addPart(body)
-                                .build())
+                            .post(jsonBody)
                             .build()
 
                         val response = client.newCall(request).execute()
 
                         withContext(Dispatchers.Main) {
                             if (response.isSuccessful) {
-                                Toast.makeText(this@RegisterActivity8, "ชื่อไฟล์ถูกบันทึกแล้ว", Toast.LENGTH_LONG).show()
+                                Toast.makeText(this@RegisterActivity8, "ข้อมูลถูกบันทึกแล้ว", Toast.LENGTH_LONG).show()
                                 val intent = Intent(this@RegisterActivity8, LoginActivity::class.java)
                                 startActivity(intent)
                             } else {

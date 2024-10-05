@@ -20,7 +20,7 @@ import java.util.Calendar
 
 class RegisterActivity4 : AppCompatActivity() {
 
-    private var selectedEducation: String? = null // เปลี่ยนเป็น nullable
+    private var selectedEducation: String? = null
     private var selectedDateOfBirth: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +43,7 @@ class RegisterActivity4 : AppCompatActivity() {
         setupEducationButton(buttonPhd, "ปริญญาเอก")
         setupEducationButton(buttonWorking, "กำลังทำงาน")
 
-
-        // Set up DatePickerDialog
+        // ฟังก์ชันสำหรับเลือกวันเกิด
         buttonSelectDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -52,7 +51,6 @@ class RegisterActivity4 : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                // Format as YYYY-MM-DD
                 selectedDateOfBirth = "$selectedYear-${String.format("%02d", selectedMonth + 1)}-${String.format("%02d", selectedDay)}"
                 buttonSelectDate.text = selectedDateOfBirth
             }, year, month, day)
@@ -78,53 +76,32 @@ class RegisterActivity4 : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val userID = intent.getIntExtra("userID", -1)
-            if (userID == -1) {
-                Toast.makeText(this@RegisterActivity4, "ไม่พบ userID", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
+            // รับข้อมูลจากหน้า RegisterActivity3
+            val email = intent.getStringExtra("email")
+            val username = intent.getStringExtra("username")
+            val password = intent.getStringExtra("password")
+            val firstname = intent.getStringExtra("firstname")
+            val lastname = intent.getStringExtra("lastname")
+            val nickname = intent.getStringExtra("nickname")
+            val gender = intent.getStringExtra("gender")
+            val height = intent.getStringExtra("height")
+            val phonenumber = intent.getStringExtra("phonenumber")
 
-            // แปลง selectedEducation เป็น educationID
-            val educationID = getEducationID(selectedEducation!!)
-            if (educationID == -1) {
-                Toast.makeText(this, "ไม่พบระดับการศึกษาที่ถูกต้อง", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
-            // ส่งข้อมูลไปยังเซิร์ฟเวอร์
-            val url = getString(R.string.root_url) + "/api/register4"
-            val formBody: RequestBody = FormBody.Builder()
-                .add("educationID", educationID.toString())
-                .add("home", home)
-                .add("DateBirth", selectedDateOfBirth!!)
-                .add("userID", userID.toString()) // ส่ง userID ไปยังเซิร์ฟเวอร์
-                .build()
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val request: Request = Request.Builder()
-                        .url(url)
-                        .post(formBody)
-                        .build()
-
-                    val response = OkHttpClient().newCall(request).execute()
-
-                    withContext(Dispatchers.Main) {
-                        if (response.isSuccessful) {
-                            // ไปยังหน้า RegisterActivity5
-                            val intent = Intent(this@RegisterActivity4, RegisterActivity5::class.java)
-                            intent.putExtra("userID", userID)
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(this@RegisterActivity4, "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@RegisterActivity4, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
+            // ส่งข้อมูลไปยัง RegisterActivity5
+            val intent = Intent(this@RegisterActivity4, RegisterActivity5::class.java)
+            intent.putExtra("email", email)
+            intent.putExtra("username", username)
+            intent.putExtra("password", password)
+            intent.putExtra("firstname", firstname)
+            intent.putExtra("lastname", lastname)
+            intent.putExtra("nickname", nickname)
+            intent.putExtra("gender", gender)
+            intent.putExtra("height", height)
+            intent.putExtra("phonenumber", phonenumber)
+            intent.putExtra("dateOfBirth", selectedDateOfBirth)
+            intent.putExtra("educationID", getEducationID(selectedEducation!!))
+            intent.putExtra("home", home)
+            startActivity(intent)
         }
     }
 
@@ -142,7 +119,6 @@ class RegisterActivity4 : AppCompatActivity() {
 
     private fun setupEducationButton(button: Button, education: String) {
         button.setOnClickListener {
-            // ปรับสถานะปุ่มที่ถูกเลือก
             findViewById<Button>(R.id.buttonHighSchool).isSelected = false
             findViewById<Button>(R.id.buttonBachelor).isSelected = false
             findViewById<Button>(R.id.buttonMaster).isSelected = false

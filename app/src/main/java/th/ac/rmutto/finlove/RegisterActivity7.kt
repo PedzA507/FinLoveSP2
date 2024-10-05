@@ -8,14 +8,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 
 class RegisterActivity7 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,56 +25,61 @@ class RegisterActivity7 : AppCompatActivity() {
             }
 
             val selectedGender = findViewById<RadioButton>(selectedRadioButtonId).text.toString()
-            val interestedGenderID = getInterestedGenderID(selectedGender) // แปลงเพศเป็น interestedGenderID
+            val interestGenderID = getinterestGenderID(selectedGender)
 
-            val userID = intent.getIntExtra("userID", -1)
-            if (userID == -1) {
-                Toast.makeText(this@RegisterActivity7, "ไม่พบ userID", Toast.LENGTH_LONG).show()
+            // รับข้อมูลทั้งหมดจาก RegisterActivity6 ที่ส่งผ่าน Intent
+            val email = intent.getStringExtra("email")
+            val username = intent.getStringExtra("username")
+            val password = intent.getStringExtra("password")
+            val firstname = intent.getStringExtra("firstname")
+            val lastname = intent.getStringExtra("lastname")
+            val nickname = intent.getStringExtra("nickname")
+            val gender = intent.getStringExtra("gender")
+            val height = intent.getStringExtra("height")
+            val phonenumber = intent.getStringExtra("phonenumber")
+            val dateOfBirth = intent.getStringExtra("dateOfBirth")
+            val educationID = intent.getIntExtra("educationID", -1)
+            val home = intent.getStringExtra("home")
+            val preferences = intent.getStringExtra("preferences")
+            val goalID = intent.getIntExtra("goalID", -1)
+
+            // Log ข้อมูลที่รับเข้ามา
+            Log.d("RegisterActivity7", "Received data: email: $email, username: $username, password: $password, firstname: $firstname, lastname: $lastname, nickname: $nickname, gender: $gender, height: $height, phonenumber: $phonenumber, dateOfBirth: $dateOfBirth, educationID: $educationID, home: $home, preferences: $preferences, goalID: $goalID, interestGenderID: $interestGenderID")
+
+            if (educationID == -1 || email.isNullOrEmpty() || username.isNullOrEmpty() || goalID == -1) {
+                Toast.makeText(this@RegisterActivity7, "ข้อมูลไม่ครบถ้วน", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            Log.d("RegisterActivity7", "Selected Gender: $selectedGender")
-            Log.d("RegisterActivity7", "InterestedGenderID: $interestedGenderID")
-            Log.d("RegisterActivity7", "UserID: $userID")
+            // Log ข้อมูลก่อนส่งออกไป
+            Log.d("RegisterActivity7", "Interested Gender: $selectedGender, interestGenderID: $interestGenderID, GoalID: $goalID")
 
-            val url = getString(R.string.root_url) + "/api/register7"
-            val formBody: RequestBody = FormBody.Builder()
-                .add("interestedGenderID", interestedGenderID.toString()) // ส่ง interestedGenderID แทน interestedGender
-                .add("userID", userID.toString())
-                .build()
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val request: Request = Request.Builder()
-                        .url(url)
-                        .post(formBody)
-                        .build()
-
-                    val response = OkHttpClient().newCall(request).execute()
-
-                    withContext(Dispatchers.Main) {
-                        if (response.isSuccessful) {
-                            Log.d("RegisterActivity7", "Response successful")
-                            val intent = Intent(this@RegisterActivity7, RegisterActivity8::class.java)
-                            intent.putExtra("userID", userID)
-                            startActivity(intent)
-                        } else {
-                            Log.e("RegisterActivity7", "Response error: ${response.code}")
-                            Toast.makeText(this@RegisterActivity7, "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Log.e("RegisterActivity7", "Error: ${e.message}")
-                        Toast.makeText(this@RegisterActivity7, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
+            // สร้าง Intent เพื่อส่งข้อมูลไปยัง RegisterActivity8
+            val intent = Intent(this@RegisterActivity7, RegisterActivity8::class.java).apply {
+                putExtra("email", email)
+                putExtra("username", username)
+                putExtra("password", password)
+                putExtra("firstname", firstname)
+                putExtra("lastname", lastname)
+                putExtra("nickname", nickname)
+                putExtra("gender", gender)
+                putExtra("height", height)
+                putExtra("phonenumber", phonenumber)
+                putExtra("dateOfBirth", dateOfBirth)
+                putExtra("educationID", educationID)
+                putExtra("home", home)
+                putExtra("preferences", preferences)
+                putExtra("interestGenderID", interestGenderID) // ส่ง interestGenderID ไปด้วย
+                putExtra("goalID", goalID) // ส่ง goalID ไปด้วย
             }
+
+            // เริ่ม Activity ใหม่
+            startActivity(intent)
         }
     }
 
-    // ฟังก์ชันสำหรับแปลงชื่อเพศเป็น interestedGenderID
-    private fun getInterestedGenderID(gender: String): Int {
+    // ฟังก์ชันสำหรับแปลงชื่อเพศเป็น interestGenderID
+    private fun getinterestGenderID(gender: String): Int {
         return when (gender) {
             "ชาย" -> 1
             "หญิง" -> 2
