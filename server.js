@@ -385,13 +385,13 @@ app.post('/api/register7', async function(req, res) {
 });
 
 app.post('/api/register8', upload.single('imageFile'), async function(req, res) {
-    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID  } = req.body;
+    const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID } = req.body;
     const fileName = req.file ? req.file.filename : null;
 
     // ตรวจสอบข้อมูลว่าครบถ้วนหรือไม่
-    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber || !home || !dateOfBirth || !educationID || !preferences || !goalID || !interestGenderID  || !fileName) {
+    if (!email || !username || !password || !firstname || !lastname || !nickname || !gender || !height || !phonenumber || !home || !dateOfBirth || !educationID || !preferences || !goalID || !interestGenderID || !fileName) {
         console.log("ข้อมูลไม่ครบถ้วน", {
-            email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID , fileName
+            email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID, fileName
         });
         return res.status(400).send({ "message": "ข้อมูลไม่ครบถ้วน", "status": false });
     }
@@ -412,15 +412,15 @@ app.post('/api/register8', upload.single('imageFile'), async function(req, res) 
 
         // Log ข้อมูลก่อนการบันทึกลง database
         console.log("Inserting data into User: ", {
-            username, hashedPassword, email, firstname, lastname, nickname, genderID, height, phonenumber, home, dateOfBirth, educationID, goalID, fileName
+            username, hashedPassword, email, firstname, lastname, nickname, genderID, height, phonenumber, home, dateOfBirth, educationID, goalID, fileName, interestGenderID
         });
 
         // บันทึกข้อมูลผู้ใช้
         const sqlInsert = `
-            INSERT INTO User (username, password, email, firstname, lastname, nickname, GenderID, height, phonenumber, home, DateBirth, EducationID, goalID, imageFile)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO User (username, password, email, firstname, lastname, nickname, GenderID, height, phonenumber, home, DateBirth, EducationID, goalID, imageFile, interestGenderID )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        const [insertResult] = await db.promise().query(sqlInsert, [username, hashedPassword, email, firstname, lastname, nickname, genderID, height, phonenumber, home, dateOfBirth, educationID, goalID, fileName]);
+        const [insertResult] = await db.promise().query(sqlInsert, [username, hashedPassword, email, firstname, lastname, nickname, genderID, height, phonenumber, home, dateOfBirth, educationID, goalID, fileName, interestGenderID]);
 
         const userID = insertResult.insertId;
 
@@ -438,7 +438,6 @@ app.post('/api/register8', upload.single('imageFile'), async function(req, res) 
         res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
     }
 });
-
 
 app.post('/api/request-pin', async (req, res) => {
     const { email } = req.body;
