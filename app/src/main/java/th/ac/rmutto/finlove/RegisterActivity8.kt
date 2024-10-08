@@ -104,7 +104,7 @@ class RegisterActivity8 : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             if (response.isSuccessful) {
                                 Toast.makeText(this@RegisterActivity8, "ข้อมูลถูกบันทึกแล้ว", Toast.LENGTH_LONG).show()
-                                val intent = Intent(this@RegisterActivity8, LoginActivity::class.java)
+                                val intent = Intent(this@RegisterActivity8, FirstPageActivity::class.java)
                                 startActivity(intent)
                             } else {
                                 Toast.makeText(this@RegisterActivity8, "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้", Toast.LENGTH_LONG).show()
