@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/newbg"
     android:padding="16dp">
 
     <TextView
@@ -11,12 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="116dp"
-        android:shadowColor="#BC000000"
-        android:shadowDy="8"
-        android:shadowRadius="4"
         android:text="เพิ่มรูปของคุณ"
-        android:textColor="#00BCD4"
-        android:textSize="48sp"
+        android:textColor="@color/teal_200"
+        android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.366"
@@ -44,6 +40,7 @@
         android:background="@drawable/button"
         android:text="เลือกรูปภาพ"
         android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +54,7 @@
         android:background="@drawable/button"
         android:text="อัพโหลด"
         android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonSelectImage" />
@@ -65,14 +63,13 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="46dp"
         android:layout_marginTop="6dp"
-        android:layout_marginEnd="16dp"
         android:text="รูปนี้จะแสดงให้ผู้ใช้คนอื่นเห็นเป็นรูปแรก"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.733"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle8" />
 

@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/newbg"
     android:scaleType="centerCrop"
     tools:context=".RegisterActivity1">
 
@@ -80,7 +79,7 @@
         android:id="@+id/buttonNext"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="7dp"
         android:background="@drawable/cyclebutton"
         android:scaleType="centerInside"

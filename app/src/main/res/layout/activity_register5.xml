@@ -4,7 +4,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/newbg"
     tools:context=".RegisterActivity5">
 
     <TextView
@@ -14,10 +13,11 @@
         android:layout_marginTop="184dp"
         android:text="คุณชอบอะไร"
         android:textAlignment="center"
-        android:textColor="#00BCD4"
-        android:textSize="40sp"
+        android:textColor="@color/teal_200"
+        android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.322"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,9 +25,11 @@
         android:id="@+id/buttonOption1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="48dp"
-        android:background="@drawable/button_selector"
         android:text="ฟุตบอล"
+        android:textStyle="bold"
+        android:background="@drawable/button_selector"
         android:textColor="@drawable/text_selector"
         app:layout_constraintEnd_toStartOf="@+id/buttonOption3"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,38 +40,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:background="@drawable/button_selector"
+        android:layout_marginEnd="40dp"
         android:text="ท่องเที่ยว"
+        android:textStyle="bold"
+        android:background="@drawable/button_selector"
         android:textColor="@drawable/text_selector"
-        app:layout_constraintStart_toEndOf="@+id/buttonOption3"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonOption3"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
 
     <Button
         android:id="@+id/buttonOption3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="48dp"
-        android:background="@drawable/button_selector"
         android:text="ภาพยนตร์"
+        android:textStyle="bold"
+        android:background="@drawable/button_selector"
         android:textColor="@drawable/text_selector"
         app:layout_constraintEnd_toStartOf="@+id/buttonOption2"
         app:layout_constraintStart_toEndOf="@+id/buttonOption1"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
-
-    <!-- ปุ่ม Next -->
-    <Button
+    <ImageButton
         android:id="@+id/buttonNextStep5"
         android:layout_width="93dp"
         android:layout_height="93dp"
         android:layout_marginTop="120dp"
         android:background="@drawable/cyclebutton"
-        android:text="Next"
-        android:textColor="#FFFFFF"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:src="@drawable/ic_arrow_right"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.786"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonOption3" />
 

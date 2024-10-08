@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -20,7 +21,7 @@ class RegisterActivity6 : AppCompatActivity() {
         val buttonGoal2 = findViewById<Button>(R.id.buttonGoal2)
         val buttonGoal3 = findViewById<Button>(R.id.buttonGoal3)
         val buttonGoal4 = findViewById<Button>(R.id.buttonGoal4)
-        val buttonNextStep6 = findViewById<Button>(R.id.buttonNextStep6)
+        val buttonNextStep6 = findViewById<ImageButton>(R.id.buttonNextStep6)
 
         // ตั้งค่าปุ่ม goal เพื่อเลือกเป้าหมาย
         setupGoalButton(buttonGoal1, 1)

@@ -4,91 +4,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/newbg"
     android:padding="16dp"
     tools:context=".RegisterActivity6">
 
-    <!-- หัวข้อเป้าหมายของคุณ -->
     <TextView
         android:id="@+id/textViewTitleGoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        android:text="เป้าหมายของคุณ"
-        android:textColor="#00BCD4"
-        android:shadowColor="#BC000000"
-        android:shadowDy="8"
-        android:shadowRadius="4"
-        android:textSize="40sp"
+        android:text="เป้าหมาย"
+        android:textColor="@color/teal_200"
+        android:textSize="45dp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintHorizontal_bias="0.161"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- ปุ่มตัวเลือกเป้าหมาย ลดน้ำหนัก -->
     <Button
         android:id="@+id/buttonGoal1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_selector"
-        android:text="หาคู่รักที่จริงใจ"
         android:textColor="@drawable/text_selector"
-        app:layout_constraintEnd_toStartOf="@+id/buttonGoal2"
+        android:text="หาคู่รักที่จริงใจ"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal"
+        app:layout_constraintWidth_percent="0.8" />
 
-    <!-- ปุ่มตัวเลือกเป้าหมาย เพิ่มกล้ามเนื้อ -->
     <Button
         android:id="@+id/buttonGoal2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/button_selector"
         android:text="หาคู่เดทช่วงสั้นๆ"
         android:textColor="@drawable/text_selector"
-        app:layout_constraintStart_toEndOf="@+id/buttonGoal1"
-        app:layout_constraintEnd_toStartOf="@+id/buttonGoal3"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonGoal1"
+        app:layout_constraintWidth_percent="0.8" />
 
-    <!-- ปุ่มตัวเลือกเป้าหมาย ออกกำลังกายเพื่อสุขภาพ -->
     <Button
         android:id="@+id/buttonGoal3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/button_selector"
         android:text="หาเพื่อนใหม่"
         android:textColor="@drawable/text_selector"
-        app:layout_constraintStart_toEndOf="@+id/buttonGoal2"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
-
-    <!-- ปุ่ม Next -->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonGoal2"
+        app:layout_constraintWidth_percent="0.8" />
 
     <Button
         android:id="@+id/buttonGoal4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/button_selector"
         android:text="ยังไม่แน่ใจ"
         android:textColor="@drawable/text_selector"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonGoal2"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitleGoal" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonGoal3"
+        app:layout_constraintWidth_percent="0.8" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/buttonNextStep6"
         android:layout_width="93dp"
         android:layout_height="93dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/cyclebutton"
-        android:text="Next"
-        android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@+id/buttonGoal3"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:src="@drawable/ic_arrow_right"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.867"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonGoal4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

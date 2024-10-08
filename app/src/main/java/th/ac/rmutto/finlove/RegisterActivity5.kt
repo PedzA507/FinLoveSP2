@@ -3,6 +3,7 @@ package th.ac.rmutto.finlove
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -19,7 +20,7 @@ class RegisterActivity5 : AppCompatActivity() {
         val buttonOption1 = findViewById<Button>(R.id.buttonOption1)
         val buttonOption2 = findViewById<Button>(R.id.buttonOption2)
         val buttonOption3 = findViewById<Button>(R.id.buttonOption3)
-        val buttonNextStep5 = findViewById<Button>(R.id.buttonNextStep5)
+        val buttonNextStep5 = findViewById<ImageButton>(R.id.buttonNextStep5)
 
         setupButton(buttonOption1, "ฟุตบอล")
         setupButton(buttonOption2, "ภาพยนตร์")
