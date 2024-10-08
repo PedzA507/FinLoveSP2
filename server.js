@@ -145,6 +145,33 @@ app.post('/api/logout/:id', async (req, res) => {
     }
 });
 
+app.post('/api/checkUsernameEmail', async function(req, res) {
+    const { username, email } = req.body;
+
+    if (!username || !email) {
+        return res.status(400).send({ "message": "กรุณาระบุชื่อผู้ใช้และอีเมล", "status": false });
+    }
+
+    try {
+        const [usernameResult] = await db.promise().query("SELECT username FROM User WHERE username = ?", [username]);
+        const [emailResult] = await db.promise().query("SELECT email FROM User WHERE email = ?", [email]);
+
+        if (usernameResult.length > 0) {
+            return res.status(409).send({ "message": "ชื่อผู้ใช้นี้ถูกใช้งานแล้ว", "status": false });
+        }
+
+        if (emailResult.length > 0) {
+            return res.status(409).send({ "message": "อีเมลนี้ถูกใช้งานแล้ว", "status": false });
+        }
+
+        res.send({ "message": "ชื่อผู้ใช้และอีเมลนี้สามารถใช้ได้", "status": true });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send({ "message": "เกิดข้อผิดพลาดในระบบ", "status": false });
+    }
+});
+
+
 app.post('/api/register8', upload.single('imageFile'), async function(req, res) {
     const { email, username, password, firstname, lastname, nickname, gender, height, phonenumber, home, dateOfBirth, educationID, preferences, goalID, interestGenderID } = req.body;
     const fileName = req.file ? req.file.filename : null;
