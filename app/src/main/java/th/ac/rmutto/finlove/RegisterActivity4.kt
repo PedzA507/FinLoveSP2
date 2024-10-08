@@ -43,7 +43,6 @@ class RegisterActivity4 : AppCompatActivity() {
         setupEducationButton(buttonPhd, "ปริญญาเอก")
         setupEducationButton(buttonWorking, "กำลังทำงาน")
 
-        // ฟังก์ชันสำหรับเลือกวันเกิด
         buttonSelectDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -55,8 +54,12 @@ class RegisterActivity4 : AppCompatActivity() {
                 buttonSelectDate.text = selectedDateOfBirth
             }, year, month, day)
 
+            // กำหนดให้เลือกวันเกิดได้ไม่เกินวันที่ปัจจุบัน
+            datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+
             datePickerDialog.show()
         }
+
 
         buttonNextStep4.setOnClickListener {
             val home = editTextHome.text.toString()
