@@ -541,7 +541,7 @@ class ProfileActivity : AppCompatActivity() {
                     if (success) {
                         Toast.makeText(this@ProfileActivity, "ลบผู้ใช้สำเร็จ", Toast.LENGTH_SHORT).show()
                         // ทำการ Logout หรือส่งผู้ใช้กลับไปหน้าแรก
-                        val intent = Intent(this@ProfileActivity, LoginActivity::class.java)
+                        val intent = Intent(this@ProfileActivity, FirstPageActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()

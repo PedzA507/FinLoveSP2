@@ -105,11 +105,13 @@ class RegisterActivity8 : AppCompatActivity() {
                             if (response.isSuccessful) {
                                 Toast.makeText(this@RegisterActivity8, "ข้อมูลถูกบันทึกแล้ว", Toast.LENGTH_LONG).show()
                                 val intent = Intent(this@RegisterActivity8, FirstPageActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                             } else {
                                 Toast.makeText(this@RegisterActivity8, "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้", Toast.LENGTH_LONG).show()
                             }
                         }
+
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@RegisterActivity8, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
