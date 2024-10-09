@@ -15,7 +15,7 @@
         android:layout_marginTop="170dp"
         android:text="เกี่ยวกับคุณ"
         android:textAlignment="center"
-        android:textColor="#00BCD4"
+        android:textColor="@color/blue_main"
         android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

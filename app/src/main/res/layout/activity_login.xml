@@ -9,18 +9,17 @@
     android:scaleType="centerCrop"
     tools:context=".LoginActivity">
 
-    <!-- Title เข้าสู่ระบบ -->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="196dp"
+        android:layout_marginTop="170dp"
         android:fontFamily="@font/abril_fatface"
         android:shadowRadius="4"
         android:text="เข้าสู่ระบบ"
         android:textAlignment="center"
-        android:textColor="#2EB9C6"
+        android:textColor="@color/blue_main"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +34,7 @@
         android:layout_width="300dp"
         android:layout_height="55dp"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/edittext"
         android:ems="15"
         android:hint="Username"
@@ -48,7 +47,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:ignore="TouchTargetSizeCheck" />
 
-    <!-- ช่องกรอก Password -->
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="300dp"
@@ -100,18 +98,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
 
-
-    <!-- ข้อความ Terms & Conditions -->
-    <TextView
-        android:id="@+id/tv_terms_conditions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="By signing up, you are agreeing to our Terms &amp; \nConditions"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonLogin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

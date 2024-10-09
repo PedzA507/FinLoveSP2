@@ -7,21 +7,22 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity5">
 
+    <!-- GridLayout สำหรับจัดเรียงปุ่ม -->
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="170dp"
         android:text="คุณชอบอะไร"
         android:textAlignment="center"
-        android:textColor="@color/teal_200"
+        android:textColor="@color/blue_main"
         android:textSize="45sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- GridLayout สำหรับจัดเรียงปุ่ม -->
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="wrap_content"
@@ -232,7 +233,6 @@
 
     </GridLayout>
 
-    <!-- ปุ่ม Next -->
     <ImageButton
         android:id="@+id/buttonNextStep5"
         android:layout_width="93dp"
@@ -240,7 +240,10 @@
         android:layout_marginTop="50dp"
         android:background="@drawable/cyclebutton"
         android:src="@drawable/ic_arrow_right"
-        app:layout_constraintTop_toBottomOf="@id/gridLayout"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintHorizontal_bias="0.886"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gridLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

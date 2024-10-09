@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -42,7 +43,7 @@ class ChangePreferenceActivity : AppCompatActivity() {
         val buttonOption14 = findViewById<Button>(R.id.buttonOption14)
         val buttonOption15 = findViewById<Button>(R.id.buttonOption15)
         val buttonOption16 = findViewById<Button>(R.id.buttonOption16)
-        val buttonSave = findViewById<Button>(R.id.buttonsave)
+        val buttonSave = findViewById<ImageButton>(R.id.buttonsave)
 
         // Set up buttons with preferences
         setupButton(buttonOption1, "ฟุตบอล")

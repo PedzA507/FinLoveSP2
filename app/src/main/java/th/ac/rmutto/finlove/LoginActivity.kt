@@ -41,15 +41,6 @@ class LoginActivity : AppCompatActivity() {
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val buttonLogin = findViewById<Button>(R.id.buttonLogin)
         val forgetPasswordButton = findViewById<TextView>(R.id.forgetbtn)
-        val termsConditionsTextView = findViewById<TextView>(R.id.tv_terms_conditions)
-
-
-        // การตั้งค่าสีข้อความสำหรับ Terms & Conditions
-        val spannable = SpannableString("By signing up, you are agreeing to our Terms & \nConditions")
-        val termsColor = ForegroundColorSpan(Color.parseColor("#0000FF")) // สีน้ำเงินเข้ม
-        spannable.setSpan(termsColor, 39, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        termsConditionsTextView.text = spannable
-
 
 
         // การทำงานเมื่อผู้ใช้กดปุ่มเข้าสู่ระบบ
