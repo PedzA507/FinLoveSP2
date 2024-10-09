@@ -66,9 +66,11 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
+        // ดึง userID ที่ส่งมาจาก intent
         val userID = intent.getIntExtra("userID", -1)
         Log.d("ProfileActivity", "Received userID: $userID")
 
+        // ถ้า userID ไม่ใช่ -1 แสดงว่ามี userID อยู่ ให้ทำการดึงข้อมูลผู้ใช้จากเซิร์ฟเวอร์
         if (userID != -1) {
             fetchUserInfo(userID)
         } else {
