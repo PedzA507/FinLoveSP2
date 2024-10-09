@@ -4,28 +4,38 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.RadioButton
-import android.widget.RadioGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class RegisterActivity7 : AppCompatActivity() {
+
+    // ตัวแปรเก็บค่าเพศที่สนใจ
+    private var selectedGender: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register7)
 
-        val radioGroupGender = findViewById<RadioGroup>(R.id.radioGroupGender)
-        val buttonNextStep7 = findViewById<Button>(R.id.buttonNextStep7)
+        // เชื่อมต่อปุ่มจาก XML
+        val buttonMale = findViewById<Button>(R.id.buttonMale)
+        val buttonFemale = findViewById<Button>(R.id.buttonFemale)
+        val buttonOther = findViewById<Button>(R.id.buttonOther)
+        val buttonNextStep7 = findViewById<ImageButton>(R.id.buttonNextStep7)
 
+        // กำหนดการทำงานของปุ่มเลือกเพศ
+        setupGenderButton(buttonMale, "ชาย")
+        setupGenderButton(buttonFemale, "หญิง")
+        setupGenderButton(buttonOther, "อื่นๆ")
+
+        // เมื่อกดปุ่มถัดไป
         buttonNextStep7.setOnClickListener {
-            val selectedRadioButtonId = radioGroupGender.checkedRadioButtonId
-            if (selectedRadioButtonId == -1) {
+            if (selectedGender.isNullOrEmpty()) {
                 Toast.makeText(this@RegisterActivity7, "กรุณาเลือกเพศที่คุณสนใจ", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            val selectedGender = findViewById<RadioButton>(selectedRadioButtonId).text.toString()
-            val interestGenderID = getinterestGenderID(selectedGender)
+            val interestGenderID = getInterestGenderID(selectedGender)
 
             // รับข้อมูลทั้งหมดจาก RegisterActivity6 ที่ส่งผ่าน Intent
             val email = intent.getStringExtra("email")
@@ -51,9 +61,6 @@ class RegisterActivity7 : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Log ข้อมูลก่อนส่งออกไป
-            Log.d("RegisterActivity7", "Interested Gender: $selectedGender, interestGenderID: $interestGenderID, GoalID: $goalID")
-
             // สร้าง Intent เพื่อส่งข้อมูลไปยัง RegisterActivity8
             val intent = Intent(this@RegisterActivity7, RegisterActivity8::class.java).apply {
                 putExtra("email", email)
@@ -69,22 +76,36 @@ class RegisterActivity7 : AppCompatActivity() {
                 putExtra("educationID", educationID)
                 putExtra("home", home)
                 putExtra("preferences", preferences)
-                putExtra("interestGenderID", interestGenderID) // ส่ง interestGenderID ไปด้วย
-                putExtra("goalID", goalID) // ส่ง goalID ไปด้วย
+                putExtra("interestGenderID", interestGenderID)
+                putExtra("goalID", goalID)
             }
 
-            // เริ่ม Activity ใหม่
+
             startActivity(intent)
         }
     }
 
     // ฟังก์ชันสำหรับแปลงชื่อเพศเป็น interestGenderID
-    private fun getinterestGenderID(gender: String): Int {
+    private fun getInterestGenderID(gender: String?): Int {
         return when (gender) {
             "ชาย" -> 1
             "หญิง" -> 2
             "อื่นๆ" -> 3
             else -> -1
+        }
+    }
+
+    // ฟังก์ชันสำหรับตั้งค่าการเลือกเพศ
+    private fun setupGenderButton(button: Button, gender: String) {
+        button.setOnClickListener {
+            // ทำให้ปุ่มที่ถูกเลือก active
+            findViewById<Button>(R.id.buttonMale).isSelected = false
+            findViewById<Button>(R.id.buttonFemale).isSelected = false
+            findViewById<Button>(R.id.buttonOther).isSelected = false
+            button.isSelected = true
+
+            // เก็บค่าเพศที่ถูกเลือก
+            selectedGender = gender
         }
     }
 }
