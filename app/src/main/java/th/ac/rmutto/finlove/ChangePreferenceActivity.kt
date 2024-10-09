@@ -25,16 +25,44 @@ class ChangePreferenceActivity : AppCompatActivity() {
 
         selectedPreferences = mutableListOf()
 
+        // Find all buttons
         val buttonOption1 = findViewById<Button>(R.id.buttonOption1)
         val buttonOption2 = findViewById<Button>(R.id.buttonOption2)
         val buttonOption3 = findViewById<Button>(R.id.buttonOption3)
+        val buttonOption4 = findViewById<Button>(R.id.buttonOption4)
+        val buttonOption5 = findViewById<Button>(R.id.buttonOption5)
+        val buttonOption6 = findViewById<Button>(R.id.buttonOption6)
+        val buttonOption7 = findViewById<Button>(R.id.buttonOption7)
+        val buttonOption8 = findViewById<Button>(R.id.buttonOption8)
+        val buttonOption9 = findViewById<Button>(R.id.buttonOption9)
+        val buttonOption10 = findViewById<Button>(R.id.buttonOption10)
+        val buttonOption11 = findViewById<Button>(R.id.buttonOption11)
+        val buttonOption12 = findViewById<Button>(R.id.buttonOption12)
+        val buttonOption13 = findViewById<Button>(R.id.buttonOption13)
+        val buttonOption14 = findViewById<Button>(R.id.buttonOption14)
+        val buttonOption15 = findViewById<Button>(R.id.buttonOption15)
+        val buttonOption16 = findViewById<Button>(R.id.buttonOption16)
         val buttonSave = findViewById<Button>(R.id.buttonsave)
 
-        // ฟังก์ชันสำหรับจัดการการคลิกปุ่ม
+        // Set up buttons with preferences
         setupButton(buttonOption1, "ฟุตบอล")
         setupButton(buttonOption2, "ภาพยนตร์")
         setupButton(buttonOption3, "ท่องเที่ยว")
+        setupButton(buttonOption4, "อนิเมชั่น")
+        setupButton(buttonOption5, "ช็อปปิ้ง")
+        setupButton(buttonOption6, "เล่นดนตรี")
+        setupButton(buttonOption7, "เล่นกีฬา")
+        setupButton(buttonOption8, "เล่นเกม")
+        setupButton(buttonOption9, "อ่านหนังสือ")
+        setupButton(buttonOption10, "ปาร์ตี้")
+        setupButton(buttonOption11, "สายควัน")
+        setupButton(buttonOption12, "ออกกำลังกาย")
+        setupButton(buttonOption13, "ตกปลา")
+        setupButton(buttonOption14, "รักสัตว์")
+        setupButton(buttonOption15, "ของหวาน")
+        setupButton(buttonOption16, "ถ่ายรูป")
 
+        // Save button click listener
         buttonSave.setOnClickListener {
             if (selectedPreferences.isEmpty()) {
                 Toast.makeText(this, "กรุณาเลือกอย่างน้อยหนึ่งตัวเลือก", Toast.LENGTH_LONG).show()
@@ -97,6 +125,19 @@ class ChangePreferenceActivity : AppCompatActivity() {
             "ฟุตบอล" -> 1
             "ภาพยนตร์" -> 2
             "ท่องเที่ยว" -> 3
+            "อนิเมชั่น" -> 4
+            "ช็อปปิ้ง" -> 5
+            "เล่นดนตรี" -> 6
+            "เล่นกีฬา" -> 7
+            "เล่นเกม" -> 8
+            "อ่านหนังสือ" -> 9
+            "ปาร์ตี้" -> 10
+            "สายควัน" -> 11
+            "ออกกำลังกาย" -> 12
+            "ตกปลา" -> 13
+            "รักสัตว์" -> 14
+            "ของหวาน" -> 15
+            "ถ่ายรูป" -> 16
             else -> -1
         }
     }
