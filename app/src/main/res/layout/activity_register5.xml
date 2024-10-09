@@ -45,6 +45,8 @@
             android:text="ฟุตบอล"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -55,6 +57,8 @@
             android:text="ภาพยนตร์"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -65,6 +69,8 @@
             android:text="ท่องเที่ยว"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -75,6 +81,8 @@
             android:text="อนิเมชั่น"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -85,6 +93,8 @@
             android:layout_margin="5dp"
             android:text="ช็อปปิ้ง"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -95,6 +105,8 @@
             android:text="เล่นดนตรี"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -105,6 +117,8 @@
             android:text="เล่นกีฬา"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -115,6 +129,8 @@
             android:text="เล่นเกม"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -125,6 +141,8 @@
             android:text="อ่านหนังสือ"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -135,6 +153,8 @@
             android:text="ปาร์ตี้"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -145,6 +165,8 @@
             android:text="สายควัน"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -155,6 +177,8 @@
             android:text="ออกกำลังกาย"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -165,6 +189,8 @@
             android:text="ตกปลา"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -175,6 +201,8 @@
             android:text="รักสัตว์"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -185,6 +213,8 @@
             android:text="ของหวาน"
             android:layout_margin="5dp"
             android:layout_marginTop="15dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
@@ -195,6 +225,8 @@
             android:text="ถ่ายรูป"
             android:layout_marginTop="15dp"
             android:layout_margin="5dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:background="@drawable/button_selector"
             android:textColor="@drawable/text_selector" />
 
