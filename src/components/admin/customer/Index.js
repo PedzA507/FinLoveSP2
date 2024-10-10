@@ -66,46 +66,8 @@ export default function Index() {
     });
   };
 
-  // List of side menu items
-  const menuItems = [
-    { text: 'Home', icon: <HomeIcon />, action: () => navigate('/') },
-    { text: 'Add Employee', icon: <AnalyticsIcon />, action: () => navigate('/addemployee') },
-    { text: 'Clients', icon: <PeopleIcon />, action: () => navigate('/admin/user') },
-    { text: 'Tasks', icon: <AnalyticsIcon />, action: () => navigate('/tasks') },
-    { text: 'Settings', icon: <SettingsIcon />, action: () => navigate('/settings') },
-    { text: 'Feedback', icon: <FeedbackIcon />, action: () => navigate('/feedback') },
-    { text: 'About', icon: <InfoIcon />, action: () => navigate('/about') },
-  ];
-
   return (
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-        {/* Sidebar Drawer */}
-        <Drawer
-          variant="permanent"
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              backgroundColor: '#1f1f1f',
-              color: '#ffffff',
-            },
-          }}
-        >
-          <Toolbar />
-          <Box sx={{ overflow: 'auto' }}>
-            <List>
-              {menuItems.map((item, index) => (
-                <ListItem button key={item.text} onClick={item.action}>
-                  <ListItemIcon sx={{ color: '#ffffff' }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Drawer>
 
         {/* Main Content */}
         <Container sx={{ marginTop: 2 }} maxWidth="lg">

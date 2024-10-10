@@ -46,8 +46,8 @@ export default function Dashboard() {
   const drawerWidth = 240;
   const menuItems = [
     { text: 'จัดการข้อมูลผู้ใช้', action: () => navigate('/admin/user'), icon: <PeopleIcon /> },
-    { text: 'จัดการความชอบ', action: () => navigate('/admin/user'), icon: <SettingsIcon /> },
-    { text: 'ตรวจสอบรายงานผู้ใช้', action: () => navigate('/admin/user'), icon: <PeopleIcon /> },
+    { text: 'จัดการข้อมูลพนักงาน', action: () => navigate('/admin/employee'), icon: <SettingsIcon /> },
+    { text: 'ตรวจสอบรายงานผู้ใช้', action: () => navigate('/admin/employee'), icon: <PeopleIcon /> },
     { text: 'เพิ่มผู้ดูแล', action: () => navigate('/addEmployee'), icon: <SettingsIcon /> },
     { text: 'ออกจากระบบ', action: () => navigate('/signinuser'), icon: <HomeIcon /> }
   ];
