@@ -355,7 +355,7 @@ app.put('/api/user/ban/:id', async function(req, res) {
 
 // Unban a user (set isActive to 1 in user table)
 app.put('/api/user/unban/:id', async function(req, res) {
-    const empID = req.params.id;
+    const userID = req.params.id;
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null;
 
     if (!token) {
@@ -366,17 +366,17 @@ app.put('/api/user/unban/:id', async function(req, res) {
         let decode = jwt.verify(token, SECRET_KEY);
         // ตรวจสอบว่าเป็นผู้ดูแลระบบหรือไม่ (positionID = 1 หมายถึง admin)
         if (decode.positionID != 1) {
-            return res.send({'message':'คุณไม่มีสิทธิ์ในการปลดแบนพนักงาน', 'status': false});
+            return res.send({'message':'คุณไม่มีสิทธิ์ในการปลดแบนผู้ใช้', 'status': false});
         }
 
-        // อัปเดต isActive ในตาราง employee ให้เป็น 1 (ปลดแบน)
-        let sql = "UPDATE employee SET isActive = 1 WHERE empID = ?";
-        db.query(sql, [empID], (err, result) => {
+        // อัปเดต isActive ในตาราง user ให้เป็น 1 (ปลดแบน)
+        let sql = "UPDATE user SET isActive = 1 WHERE userID = ?";
+        db.query(sql, [userID], (err, result) => {
             if (err) {
                 console.error(err);
-                return res.send({'message': 'เกิดข้อผิดพลาดในการปลดแบนพนักงาน', 'status': false});
+                return res.send({'message': 'เกิดข้อผิดพลาดในการปลดแบนผู้ใช้', 'status': false});
             }
-            res.send({'message': 'ปลดแบนพนักงานเรียบร้อยแล้ว', 'status': true});
+            res.send({'message': 'ปลดแบนผู้ใช้เรียบร้อยแล้ว', 'status': true});
         });
 
     } catch (error) {

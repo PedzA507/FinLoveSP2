@@ -122,32 +122,37 @@ export default function Index() {
                     <TableCell align="center">จัดการข้อมูล</TableCell>
                   </TableRow>
                 </TableHead>
-<TableBody>
-  {employees.map((employee) => (
-    <TableRow key={employee.empID}> 
-      <TableCell align="right">{employee.empID}</TableCell>
-      <TableCell align="center">
-        <Avatar src={url + '/employee/image/' + employee.imageFile} />
-      </TableCell>
-      <TableCell align="left">{employee.firstname}</TableCell> {/* ตรวจสอบการดึงข้อมูลตรงนี้ */}
-      <TableCell align="left">{employee.lastname}</TableCell>  {/* ตรวจสอบการดึงข้อมูลตรงนี้ */}
-      <TableCell align="left">{employee.username}</TableCell>
-      <TableCell align="center">
-        <ButtonGroup color="primary">
-          <Button onClick={() => ViewEmployee(employee.empID)}>ตรวจสอบรายงาน</Button>
-          <Button onClick={() => UpdateEmployee(employee.empID)}>แก้ไข</Button>
-          {employee.isActive === 1 ? (
-            <Button onClick={() => EmployeeBan(employee.empID)}>แบนผู้ใช้</Button>
-          ) : (
-            <Button onClick={() => EmployeeUnban(employee.empID)}>ปลดแบน</Button>
-          )}
-          <Button onClick={() => EmployeeDelete(employee.empID)}>ลบผู้ใช้</Button>
-        </ButtonGroup>
-      </TableCell>
-    </TableRow>
-  ))}
-</TableBody>
 
+                <TableBody>
+                  {employees.map((employee) => (
+                    <TableRow key={employee.empID}> 
+                      <TableCell align="right">{employee.empID}</TableCell>
+                      <TableCell align="center">
+                        <Box display="flex" justifyContent="center">
+                          <Avatar src={url + '/employee/image/' + employee.imageFile} />
+                        </Box>
+                      </TableCell>
+                      <TableCell align="left">{employee.firstname}</TableCell>
+                      <TableCell align="left">{employee.lastname}</TableCell>
+                      <TableCell align="left">{employee.username}</TableCell>
+                      <TableCell align="center">
+                        <ButtonGroup color="primary" aria-label="outlined primary button group">
+                          <Button variant="contained" onClick={() => ViewEmployee(employee.empID)}>ตรวจสอบรายงาน</Button>
+                          <Button variant="outlined" onClick={() => UpdateEmployee(employee.empID)}>แก้ไข</Button>
+
+                          {/* Conditionally render "แบนผู้ใช้" or "ปลดแบน" based on isActive */}
+                          {employee.isActive === 1 ? (
+                            <Button variant="outlined" color="secondary" onClick={() => EmployeeBan(employee.empID)}>แบนผู้ใช้</Button>
+                          ) : (
+                            <Button variant="outlined" color="primary" onClick={() => EmployeeUnban(employee.empID)}>ปลดแบน</Button>
+                          )}
+
+                          <Button variant="contained" color="error" onClick={() => EmployeeDelete(employee.empID)}>ลบผู้ใช้</Button>
+                        </ButtonGroup>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
               </Table>
             </TableContainer>
           </Paper>
