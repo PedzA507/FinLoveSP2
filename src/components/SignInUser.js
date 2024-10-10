@@ -57,7 +57,7 @@ export default function SignInUser() {
         } else if (result['role'] === 'employee') {
           navigate('/dashboard'); // นำทางไปยังหน้าหลักของ employee
         } else {
-          navigate('/cusview'); // นำทางไปยังหน้าหลักของ customer
+          navigate('/cusview'); // นำทางไปยังหน้าหลักของ user
         }
       }
 

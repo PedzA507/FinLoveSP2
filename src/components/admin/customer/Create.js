@@ -67,7 +67,7 @@ export default function Create() {
     alert(result['message']);
 
     if (result['status'] === true) {
-      window.location.href = '/admin/customer';
+      window.location.href = '/admin/user';
     }
   }
 

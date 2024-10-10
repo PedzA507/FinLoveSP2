@@ -9,45 +9,9 @@ import FeedbackIcon from '@mui/icons-material/Feedback';
 import InfoIcon from '@mui/icons-material/Info';
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import BackgroundImage from '../../assets/BG.png';
-
 
 
 const drawerWidth = 240;
-
-// Custom theme (เหมือนกับ Dashboard)
-const customTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#1976d2',
-    },
-    background: {
-
-      default: '#1f1f1f',
-      paper: '#242424',
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#cccccc',
-    },
-  },
-  typography: {
-    h1: {
-      fontSize: '2.5rem',
-      color: '#ffffff',
-    },
-    h5: {
-      color: '#ffffff',
-    },
-    h6: {
-      color: '#ffffff',
-      fontWeight: 'bold',
-    },
-  },
-});
-
-// Fetch token from local storage
 const token = localStorage.getItem('token');
 const url = process.env.REACT_APP_BASE_URL;
 
@@ -56,11 +20,11 @@ export default function Index() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    UsersGet(setUsers);
+    UsersGet();
   }, []);
 
   const UsersGet = () => {
-    axios.get(`${url}/customer`, {
+    axios.get(`${url}/user`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -74,15 +38,15 @@ export default function Index() {
   };
 
   const ViewUser = (id) => {
-    window.location = `/admin/customer/view/${id}`;
+    window.location = `/admin/user/view/${id}`;
   }
 
   const UpdateUser = (id) => {
-    window.location = `/admin/customer/update/${id}`;
+    window.location = `/admin/user/update/${id}`;
   }
 
   const UserDelete = (id) => {
-    axios.delete(`${url}/customer/${id}`, {
+    axios.delete(`${url}/user/${id}`, {
       headers: {
         'Accept': 'application/form-data',
         'Content-Type': 'application/json',
@@ -102,10 +66,11 @@ export default function Index() {
     });
   };
 
+  // List of side menu items
   const menuItems = [
     { text: 'Home', icon: <HomeIcon />, action: () => navigate('/') },
     { text: 'Add Employee', icon: <AnalyticsIcon />, action: () => navigate('/addemployee') },
-    { text: 'Clients', icon: <PeopleIcon />, action: () => navigate('/admin/customer') },
+    { text: 'Clients', icon: <PeopleIcon />, action: () => navigate('/admin/user') },
     { text: 'Tasks', icon: <AnalyticsIcon />, action: () => navigate('/tasks') },
     { text: 'Settings', icon: <SettingsIcon />, action: () => navigate('/settings') },
     { text: 'Feedback', icon: <FeedbackIcon />, action: () => navigate('/feedback') },
@@ -113,12 +78,8 @@ export default function Index() {
   ];
 
   return (
-    <ThemeProvider theme={customTheme}>
-      <Box sx={{ display: 'flex', minHeight: '100vh' ,
-          backgroundImage: `url(${BackgroundImage})`, 
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'}}>
-        {/* Sidebar */}
+      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+        {/* Sidebar Drawer */}
         <Drawer
           variant="permanent"
           sx={{
@@ -148,17 +109,17 @@ export default function Index() {
 
         {/* Main Content */}
         <Container sx={{ marginTop: 2 }} maxWidth="lg">
-          <Paper sx={{ padding: 2, color: 'text.secondary' }}>
+          <Paper sx={{ padding: 2 }}>
             <Box display="flex">
               <Box flexGrow={1}>
                 <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                  รายการข้อมูลลูกค้า
+                  จัดการข้อมูลผู้ใช้
                 </Typography>
               </Box>
               <Box>
-                <Link to="/admin/customer/create">
+                <Link to="/admin/user/create">
                   <Button variant="contained" color="primary">
-                    เพิ่มข้อมูลลูกค้า
+                    เพิ่มข้อมูลผู้ใช้
                   </Button>
                 </Link>
               </Box>
@@ -178,21 +139,21 @@ export default function Index() {
 
                 <TableBody>
                   {users.map((user) => (
-                    <TableRow key={user.custID}>
-                      <TableCell align="right">{user.custID}</TableCell>
+                    <TableRow key={user.userID}>
+                      <TableCell align="right">{user.userID}</TableCell>
                       <TableCell align="center">
                         <Box display="flex" justifyContent="center">
-                          <Avatar src={url + '/customer/image/' + user.imageFile} />
+                          <Avatar src={url + '/user/image/' + user.imageFile} />
                         </Box>
                       </TableCell>
-                      <TableCell align="left">{user.firstName}</TableCell>
-                      <TableCell align="left">{user.lastName}</TableCell>
+                      <TableCell align="left">{user.firstname}</TableCell>
+                      <TableCell align="left">{user.lastname}</TableCell>
                       <TableCell align="left">{user.username}</TableCell>
                       <TableCell align="center">
                         <ButtonGroup color="primary" aria-label="outlined primary button group">
-                          <Button onClick={() => ViewUser(user.custID)}>แสดง</Button>
-                          <Button onClick={() => UpdateUser(user.custID)}>แก้ไข</Button>
-                          <Button onClick={() => UserDelete(user.custID)}>&nbsp;ลบ&nbsp;</Button>
+                          <Button onClick={() => ViewUser(user.userID)}>ตรวจสอบรายงาน</Button>
+                          <Button onClick={() => UpdateUser(user.userID)}>แก้ไข</Button>
+                          <Button onClick={() => UserDelete(user.userID)}>ระงับผู้ใช้</Button>
                         </ButtonGroup>
                       </TableCell>
                     </TableRow>
@@ -203,6 +164,5 @@ export default function Index() {
           </Paper>
         </Container>
       </Box>
-    </ThemeProvider>
   );
 }
