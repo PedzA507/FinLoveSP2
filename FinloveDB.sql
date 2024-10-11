@@ -75,7 +75,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (2,'ปริญ','วรกมล','0898763723',1,'parin@hotmail.com','admin','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(3,'สมชาย','หารณรงค์','0862134496',1,'somchai@gmail.com','ant','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img3.jpg',1,0,NULL,1),(4,'กาญจนา','กิ่งแก้ว','0868927364',1,'karnjana@gmail.com','karnjana','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img4.jpg',2,0,NULL,1),(5,'ขนิษฐา','กองแก้ว','0893524367',1,'khanitha@hotmail.com','khanitha','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img5.jpg',2,0,NULL,1),(6,'พิเชษ','เจตจำนงค์','0896789076',1,'pichet@hotmail.com','pichet','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img6.jpg',2,0,NULL,1),(7,'นิดา','แสนสุข','0897658261',1,'nida@gmail.com','nida','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img7.jpg',2,0,NULL,1),(8,'นิตยา','สุขใจ','0898733827',1,'nitaya@gmail.com','nitaya','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img8.jpg',2,0,NULL,0),(9,'สรศักดิ์','หาญกล้า','0895767898',1,'sorasak@gmail.com','sorasak','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img9.jpg',2,0,NULL,0),(10,'สมชาติ','ใจดี','0897652875',1,'somechai@gmail.com','somchat','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img10.jpg',2,0,NULL,0),(11,'ped','ped',NULL,1,'ped','ped','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(14,'Methaporn','Limrostham',NULL,1,'pedza507@gmail.com','antff','$2a$10$oCSxPPo0DWOLxOj2HR/N5O160I8GMcHliLbIwCMw.mli1F3kn.zk.','img2.png',NULL,0,NULL,1);
+INSERT INTO `employee` VALUES (2,'ปริญ','วรกมล','0898763723',1,'parin@hotmail.com','admin','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(3,'สมชาย','หารณรงค์','0862134496',1,'somchai@gmail.com','ant','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img3.jpg',1,2,'2024-10-11 14:40:57',1),(4,'กาญจนา','กิ่งแก้ว','0868927364',1,'karnjana@gmail.com','karnjana','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img4.jpg',2,0,NULL,0),(5,'ขนิษฐา','กองแก้ว','0893524367',1,'khanitha@hotmail.com','khanitha','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img5.jpg',2,0,NULL,1),(6,'พิเชษ','เจตจำนงค์','0896789076',1,'pichet@hotmail.com','pichet','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img6.jpg',2,0,NULL,1),(7,'นิดา','แสนสุข','0897658261',1,'nida@gmail.com','nida','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img7.jpg',2,0,NULL,1),(8,'นิตยา','สุขใจ','0898733827',1,'nitaya@gmail.com','nitaya','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img8.jpg',2,0,NULL,0),(9,'สรศักดิ์','หาญกล้า','0895767898',1,'sorasak@gmail.com','sorasak','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img9.jpg',2,0,NULL,0),(10,'สมชาติ','ใจดี','0897652875',1,'somechai@gmail.com','somchat','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img10.jpg',2,0,NULL,0),(11,'ped','ped',NULL,1,'ped','ped','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(14,'Methaporn','Limrostham',NULL,1,'pedza507@gmail.com','antff','$2a$10$oCSxPPo0DWOLxOj2HR/N5O160I8GMcHliLbIwCMw.mli1F3kn.zk.','img2.png',NULL,0,NULL,1);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,13 +208,13 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `UserID` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) DEFAULT NULL,
+  `username` varchar(20) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `firstname` varchar(255) DEFAULT NULL,
-  `lastname` varchar(255) DEFAULT NULL,
-  `nickname` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phonenumber` varchar(255) DEFAULT NULL,
+  `firstname` varchar(20) DEFAULT NULL,
+  `lastname` varchar(20) DEFAULT NULL,
+  `nickname` varchar(15) DEFAULT NULL,
+  `email` varchar(40) DEFAULT NULL,
+  `phonenumber` varchar(10) DEFAULT NULL,
   `height` float DEFAULT NULL,
   `home` varchar(255) DEFAULT NULL,
   `DateBirth` date DEFAULT NULL,
@@ -238,7 +238,7 @@ CREATE TABLE `user` (
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`educationID`) REFERENCES `education` (`educationID`),
   CONSTRAINT `user_ibfk_2` FOREIGN KEY (`goalID`) REFERENCES `goal` (`goalID`),
   CONSTRAINT `user_ibfk_4` FOREIGN KEY (`interestGenderID`) REFERENCES `interestgender` (`interestGenderID`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,7 +247,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (59,'ant','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','Methaporn','Limrostham','Ant','pedza506@gmail.com','0642727318',180,'Bangkok','2003-10-07','image8919987123993735035.jpg',1,2,1,2,3,'2024-10-10 14:39:34',NULL,NULL,1),(60,'test','$2b$10$yD548UH0t5FsrnhLIR8hluEQjqoj4zXsBGi0O9uIt1jM5oqFn2qrC','firstname','lastname','nickname','email','9999',400,'home','2003-10-01','image8919987123993735035.jpg',2,3,1,1,0,'2024-10-04 10:10:37',NULL,NULL,1),(61,'beamdota','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','vorrapat','kobsinkha','beam','9beamdota@gmail.com','0855240541',171,'Bangkok','0200-08-07','image8919987123993735035.jpg',1,2,1,2,0,'2024-10-04 10:13:13',NULL,NULL,1),(82,'Praewa','$2b$10$q5dKjQKmjo.xSpR5R04qe.409Cr5/H63vi0JoQJA/YLJesX/B8dEO','Praewa','Praewa','Praewa','Praewa','1111',160,'Praewa','2024-10-06','image8919987123993735035.jpg',2,2,3,NULL,0,'2024-10-05 19:44:06',NULL,NULL,1),(84,'james','$2b$10$1E1RHi7TNFVcBDywse8FFOhh254CFxzWnj/Jk/tt2TDLVeZ1VjwlC','james','james','james','james','33333',2222,'james','2024-10-01','image8919987123993735035.jpg',1,3,3,2,0,'2024-10-08 14:49:17',NULL,NULL,1),(96,'jeff','$2b$10$Oc6OqxiMS3skzTw2zOvJcO9JMCLS1WlYgaGo9oZJcLioOINycLifC','jeff','jeff','jeff','jeff','1654221',180,'jeff','2024-10-04','image8919987123993735035.jpg',2,1,3,2,0,NULL,NULL,NULL,1),(97,'geg','$2b$10$LTH88HvhZlHskWA61Q8oDe9TbYnaHlovN2XOgBrJlz3dnSP3.4zmi','grokegr','grgre','gergre','opmopgre','24342',423242000,'rgeg','2024-10-01','image8919987123993735035.jpg',2,2,3,2,0,NULL,NULL,NULL,1),(102,NULL,'$2a$10$UfDvgAEcB7awzUm5BcOqR./Ke4B8IqIry5skOyDEAnP2FxcLcht02','adminn','adminn',NULL,NULL,NULL,NULL,NULL,NULL,'image8919987123993735035.jpg',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,1);
+INSERT INTO `user` VALUES (59,'ant','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','Methaporn','Limrostham','Ant','pedza506@gmail.com','0642727318',180,'Bangkok','2003-10-07','image8919987123993735035.jpg',1,2,1,2,5,'2024-10-11 10:15:01',NULL,NULL,1),(60,'test','$2b$10$yD548UH0t5FsrnhLIR8hluEQjqoj4zXsBGi0O9uIt1jM5oqFn2qrC','firstname','lastname','nickname','email','9999',400,'home','2003-10-01','image8919987123993735035.jpg',2,3,1,1,0,'2024-10-04 10:10:37',NULL,NULL,1),(61,'beamdota','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','vorrapat','kobsinkha','beam','9beamdota@gmail.com','0855240541',171,'Bangkok','0200-08-07','image8919987123993735035.jpg',1,2,1,2,0,'2024-10-04 10:13:13',NULL,NULL,1),(82,'Praewa','$2b$10$q5dKjQKmjo.xSpR5R04qe.409Cr5/H63vi0JoQJA/YLJesX/B8dEO','Praewa','Praewa','Praewa','Praewa','1111',160,'Praewa','2024-10-06','image8919987123993735035.jpg',2,2,3,NULL,0,'2024-10-05 19:44:06',NULL,NULL,1),(84,'james','$2b$10$1E1RHi7TNFVcBDywse8FFOhh254CFxzWnj/Jk/tt2TDLVeZ1VjwlC','james','james','james','james','33333',2222,'james','2024-10-01','image8919987123993735035.jpg',1,3,3,2,0,'2024-10-08 14:49:17',NULL,NULL,1),(96,'jeff','$2b$10$Oc6OqxiMS3skzTw2zOvJcO9JMCLS1WlYgaGo9oZJcLioOINycLifC','jeff','jeff','jeff','jeff','1654221',180,'jeff','2024-10-04','image8919987123993735035.jpg',2,1,3,2,0,NULL,NULL,NULL,1),(97,'geg','$2b$10$LTH88HvhZlHskWA61Q8oDe9TbYnaHlovN2XOgBrJlz3dnSP3.4zmi','grokegr','grgre','gergre','opmopgre','24342',423242000,'rgeg','2024-10-01','image8919987123993735035.jpg',2,2,3,2,0,NULL,NULL,NULL,1),(102,NULL,'$2a$10$UfDvgAEcB7awzUm5BcOqR./Ke4B8IqIry5skOyDEAnP2FxcLcht02','adminn','adminn',NULL,NULL,NULL,NULL,NULL,NULL,'image8919987123993735035.jpg',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,1),(103,'ban','$2b$10$UF.D/AHTEQKdLLafFfMoXOHdSf.GYxc/I/6tcGSTFVM3LGPri209.','ban','ban','ban','ban','5588855665',255,'ban','2024-10-02','image8515321978712692002.jpg',2,2,4,3,0,NULL,NULL,NULL,1),(104,'bvb','$2b$10$VKi.sy8wn/nG1FggSIXrSO9ZxFCMLD/Xu.bEE/nFzpdKgdWfvmToe','nnn','mmm','ggggggg','bvb','4324324434',423,'hjthtrhtr','2024-10-01','image2529239810527146318.jpg',2,4,1,2,0,'2024-10-11 10:15:09',NULL,NULL,1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -274,7 +274,7 @@ CREATE TABLE `userpreferences` (
 
 LOCK TABLES `userpreferences` WRITE;
 /*!40000 ALTER TABLE `userpreferences` DISABLE KEYS */;
-INSERT INTO `userpreferences` VALUES (59,1),(84,1),(59,2),(60,2),(82,2),(84,2),(60,3),(61,3),(82,3),(59,4),(96,4),(97,7),(96,8),(96,12),(97,13),(97,15);
+INSERT INTO `userpreferences` VALUES (59,1),(84,1),(59,2),(60,2),(82,2),(84,2),(60,3),(61,3),(82,3),(59,4),(96,4),(97,7),(104,7),(96,8),(104,11),(96,12),(97,13),(103,14),(97,15),(103,15),(104,15);
 /*!40000 ALTER TABLE `userpreferences` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -287,4 +287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-10 23:02:27
+-- Dump completed on 2024-10-11 17:30:12
