@@ -2,7 +2,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">localhost</domain>
-        <domain includeSubdomains="true">192.168.48.1</domain> <!-- ใช้ IP ที่ต้องการ -->
+        <domain includeSubdomains="true">192.168.1.49</domain> <!-- ใช้ IP ที่ต้องการ -->
     </domain-config>
     <base-config cleartextTrafficPermitted="true" />
 </network-security-config>

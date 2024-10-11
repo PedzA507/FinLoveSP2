@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
+import android.text.InputFilter
 import androidx.appcompat.app.AppCompatActivity
 
 class RegisterActivity2 : AppCompatActivity() {
@@ -21,10 +22,31 @@ class RegisterActivity2 : AppCompatActivity() {
         val username = intent.getStringExtra("username")
         val password = intent.getStringExtra("password")
 
+        // กำหนดข้อจำกัดจำนวนตัวอักษรตามฐานข้อมูล
+        editTextFirstname.filters = arrayOf(InputFilter.LengthFilter(20))  // จำกัดชื่อจริงไม่เกิน 20 ตัวอักษร
+        editTextLastname.filters = arrayOf(InputFilter.LengthFilter(20))   // จำกัดนามสกุลไม่เกิน 20 ตัวอักษร
+        editTextNickname.filters = arrayOf(InputFilter.LengthFilter(15))   // จำกัดชื่อเล่นไม่เกิน 15 ตัวอักษร
+
         buttonNextStep2.setOnClickListener {
             val firstname = editTextFirstname.text.toString()
             val lastname = editTextLastname.text.toString()
             val nickname = editTextNickname.text.toString()
+
+            // ตรวจสอบความยาวของข้อมูลก่อนส่งไปยังหน้าถัดไป
+            if (firstname.length > 20) {
+                editTextFirstname.error = "ชื่อจริงต้องไม่เกิน 20 ตัวอักษร"
+                return@setOnClickListener
+            }
+
+            if (lastname.length > 20) {
+                editTextLastname.error = "นามสกุลต้องไม่เกิน 20 ตัวอักษร"
+                return@setOnClickListener
+            }
+
+            if (nickname.length > 15) {
+                editTextNickname.error = "ชื่อเล่นต้องไม่เกิน 15 ตัวอักษร"
+                return@setOnClickListener
+            }
 
             if (firstname.isEmpty()) {
                 editTextFirstname.error = "กรุณาระบุชื่อจริง"

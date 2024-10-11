@@ -8,14 +8,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import java.util.Calendar
 
 class RegisterActivity4 : AppCompatActivity() {
@@ -59,7 +51,6 @@ class RegisterActivity4 : AppCompatActivity() {
 
             datePickerDialog.show()
         }
-
 
         buttonNextStep4.setOnClickListener {
             val home = editTextHome.text.toString()

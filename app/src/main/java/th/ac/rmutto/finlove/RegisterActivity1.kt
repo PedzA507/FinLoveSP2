@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import android.content.Intent
+import android.text.InputFilter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
@@ -25,10 +26,31 @@ class RegisterActivity1 : AppCompatActivity() {
         val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
         val buttonNext = findViewById<ImageButton>(R.id.buttonNext)
 
+        // กำหนดข้อจำกัดจำนวนตัวอักษรตามฐานข้อมูล
+        editTextUsername.filters = arrayOf(InputFilter.LengthFilter(20)) // จำกัดชื่อผู้ใช้ไม่เกิน 20 ตัวอักษร
+        editTextEmail.filters = arrayOf(InputFilter.LengthFilter(30)) // จำกัดอีเมลไม่เกิน 40 ตัวอักษร
+        editTextPassword.filters = arrayOf(InputFilter.LengthFilter(20)) // จำกัดรหัสผ่านไม่เกิน 20 ตัวอักษร
+
         buttonNext.setOnClickListener {
             val email = editTextEmail.text.toString()
             val username = editTextUsername.text.toString()
             val password = editTextPassword.text.toString()
+
+            // ตรวจสอบความยาวของข้อมูลอีกครั้งในกรณีที่มีการ bypass input filter
+            if (email.length > 40) {
+                editTextEmail.error = "อีเมลต้องไม่เกิน 40 ตัวอักษร"
+                return@setOnClickListener
+            }
+
+            if (username.length > 20) {
+                editTextUsername.error = "ชื่อผู้ใช้ต้องไม่เกิน 20 ตัวอักษร"
+                return@setOnClickListener
+            }
+
+            if (password.length > 20) {
+                editTextPassword.error = "รหัสผ่านต้องไม่เกิน 20 ตัวอักษร"
+                return@setOnClickListener
+            }
 
             if (email.isEmpty()) {
                 editTextEmail.error = "กรุณาระบุอีเมล"
