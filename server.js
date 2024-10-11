@@ -14,12 +14,13 @@ const saltRounds = 10;
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/');
+        cb(null, 'assets/user/');  // เปลี่ยนจาก 'uploads/' เป็น 'assets/user/'
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);  // ใช้ชื่อไฟล์เดิม
     }
 });
+
 
 const upload = multer({ storage: storage });
 
@@ -359,11 +360,11 @@ app.get('/api/user', function(req, res){
     });
 });
 
-// แสดงรูปภาพของผู้ใช้
 app.get('/api/user/image/:filename', function(req, res){
-    const filepath = path.join(__dirname, 'uploads', req.params.filename);  
+    const filepath = path.join(__dirname, 'assets/user', req.params.filename);  // แก้จาก 'uploads' เป็น 'assets/user'
     res.sendFile(filepath);
 });
+
 
 
 
