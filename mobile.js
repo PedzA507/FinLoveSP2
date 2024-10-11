@@ -35,7 +35,8 @@ db.connect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static('uploads'));
+app.use('/assets/user', express.static(path.join(__dirname, 'assets/user')));
+
 
 // Nodemailer Transporter Configuration
 const transporter = nodemailer.createTransport({
@@ -370,6 +371,8 @@ app.get('/api/user/image/:filename', function(req, res){
 
 
 
+
+
 // เรียกดูข้อมูลผู้ใช้
 app.get('/api/user/:id', async function (req, res) {
     const { id } = req.params;
@@ -396,7 +399,8 @@ app.get('/api/user/:id', async function (req, res) {
         const [result] = await db.promise().query(sql, [id]);
         if (result.length > 0) {
             if (result[0].imageFile) {
-                result[0].imageFile = `${req.protocol}://${req.get('host')}/uploads/${result[0].imageFile}`;
+                // แก้ไข path การเข้าถึงรูปภาพจาก assets/user
+                result[0].imageFile = `${req.protocol}://${req.get('host')}/assets/user/${result[0].imageFile}`;
             }
             res.send(result[0]);
         } else {
@@ -407,8 +411,6 @@ app.get('/api/user/:id', async function (req, res) {
         res.status(500).send({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้", status: false });
     }
 });
-
-
 
 
 
