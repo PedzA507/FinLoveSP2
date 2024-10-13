@@ -202,7 +202,9 @@ class HomeFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     if (response.isSuccessful) {
                         Toast.makeText(requireContext(), "User disliked successfully", Toast.LENGTH_SHORT).show()
+
                         nextUser() // ไปยังผู้ใช้คนถัดไปทันทีเมื่อกด "Dislike"
+
                     } else {
                         Toast.makeText(requireContext(), "Error: ${response.message}", Toast.LENGTH_SHORT).show()
                     }
@@ -210,7 +212,6 @@ class HomeFragment : Fragment() {
             }
         })
     }
-
 
     // แสดง AlertDialog สำหรับเลือกเหตุผลการรายงาน
     private fun showReportDialog(reportedID: Int) {
