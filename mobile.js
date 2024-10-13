@@ -50,6 +50,10 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // API สำหรับการเข้าสู่ระบบ
 app.post('/api/login', async function(req, res) {
     const { username, password } = req.body;
@@ -147,6 +151,10 @@ app.post('/api/logout/:id', async (req, res) => {
     }
 });
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 app.post('/api/checkUsernameEmail', async function(req, res) {
     const { username, email } = req.body;
 
@@ -172,6 +180,7 @@ app.post('/api/checkUsernameEmail', async function(req, res) {
         res.status(500).send({ "message": "เกิดข้อผิดพลาดในระบบ", "status": false });
     }
 });
+
 
 
 app.post('/api/register8', upload.single('imageFile'), async function(req, res) {
@@ -228,6 +237,10 @@ app.post('/api/register8', upload.single('imageFile'), async function(req, res) 
         res.status(500).send({ "message": "บันทึกลง FinLove ล้มเหลว", "status": false });
     }
 });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 app.post('/api/request-pin', async (req, res) => {
     const { email } = req.body;
@@ -347,6 +360,9 @@ app.post('/api/reset-password', async (req, res) => {
 });
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // แสดงข้อมูลผู้ใช้ทั้งหมด
 app.get('/api/user', function(req, res){        
     const sql = "SELECT username, imageFile, preferences FROM user";
@@ -367,7 +383,6 @@ app.get('/api/user/image/:filename', function(req, res){
     const filepath = path.join(__dirname, 'assets/user', req.params.filename);  // แก้จาก 'uploads' เป็น 'assets/user'
     res.sendFile(filepath);
 });
-
 
 
 
@@ -516,6 +531,7 @@ app.post('/api/user/update/:id', async function(req, res) {
 });
 
 
+
 // API สำหรับอัปเดต preferences ของผู้ใช้
 app.post('/api/user/update_preferences/:id', async function (req, res) {
     const { id } = req.params; // รับ userID จากพารามิเตอร์
@@ -556,7 +572,6 @@ app.post('/api/user/update_preferences/:id', async function (req, res) {
         res.status(500).send({ message: "เกิดข้อผิดพลาดในการอัปเดต preferences", status: false });
     }
 });
-
 
 
 
@@ -669,7 +684,6 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
 
 
 
-
 // API สำหรับการลบผู้ใช้
 app.delete('/api/user/:id', async function (req, res) {
     const { id } = req.params;
@@ -714,11 +728,7 @@ app.delete('/api/user/:id', async function (req, res) {
 });
 
 
-
-
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // ดึงข้อมูลผู้ใช้ทั้งหมดจากฐานข้อมูล
@@ -742,7 +752,7 @@ app.get('/api/users', (req, res) => {
 });
 
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.post('/api/report', (req, res) => {
     const { reporterID, reportedID, reportType } = req.body;
@@ -777,7 +787,7 @@ app.post('/api/report', (req, res) => {
 });
 
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Route สำหรับ Like
@@ -860,27 +870,7 @@ app.post('/api/dislike', (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 // Function to execute a query with a promise-based approach
@@ -965,6 +955,7 @@ app.get('/chat/show/:chatRoomID', async function (req, res) {
 });
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 app.listen(process.env.SERVER_PORT, () => {
