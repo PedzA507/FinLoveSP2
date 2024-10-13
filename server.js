@@ -246,7 +246,7 @@ app.get('/api/profile/:id', async function(req, res) {
 
 //Show a user image
 app.get('/api/user/image/:filename', function(req, res) {        
-    const filepath = path.join(__dirname, 'assets/customer', req.params.filename);
+    const filepath = path.join(__dirname, 'assets/user', req.params.filename);
 
     // Check if the file exists
     fs.access(filepath, fs.constants.F_OK, (err) => {
