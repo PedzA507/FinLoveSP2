@@ -361,14 +361,12 @@ app.get('/api/user', function(req, res){
     });
 });
 
+
+
 app.get('/api/user/image/:filename', function(req, res){
     const filepath = path.join(__dirname, 'assets/user', req.params.filename);  // แก้จาก 'uploads' เป็น 'assets/user'
     res.sendFile(filepath);
 });
-
-
-
-
 
 
 
@@ -714,6 +712,168 @@ app.delete('/api/user/:id', async function (req, res) {
         res.status(500).send({ message: "เกิดข้อผิดพลาดในการลบข้อมูลผู้ใช้", status: false });
     }
 });
+
+
+
+
+
+
+
+
+
+// ดึงข้อมูลผู้ใช้ทั้งหมดจากฐานข้อมูล
+app.get('/api/users', (req, res) => {
+    const query = `SELECT userID, nickname, imageFile FROM user`;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            return res.status(500).send('Error fetching users');
+        }
+
+        // ตรวจสอบและปรับปรุงเส้นทางของ imageFile สำหรับผู้ใช้แต่ละคน
+        results.forEach(user => {
+            if (user.imageFile) {
+                user.imageFile = `${req.protocol}://${req.get('host')}/assets/user/${user.imageFile}`;
+            }
+        });
+
+        res.json(results);
+    });
+});
+
+
+
+
+app.post('/api/report', (req, res) => {
+    const { reporterID, reportedID, reportType } = req.body;
+
+    // ตรวจสอบว่าได้ค่าอะไรจาก req.body และมีการส่งค่ามาครบถ้วนหรือไม่
+    console.log('Received report data:', { reporterID, reportedID, reportType });
+
+    // ตรวจสอบว่า reporterID ถูกส่งมาหรือไม่
+    if (!reporterID || reporterID === '-1') {
+        console.error("Invalid reporterID:", reporterID);
+        return res.status(400).json({ message: "Invalid reporterID" });
+    }
+
+    const query = `
+        INSERT INTO userreport (reporterID, reportedID, reportID)
+        VALUES (?, ?, (SELECT reportID FROM report WHERE reportType = ?))
+    `;
+
+    // ตรวจสอบว่าค่า query ที่จะใช้ใน db query ถูกต้องหรือไม่
+    console.log('Executing query with values:', [reporterID, reportedID, reportType]);
+
+    db.query(query, [reporterID, reportedID, reportType], (err, result) => {
+        if (err) {
+            console.error('Error inserting report:', err);
+            return res.status(500).json({ message: 'Failed to report', error: err.message });
+        }
+
+        // ตรวจสอบผลลัพธ์หลังการ execute query
+        console.log('Report insertion result:', result);
+        res.json({ message: 'Report saved successfully' });
+    });
+});
+
+
+
+
+
+// Route สำหรับ Like
+app.post('/api/like', (req, res) => {
+    const { likerID, likedID } = req.body;
+
+    if (likerID === likedID) {
+        return res.status(400).json({ error: 'You cannot like yourself' });
+    }
+
+    // ลบการตรวจสอบ Like ซ้ำ
+    const insertLikeQuery = `
+        INSERT INTO userlike (likerID, likedID)
+        VALUES (?, ?)
+    `;
+
+    db.query(insertLikeQuery, [likerID, likedID], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.status(200).json({ success: true });
+    });
+});
+
+// Route สำหรับเช็คการ Match
+app.post('/api/check_match', (req, res) => {
+    const { userID, likedID } = req.body;
+
+    // ตรวจสอบว่าผู้ที่ถูกกด Like (likedID) ได้กด Like ให้กับผู้ล็อกอิน (userID) อยู่ก่อนหรือไม่
+    const checkMatchQuery = `
+        SELECT * FROM userlike 
+        WHERE likerID = ? AND likedID = ?
+    `;
+
+    db.query(checkMatchQuery, [likedID, userID], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (result.length > 0) {
+            // ถ้าผู้ใช้ที่ถูกกด Like (likedID) ได้กด Like ให้ผู้ล็อกอิน (userID) ก่อนหน้านี้
+            return res.status(200).json({ match: true });
+        } else {
+            // ถ้าอีกฝ่ายยังไม่กด Like ให้ผู้ล็อกอิน
+            return res.status(200).json({ match: false });
+        }
+    });
+});
+
+
+// Route สำหรับ Dislike
+app.post('/api/dislike', (req, res) => {
+    const { dislikerID, dislikedID } = req.body;
+
+    if (dislikerID === dislikedID) {
+        return res.status(400).json({ error: 'You cannot dislike yourself' });
+    }
+
+    // ตรวจสอบก่อนว่าผู้ใช้เคยถูก Like หรือ Dislike แล้วหรือยัง
+    const checkExistQuery = `
+        SELECT * FROM userdislike 
+        WHERE dislikerID = ? AND dislikedID = ?
+    `;
+
+    db.query(checkExistQuery, [dislikerID, dislikedID], (err, result) => {
+        if (err) return res.status(500).send(err);
+
+        if (result.length > 0) {
+            // ถ้าเคย Dislike แล้วให้ตอบกลับว่า Dislike สำเร็จโดยไม่ต้องทำซ้ำ
+            return res.status(200).json({ success: true, message: 'Already disliked this user' });
+        }
+
+        // เพิ่ม Dislike ลงในฐานข้อมูล
+        const sql = 'INSERT INTO userdislike (dislikerID, dislikedID) VALUES (?, ?)';
+        db.query(sql, [dislikerID, dislikedID], (err, result) => {
+            if (err) return res.status(500).send(err);
+            res.status(200).send('User disliked successfully');
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
