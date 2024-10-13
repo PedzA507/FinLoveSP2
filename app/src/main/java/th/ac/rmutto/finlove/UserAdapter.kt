@@ -30,6 +30,7 @@ class UserAdapter(private val users: List<User>, private val currentUserID: Int)
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = users[position]
         holder.bind(user, currentUserID)
+
     }
 
     override fun getItemCount(): Int = users.size
