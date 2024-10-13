@@ -200,6 +200,30 @@ INSERT INTO `preferences` VALUES (1,'ฟุตบอล'),(2,'ภาพยนต
 UNLOCK TABLES;
 
 --
+-- Table structure for table `report`
+--
+
+DROP TABLE IF EXISTS `report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report` (
+  `reportID` int NOT NULL,
+  `reportType` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`reportID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `report`
+--
+
+LOCK TABLES `report` WRITE;
+/*!40000 ALTER TABLE `report` DISABLE KEYS */;
+INSERT INTO `report` VALUES (1,'Gore'),(2,'Spam'),(3,'Nudity');
+/*!40000 ALTER TABLE `report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -247,7 +271,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (59,'ant','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','Methaporn','Limrostham','Ant','pedza506@gmail.com','0642727318',180,'Bangkok','2003-10-07','image8919987123993735035.jpg',1,2,1,2,5,'2024-10-11 10:15:01',NULL,NULL,1),(60,'test','$2b$10$yD548UH0t5FsrnhLIR8hluEQjqoj4zXsBGi0O9uIt1jM5oqFn2qrC','firstname','lastname','nickname','email','9999',400,'home','2003-10-01','image8919987123993735035.jpg',2,3,1,1,0,'2024-10-04 10:10:37',NULL,NULL,1),(61,'beamdota','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','vorrapat','kobsinkha','beam','9beamdota@gmail.com','0855240541',171,'Bangkok','0200-08-07','image8919987123993735035.jpg',1,2,1,2,0,'2024-10-04 10:13:13',NULL,NULL,1),(82,'Praewa','$2b$10$q5dKjQKmjo.xSpR5R04qe.409Cr5/H63vi0JoQJA/YLJesX/B8dEO','Praewa','Praewa','Praewa','Praewa','1111',160,'Praewa','2024-10-06','image8919987123993735035.jpg',2,2,3,NULL,0,'2024-10-05 19:44:06',NULL,NULL,1),(84,'james','$2b$10$1E1RHi7TNFVcBDywse8FFOhh254CFxzWnj/Jk/tt2TDLVeZ1VjwlC','james','james','james','james','33333',2222,'james','2024-10-01','image8919987123993735035.jpg',1,3,3,2,0,'2024-10-08 14:49:17',NULL,NULL,1),(96,'jeff','$2b$10$Oc6OqxiMS3skzTw2zOvJcO9JMCLS1WlYgaGo9oZJcLioOINycLifC','jeff','jeff','jeff','jeff','1654221',180,'jeff','2024-10-04','image8919987123993735035.jpg',2,1,3,2,0,NULL,NULL,NULL,1),(97,'geg','$2b$10$LTH88HvhZlHskWA61Q8oDe9TbYnaHlovN2XOgBrJlz3dnSP3.4zmi','grokegr','grgre','gergre','opmopgre','24342',423242000,'rgeg','2024-10-01','image8919987123993735035.jpg',2,2,3,2,0,NULL,NULL,NULL,1),(102,NULL,'$2a$10$UfDvgAEcB7awzUm5BcOqR./Ke4B8IqIry5skOyDEAnP2FxcLcht02','adminn','adminn',NULL,NULL,NULL,NULL,NULL,NULL,'image8919987123993735035.jpg',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,1),(103,'ban','$2b$10$UF.D/AHTEQKdLLafFfMoXOHdSf.GYxc/I/6tcGSTFVM3LGPri209.','ban','ban','ban','ban','5588855665',255,'ban','2024-10-02','image8515321978712692002.jpg',2,2,4,3,0,NULL,NULL,NULL,1),(104,'bvb','$2b$10$VKi.sy8wn/nG1FggSIXrSO9ZxFCMLD/Xu.bEE/nFzpdKgdWfvmToe','nnn','mmm','ggggggg','bvb','4324324434',423,'hjthtrhtr','2024-10-01','image2529239810527146318.jpg',2,4,1,2,0,'2024-10-11 10:15:09',NULL,NULL,1);
+INSERT INTO `user` VALUES (59,'ant','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','Methaporn','Limrostham','Ant','pedza506@gmail.com','0642727318',180,'Bangkok','2003-10-07','image1525654779938797799.jpg',1,2,1,2,0,'2024-10-12 08:47:40',NULL,NULL,1),(60,'test','$2b$10$yD548UH0t5FsrnhLIR8hluEQjqoj4zXsBGi0O9uIt1jM5oqFn2qrC','firstname','lastname','nickname','email','9999',400,'home','2003-10-01','image1525654779938797799.jpg',2,3,1,1,0,'2024-10-04 10:10:37',NULL,NULL,1),(61,'beamdota','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','vorrapat','kobsinkha','beam','9beamdota@gmail.com','0855240541',171,'Bangkok','0200-08-07','image1525654779938797799.jpg',1,2,1,2,0,'2024-10-04 10:13:13',NULL,NULL,1),(82,'Praewa','$2b$10$q5dKjQKmjo.xSpR5R04qe.409Cr5/H63vi0JoQJA/YLJesX/B8dEO','Praewa','Praewa','Praewa','Praewa','1111',160,'Praewa','2024-10-06','image1525654779938797799.jpg',2,2,3,NULL,0,'2024-10-05 19:44:06',NULL,NULL,1),(84,'james','$2b$10$1E1RHi7TNFVcBDywse8FFOhh254CFxzWnj/Jk/tt2TDLVeZ1VjwlC','james','james','james','james','33333',2222,'james','2024-10-01','image1525654779938797799.jpg',1,3,3,2,0,'2024-10-08 14:49:17',NULL,NULL,1),(96,'jeff','$2b$10$Oc6OqxiMS3skzTw2zOvJcO9JMCLS1WlYgaGo9oZJcLioOINycLifC','jeff','jeff','jeff','jeff','1654221',180,'jeff','2024-10-04','image1525654779938797799.jpg',2,1,3,2,0,NULL,NULL,NULL,1),(97,'geg','$2b$10$LTH88HvhZlHskWA61Q8oDe9TbYnaHlovN2XOgBrJlz3dnSP3.4zmi','grokegr','grgre','gergre','opmopgre','24342',423242000,'rgeg','2024-10-01','image1525654779938797799.jpg',2,2,3,2,0,NULL,NULL,NULL,1),(102,'adminn','$2a$10$UfDvgAEcB7awzUm5BcOqR./Ke4B8IqIry5skOyDEAnP2FxcLcht02','adminn','adminn',NULL,'adminn','0000',NULL,'adminn',NULL,'image1525654779938797799.jpg',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,1),(103,'ban','$2b$10$UF.D/AHTEQKdLLafFfMoXOHdSf.GYxc/I/6tcGSTFVM3LGPri209.','ban','ban','ban','ban','5588855665',255,'ban','2024-10-02','image1525654779938797799.jpg',2,2,4,3,0,NULL,NULL,NULL,1),(104,'bvb','$2b$10$VKi.sy8wn/nG1FggSIXrSO9ZxFCMLD/Xu.bEE/nFzpdKgdWfvmToe','nnn','mmm','ggggggg','bvb','4324324434',423,'hjthtrhtr','2024-10-01','image1525654779938797799.jpg',2,4,1,2,0,'2024-10-11 10:15:09',NULL,NULL,1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -277,6 +301,38 @@ LOCK TABLES `userpreferences` WRITE;
 INSERT INTO `userpreferences` VALUES (59,1),(84,1),(59,2),(60,2),(82,2),(84,2),(60,3),(61,3),(82,3),(59,4),(96,4),(97,7),(104,7),(96,8),(104,11),(96,12),(97,13),(103,14),(97,15),(103,15),(104,15);
 /*!40000 ALTER TABLE `userpreferences` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `userreport`
+--
+
+DROP TABLE IF EXISTS `userreport`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userreport` (
+  `userreportID` int NOT NULL AUTO_INCREMENT,
+  `reporterID` int NOT NULL,
+  `reportedID` int NOT NULL,
+  `reportID` int NOT NULL,
+  PRIMARY KEY (`userreportID`),
+  KEY `reporterID` (`reporterID`),
+  KEY `reportedID` (`reportedID`),
+  KEY `reportID` (`reportID`),
+  CONSTRAINT `userreport_ibfk_1` FOREIGN KEY (`reporterID`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `userreport_ibfk_2` FOREIGN KEY (`reportedID`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `userreport_ibfk_3` FOREIGN KEY (`reportID`) REFERENCES `report` (`reportID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userreport`
+--
+
+LOCK TABLES `userreport` WRITE;
+/*!40000 ALTER TABLE `userreport` DISABLE KEYS */;
+INSERT INTO `userreport` VALUES (2,59,60,1),(3,59,84,1),(4,59,97,3),(5,59,97,2);
+/*!40000 ALTER TABLE `userreport` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -287,4 +343,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-11 17:30:12
+-- Dump completed on 2024-10-13 15:54:33
