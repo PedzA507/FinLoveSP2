@@ -71,6 +71,7 @@ def recommend(id):
     # ส่งข้อมูลผู้ใช้ที่แนะนำกลับในรูปแบบ JSON
     return recommended_users[['UserID', 'nickname', 'imageFile']].to_dict(orient='records'), 200
 
+
 # Create Web server
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
