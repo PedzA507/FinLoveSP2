@@ -45,12 +45,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.navigation_home -> {
                     if (navController.currentDestination?.id != R.id.navigation_home) {
-                        // ส่ง userID ไปยัง HomeFragment ผ่าน arguments
-                        val bundle = Bundle()
-                        bundle.putInt("userID", userID)
-
+                        val bundle = Bundle().apply {
+                            putInt("userID", userID)
+                        }
                         navController.navigate(R.id.navigation_home, bundle)
-
                     }
                     true
                 }

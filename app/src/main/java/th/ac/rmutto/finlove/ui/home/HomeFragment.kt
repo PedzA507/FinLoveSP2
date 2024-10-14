@@ -2,6 +2,7 @@ package th.ac.rmutto.finlove.ui.home
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,9 @@ import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
+import okhttp3.FormBody
 import org.json.JSONArray
 import th.ac.rmutto.finlove.R
 import th.ac.rmutto.finlove.databinding.FragmentHomeBinding
@@ -44,14 +44,14 @@ class HomeFragment : Fragment() {
             Toast.makeText(requireContext(), "ไม่พบ userID", Toast.LENGTH_LONG).show()
         }
 
-        // ดึงข้อมูลผู้ใช้จาก API และกรองผู้ใช้ที่เป็นผู้ล็อกอินอยู่
-        fetchUsers { fetchedUsers ->
+        // ดึงข้อมูลผู้ใช้ที่แนะนำโดย AI (เรียงตามความคล้ายคลึงของ preferences)
+        fetchRecommendedUsers { fetchedUsers ->
             if (fetchedUsers.isNotEmpty()) {
                 users = fetchedUsers
                 currentIndex = 0
                 displayUser(currentIndex) // แสดงผู้ใช้คนแรก
             } else {
-                Toast.makeText(requireContext(), "ไม่พบผู้ใช้", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "ไม่พบผู้ใช้ที่แนะนำ", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -66,7 +66,7 @@ class HomeFragment : Fragment() {
         }
 
         val user = users[index]
-        val userListLayout: LinearLayout = binding.userListLayout // LinearLayout ใน fragment_home.xml
+        val userListLayout: LinearLayout = binding.userListLayout
         userListLayout.removeAllViews() // ลบรายการผู้ใช้ก่อนหน้าออก
 
         val userView = LayoutInflater.from(requireContext()).inflate(R.layout.item_user, userListLayout, false)
@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
         // เมื่อกดปุ่ม "Dislike"
         dislikeButton.setOnClickListener {
             dislikeUser(user.userID)
-            nextUser() // ไปยังผู้ใช้คนถัดไปทันทีเมื่อกด "Dislike"
+            nextUser()
         }
 
         // เมื่อกดปุ่มรายงาน
@@ -101,119 +101,7 @@ class HomeFragment : Fragment() {
         userListLayout.addView(userView)
     }
 
-    // ฟังก์ชันไปยังผู้ใช้คนถัดไป
-    private fun nextUser() {
-        currentIndex++
-        if (currentIndex >= users.size) {
-            currentIndex = 0 // วนกลับไปผู้ใช้คนแรก
-        }
-        displayUser(currentIndex) // แสดงผู้ใช้ในตำแหน่งปัจจุบัน
-    }
-
-    // ฟังก์ชันสำหรับการกด "Like"
-    private fun likeUser(likedID: Int) {
-        val url = getString(R.string.root_url) + "/api/like"
-        val formBody = FormBody.Builder()
-            .add("likerID", userID.toString()) // userID ของผู้ใช้ที่กด "Like"
-            .add("likedID", likedID.toString())
-            .build()
-
-        client.newCall(Request.Builder().url(url).post(formBody).build()).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "Failed to like user", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onResponse(call: okhttp3.Call, response: Response) {
-                requireActivity().runOnUiThread {
-                    if (response.isSuccessful) {
-                        // ตรวจสอบว่าอีกฝ่ายกด "Like" กลับหรือไม่
-                        checkMatch(likedID)
-                    } else {
-                        Toast.makeText(requireContext(), "Error: ${response.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
-    }
-
-    // ฟังก์ชันตรวจสอบการ Match
-    private fun checkMatch(likedID: Int) {
-        val url = getString(R.string.root_url) + "/api/check_match"
-        val formBody = FormBody.Builder()
-            .add("userID", userID.toString()) // userID ของผู้ใช้ที่ล็อกอินอยู่
-            .add("likedID", likedID.toString()) // userID ของผู้ใช้ที่ถูกกด "Like"
-            .build()
-
-        client.newCall(Request.Builder().url(url).post(formBody).build()).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "Failed to check match", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onResponse(call: okhttp3.Call, response: Response) {
-                requireActivity().runOnUiThread {
-                    val responseBody = response.body?.string()
-                    val isMatch = responseBody?.contains("\"match\":true") == true
-
-                    if (isMatch) {
-                        // แสดงข้อความ Match ถ้าทั้งสองฝ่ายกด "Like" ให้กัน
-                        showMatchPopup()
-                    } else {
-                        nextUser() // ถ้าไม่มีการ Match ให้ไปผู้ใช้คนถัดไป
-                    }
-                }
-            }
-        })
-    }
-
-    // ฟังก์ชันแสดง Popup ตรงกลางหน้าจอเมื่อ Match กัน
-    private fun showMatchPopup() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Match!")
-        builder.setMessage("คุณ Match กับผู้ใช้นี้แล้ว!")
-        builder.setPositiveButton("ตกลง") { dialog, _ ->
-            dialog.dismiss()
-            nextUser() // เมื่อกด "ตกลง" ไปยังผู้ใช้คนถัดไป
-        }
-
-        val alertDialog = builder.create()
-        alertDialog.show()
-    }
-
-    // ฟังก์ชันสำหรับการกด "Dislike"
-    private fun dislikeUser(dislikedID: Int) {
-        val url = getString(R.string.root_url) + "/api/dislike"
-        val formBody = FormBody.Builder()
-            .add("dislikerID", userID.toString()) // userID ของผู้ใช้ที่กด "Dislike"
-            .add("dislikedID", dislikedID.toString())
-            .build()
-
-        client.newCall(Request.Builder().url(url).post(formBody).build()).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "Failed to dislike user", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onResponse(call: okhttp3.Call, response: Response) {
-                requireActivity().runOnUiThread {
-                    if (response.isSuccessful) {
-                        Toast.makeText(requireContext(), "User disliked successfully", Toast.LENGTH_SHORT).show()
-
-                        nextUser() // ไปยังผู้ใช้คนถัดไปทันทีเมื่อกด "Dislike"
-
-                    } else {
-                        Toast.makeText(requireContext(), "Error: ${response.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
-    }
-
-    // แสดง AlertDialog สำหรับเลือกเหตุผลการรายงาน
+    // ฟังก์ชันแสดง Dialog สำหรับการรายงานผู้ใช้
     private fun showReportDialog(reportedID: Int) {
         val reportOptions = arrayOf("Gore", "Spam", "Nudity")
         val builder = AlertDialog.Builder(requireContext())
@@ -238,56 +126,6 @@ class HomeFragment : Fragment() {
         builder.create().show()
     }
 
-    // ดึงข้อมูลผู้ใช้จาก API และกรองผู้ใช้ที่เป็นผู้ล็อกอินอยู่
-    private fun fetchUsers(callback: (List<User>) -> Unit) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val url = getString(R.string.root_url) + "/api/users"
-            val request = Request.Builder().url(url).build()
-
-            try {
-                val response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    val responseBody = response.body?.string()
-                    val allUsers = parseUsers(responseBody)
-
-                    // กรองผู้ใช้ที่มี userID ไม่ตรงกับผู้ล็อกอิน
-                    val filteredUsers = allUsers.filter { it.userID != userID }
-
-                    withContext(Dispatchers.Main) {
-                        callback(filteredUsers)
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "ไม่สามารถดึงข้อมูลผู้ใช้ได้", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-
-    // แปลงข้อมูล JSON ที่ได้จาก API เป็นรายการผู้ใช้
-    private fun parseUsers(responseBody: String?): List<User> {
-        val users = mutableListOf<User>()
-        responseBody?.let {
-            val jsonArray = JSONArray(it)
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val user = User(
-                    jsonObject.getInt("userID"),
-                    jsonObject.getString("nickname"),
-                    jsonObject.getString("imageFile")
-                )
-                users.add(user)
-            }
-        }
-        return users
-    }
-
     // ส่งข้อมูลรายงานผู้ใช้ไปยัง API
     private fun reportUser(reportedID: Int, reportType: String) {
         val url = getString(R.string.root_url) + "/api/report"
@@ -304,7 +142,7 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            override fun onResponse(call: okhttp3.Call, response: Response) {
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
                 requireActivity().runOnUiThread {
                     if (response.isSuccessful) {
                         Toast.makeText(requireContext(), "Report sent successfully", Toast.LENGTH_SHORT).show()
@@ -314,6 +152,159 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+    }
+
+    // ฟังก์ชันไปยังผู้ใช้คนถัดไป
+    private fun nextUser() {
+        currentIndex++
+        if (currentIndex >= users.size) {
+            currentIndex = 0 // วนกลับไปผู้ใช้คนแรก
+        }
+        displayUser(currentIndex)
+    }
+
+    // ฟังก์ชันสำหรับการกด "Like"
+    private fun likeUser(likedID: Int) {
+        val url = getString(R.string.root_url) + "/api/like"
+        val formBody = FormBody.Builder()
+            .add("likerID", userID.toString())
+            .add("likedID", likedID.toString())
+            .build()
+
+        client.newCall(Request.Builder().url(url).post(formBody).build()).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                requireActivity().runOnUiThread {
+                    Toast.makeText(requireContext(), "Failed to like user", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                requireActivity().runOnUiThread {
+                    if (response.isSuccessful) {
+                        checkMatch(likedID)
+                    } else {
+                        Toast.makeText(requireContext(), "Error: ${response.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    // ฟังก์ชันตรวจสอบการ Match
+    private fun checkMatch(likedID: Int) {
+        val url = getString(R.string.root_url) + "/api/check_match"
+        val formBody = FormBody.Builder()
+            .add("userID", userID.toString())
+            .add("likedID", likedID.toString())
+            .build()
+
+        client.newCall(Request.Builder().url(url).post(formBody).build()).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                requireActivity().runOnUiThread {
+                    Toast.makeText(requireContext(), "Failed to check match", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                requireActivity().runOnUiThread {
+                    val responseBody = response.body?.string()
+                    val isMatch = responseBody?.contains("\"match\":true") == true
+
+                    if (isMatch) {
+                        showMatchPopup()
+                    } else {
+                        nextUser()
+                    }
+                }
+            }
+        })
+    }
+
+    // ฟังก์ชันแสดง Popup ตรงกลางหน้าจอเมื่อ Match กัน
+    private fun showMatchPopup() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Match!")
+        builder.setMessage("คุณ Match กับผู้ใช้นี้แล้ว!")
+        builder.setPositiveButton("ตกลง") { dialog, _ ->
+            dialog.dismiss()
+            nextUser()
+        }
+
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
+
+    // ฟังก์ชันสำหรับการกด "Dislike"
+    private fun dislikeUser(dislikedID: Int) {
+        val url = getString(R.string.root_url) + "/api/dislike"
+        val formBody = FormBody.Builder()
+            .add("dislikerID", userID.toString())
+            .add("dislikedID", dislikedID.toString())
+            .build()
+
+        client.newCall(Request.Builder().url(url).post(formBody).build()).enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
+                requireActivity().runOnUiThread {
+                    Toast.makeText(requireContext(), "Failed to dislike user", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                requireActivity().runOnUiThread {
+                    if (response.isSuccessful) {
+                        nextUser()
+                    } else {
+                        Toast.makeText(requireContext(), "Error: ${response.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    // ดึงข้อมูลผู้ใช้ที่แนะนำโดย AI
+    private fun fetchRecommendedUsers(callback: (List<User>) -> Unit) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val url = getString(R.string.root_url2) + "/api/recommend/$userID"
+            val request = Request.Builder().url(url).build()
+
+            try {
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    Log.d("API Response", responseBody ?: "No response")
+                    val recommendedUsers = parseUsers(responseBody)
+                    withContext(Dispatchers.Main) {
+                        callback(recommendedUsers)
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "ไม่สามารถดึงข้อมูลผู้ใช้ได้", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    // แปลงข้อมูล JSON ที่ได้จาก API เป็นรายการผู้ใช้
+    private fun parseUsers(responseBody: String?): List<User> {
+        val users = mutableListOf<User>()
+        responseBody?.let {
+            val jsonArray = JSONArray(it)
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val user = User(
+                    jsonObject.getInt("UserID"),
+                    jsonObject.getString("nickname"),
+                    jsonObject.getString("imageFile")
+                )
+                users.add(user)
+            }
+        }
+        return users
     }
 
     override fun onDestroyView() {
