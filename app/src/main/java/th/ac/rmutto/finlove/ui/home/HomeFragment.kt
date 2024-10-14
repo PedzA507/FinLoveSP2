@@ -40,22 +40,31 @@ class HomeFragment : Fragment() {
 
         // รับ userID ที่ถูกส่งมาจาก MainActivity
         userID = arguments?.getInt("userID", -1) ?: -1
-        if (userID == -1) {
-            Toast.makeText(requireContext(), "ไม่พบ userID", Toast.LENGTH_LONG).show()
+
+        // กู้คืน currentIndex หากมีการบันทึกไว้
+        if (savedInstanceState != null) {
+            currentIndex = savedInstanceState.getInt("currentIndex", 0)
         }
 
-        // ดึงข้อมูลผู้ใช้ที่แนะนำโดย AI (เรียงตามความคล้ายคลึงของ preferences)
-        fetchRecommendedUsers { fetchedUsers ->
-            if (fetchedUsers.isNotEmpty()) {
-                users = fetchedUsers
-                currentIndex = 0
-                displayUser(currentIndex) // แสดงผู้ใช้คนแรก
-            } else {
-                Toast.makeText(requireContext(), "ไม่พบผู้ใช้ที่แนะนำ", Toast.LENGTH_SHORT).show()
+        // ถ้า userID ถูกส่งมาแล้ว ให้ดึงข้อมูลผู้ใช้
+        if (userID != -1) {
+            fetchRecommendedUsers { fetchedUsers ->
+                if (fetchedUsers.isNotEmpty()) {
+                    users = fetchedUsers
+                    displayUser(currentIndex) // แสดงผู้ใช้จาก currentIndex
+                } else {
+                    Toast.makeText(requireContext(), "ไม่พบผู้ใช้ที่แนะนำ", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
         return root
+    }
+
+    // ฟังก์ชันบันทึกสถานะ currentIndex ก่อนที่ fragment จะถูกทำลาย
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("currentIndex", currentIndex) // บันทึก currentIndex
     }
 
     // ฟังก์ชันแสดงผู้ใช้จากตำแหน่ง currentIndex
@@ -130,7 +139,7 @@ class HomeFragment : Fragment() {
     private fun reportUser(reportedID: Int, reportType: String) {
         val url = getString(R.string.root_url) + "/api/report"
         val formBody = FormBody.Builder()
-            .add("reporterID", userID.toString())  // ตรวจสอบว่า userID ถูกต้อง
+            .add("reporterID", userID.toString())
             .add("reportedID", reportedID.toString())
             .add("reportType", reportType)
             .build()
@@ -261,7 +270,7 @@ class HomeFragment : Fragment() {
         })
     }
 
-    // ดึงข้อมูลผู้ใช้ที่แนะนำโดย AI
+    // ดึงข้อมูลผู้ใช้ที่แนะนำ
     private fun fetchRecommendedUsers(callback: (List<User>) -> Unit) {
         lifecycleScope.launch(Dispatchers.IO) {
             val url = getString(R.string.root_url2) + "/api/recommend/$userID"

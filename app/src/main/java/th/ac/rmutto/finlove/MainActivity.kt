@@ -7,13 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
 
 class MainActivity : AppCompatActivity() {
     private var userID: Int = -1
@@ -25,12 +18,19 @@ class MainActivity : AppCompatActivity() {
         userID = intent.getIntExtra("userID", -1)
         if (userID == -1) {
             Toast.makeText(this, "ไม่พบ userID", Toast.LENGTH_LONG).show()
+            return // หยุดการทำงานหากไม่มี userID
         }
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.nav_view)
 
         bottomNavigationView.setupWithNavController(navController)
+
+        // นำทางไปยัง HomeFragment ทันที
+        val bundle = Bundle().apply {
+            putInt("userID", userID)
+        }
+        navController.navigate(R.id.navigation_home, bundle)
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
