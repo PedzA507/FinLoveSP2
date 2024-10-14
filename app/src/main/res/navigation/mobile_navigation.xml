@@ -16,9 +16,9 @@
         android:label="Message"
         tools:layout="@layout/fragment_message" />
 
-    <activity
+    <fragment
         android:id="@+id/navigation_profile"
-        android:name="th.ac.rmutto.finlove.ProfileActivity"
+        android:name="th.ac.rmutto.finlove.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/activity_profile" />
 
