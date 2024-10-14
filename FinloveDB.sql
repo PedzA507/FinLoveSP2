@@ -75,7 +75,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (2,'ปริญ','วรกมล','0898763723',1,'parin@hotmail.com','admin','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(3,'สมชาย','หารณรงค์','0862134496',1,'somchai@gmail.com','ant','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img3.jpg',1,0,NULL,1),(4,'กาญจนา','กิ่งแก้ว','0868927364',1,'karnjana@gmail.com','karnjana','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img4.jpg',2,0,NULL,1),(5,'ขนิษฐา','กองแก้ว','0893524367',1,'khanitha@hotmail.com','khanitha','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img5.jpg',2,0,NULL,1),(6,'พิเชษ','เจตจำนงค์','0896789076',1,'pichet@hotmail.com','pichet','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img6.jpg',2,0,NULL,1),(7,'นิดา','แสนสุข','0897658261',1,'nida@gmail.com','nida','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img7.jpg',2,0,NULL,1),(8,'นิตยา','สุขใจ','0898733827',1,'nitaya@gmail.com','nitaya','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img8.jpg',2,0,NULL,0),(9,'สรศักดิ์','หาญกล้า','0895767898',1,'sorasak@gmail.com','sorasak','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img9.jpg',2,0,NULL,0),(10,'สมชาติ','ใจดี','0897652875',1,'somechai@gmail.com','somchat','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img10.jpg',2,0,NULL,0),(11,'ped','ped',NULL,1,'ped','ped','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(14,'Methaporn','Limrostham',NULL,1,'pedza507@gmail.com','antff','$2a$10$oCSxPPo0DWOLxOj2HR/N5O160I8GMcHliLbIwCMw.mli1F3kn.zk.','img2.png',NULL,0,NULL,1);
+INSERT INTO `employee` VALUES (2,'ปริญ','วรกมล','0898763723',1,'parin@hotmail.com','admin','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(3,'สมชาย','หารณรงค์','0862134496',1,'somchai@gmail.com','ant','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img3.jpg',1,2,'2024-10-11 14:40:57',1),(4,'กาญจนา','กิ่งแก้ว','0868927364',1,'karnjana@gmail.com','karnjana','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img4.jpg',2,0,NULL,0),(5,'ขนิษฐา','กองแก้ว','0893524367',1,'khanitha@hotmail.com','khanitha','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img5.jpg',2,0,NULL,1),(6,'พิเชษ','เจตจำนงค์','0896789076',1,'pichet@hotmail.com','pichet','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img6.jpg',2,0,NULL,1),(7,'นิดา','แสนสุข','0897658261',1,'nida@gmail.com','nida','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img7.jpg',2,0,NULL,1),(8,'นิตยา','สุขใจ','0898733827',1,'nitaya@gmail.com','nitaya','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img8.jpg',2,0,NULL,0),(9,'สรศักดิ์','หาญกล้า','0895767898',1,'sorasak@gmail.com','sorasak','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img9.jpg',2,0,NULL,0),(10,'สมชาติ','ใจดี','0897652875',1,'somechai@gmail.com','somchat','$2a$10$9PA9zeFRXx1U1zSnhODMw..X87PmIqN8axlC6JaP0fhxEO8OYN3Ti','img10.jpg',2,0,NULL,0),(11,'ped','ped',NULL,1,'ped','ped','$2a$10$NY/tG0DPjsdaE1TMbagI4uoZVtwbZF.xt4uf/khIQuHp1RpOYuhCm','img2.png',1,0,NULL,1),(14,'Methaporn','Limrostham',NULL,1,'pedza507@gmail.com','antff','$2a$10$oCSxPPo0DWOLxOj2HR/N5O160I8GMcHliLbIwCMw.mli1F3kn.zk.','img2.png',NULL,0,NULL,1);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,6 +200,30 @@ INSERT INTO `preferences` VALUES (1,'ฟุตบอล'),(2,'ภาพยนต
 UNLOCK TABLES;
 
 --
+-- Table structure for table `report`
+--
+
+DROP TABLE IF EXISTS `report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report` (
+  `reportID` int NOT NULL,
+  `reportType` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`reportID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `report`
+--
+
+LOCK TABLES `report` WRITE;
+/*!40000 ALTER TABLE `report` DISABLE KEYS */;
+INSERT INTO `report` VALUES (1,'Gore'),(2,'Spam'),(3,'Nudity');
+/*!40000 ALTER TABLE `report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -208,13 +232,13 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `UserID` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) DEFAULT NULL,
+  `username` varchar(20) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `firstname` varchar(255) DEFAULT NULL,
-  `lastname` varchar(255) DEFAULT NULL,
-  `nickname` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phonenumber` varchar(255) DEFAULT NULL,
+  `firstname` varchar(20) DEFAULT NULL,
+  `lastname` varchar(20) DEFAULT NULL,
+  `nickname` varchar(15) DEFAULT NULL,
+  `email` varchar(40) DEFAULT NULL,
+  `phonenumber` varchar(10) DEFAULT NULL,
   `height` float DEFAULT NULL,
   `home` varchar(255) DEFAULT NULL,
   `DateBirth` date DEFAULT NULL,
@@ -238,7 +262,7 @@ CREATE TABLE `user` (
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`educationID`) REFERENCES `education` (`educationID`),
   CONSTRAINT `user_ibfk_2` FOREIGN KEY (`goalID`) REFERENCES `goal` (`goalID`),
   CONSTRAINT `user_ibfk_4` FOREIGN KEY (`interestGenderID`) REFERENCES `interestgender` (`interestGenderID`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,8 +271,66 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (59,'ant','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','Methaporn','Limrostham','Ant','pedza506@gmail.com','0642727318',180,'Bangkok','2003-10-07','image8919987123993735035.jpg',1,2,1,2,3,'2024-10-10 14:39:34',NULL,NULL,1),(60,'test','$2b$10$yD548UH0t5FsrnhLIR8hluEQjqoj4zXsBGi0O9uIt1jM5oqFn2qrC','firstname','lastname','nickname','email','9999',400,'home','2003-10-01','image8919987123993735035.jpg',2,3,1,1,0,'2024-10-04 10:10:37',NULL,NULL,1),(61,'beamdota','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','vorrapat','kobsinkha','beam','9beamdota@gmail.com','0855240541',171,'Bangkok','0200-08-07','image8919987123993735035.jpg',1,2,1,2,0,'2024-10-04 10:13:13',NULL,NULL,1),(82,'Praewa','$2b$10$q5dKjQKmjo.xSpR5R04qe.409Cr5/H63vi0JoQJA/YLJesX/B8dEO','Praewa','Praewa','Praewa','Praewa','1111',160,'Praewa','2024-10-06','image8919987123993735035.jpg',2,2,3,NULL,0,'2024-10-05 19:44:06',NULL,NULL,1),(84,'james','$2b$10$1E1RHi7TNFVcBDywse8FFOhh254CFxzWnj/Jk/tt2TDLVeZ1VjwlC','james','james','james','james','33333',2222,'james','2024-10-01','image8919987123993735035.jpg',1,3,3,2,0,'2024-10-08 14:49:17',NULL,NULL,1),(96,'jeff','$2b$10$Oc6OqxiMS3skzTw2zOvJcO9JMCLS1WlYgaGo9oZJcLioOINycLifC','jeff','jeff','jeff','jeff','1654221',180,'jeff','2024-10-04','image8919987123993735035.jpg',2,1,3,2,0,NULL,NULL,NULL,1),(97,'geg','$2b$10$LTH88HvhZlHskWA61Q8oDe9TbYnaHlovN2XOgBrJlz3dnSP3.4zmi','grokegr','grgre','gergre','opmopgre','24342',423242000,'rgeg','2024-10-01','image8919987123993735035.jpg',2,2,3,2,0,NULL,NULL,NULL,1),(102,NULL,'$2a$10$UfDvgAEcB7awzUm5BcOqR./Ke4B8IqIry5skOyDEAnP2FxcLcht02','adminn','adminn',NULL,NULL,NULL,NULL,NULL,NULL,'image8919987123993735035.jpg',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,1);
+INSERT INTO `user` VALUES (59,'ant','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','Methaporn','Limrostham','Ant','pedza506@gmail.com','0642727318',180,'Bangkok','2003-10-07','img1.jpg',1,2,1,2,0,'2024-10-13 10:31:17',NULL,NULL,1),(60,'test','$2b$10$yD548UH0t5FsrnhLIR8hluEQjqoj4zXsBGi0O9uIt1jM5oqFn2qrC','firstname','lastname','nickname','email','9999',400,'home','2003-10-01','img2.jpg',2,3,1,1,0,'2024-10-13 10:20:11',NULL,NULL,1),(61,'beamdota','$2b$10$Nc1djZxtVJcOM0Q/VW.0Au8w0i3SBCGwk99838v7kJlSKmh5soam6','vorrapat','kobsinkha','beam','9beamdota@gmail.com','0855240541',171,'Bangkok','0200-08-07','img3.jpg',1,2,1,2,0,'2024-10-04 10:13:13',NULL,NULL,1),(82,'Praewa','$2b$10$q5dKjQKmjo.xSpR5R04qe.409Cr5/H63vi0JoQJA/YLJesX/B8dEO','Praewa','Praewa','Praewa','Praewa','1111',160,'Praewa','2024-10-06','img4.jpg',2,2,3,NULL,0,'2024-10-05 19:44:06',NULL,NULL,1),(84,'james','$2b$10$1E1RHi7TNFVcBDywse8FFOhh254CFxzWnj/Jk/tt2TDLVeZ1VjwlC','james','james','james','james','33333',2222,'james','2024-10-01','img1.jpg',1,3,3,2,0,'2024-10-08 14:49:17',NULL,NULL,1),(96,'jeff','$2b$10$Oc6OqxiMS3skzTw2zOvJcO9JMCLS1WlYgaGo9oZJcLioOINycLifC','jeff','jeff','jeff','jeff','1654221',180,'jeff','2024-10-04','image1525654779938797799.jpg',2,1,3,2,0,NULL,NULL,NULL,1),(97,'geg','$2b$10$LTH88HvhZlHskWA61Q8oDe9TbYnaHlovN2XOgBrJlz3dnSP3.4zmi','grokegr','grgre','gergre','opmopgre','24342',423242000,'rgeg','2024-10-01','image1525654779938797799.jpg',2,2,3,2,0,NULL,NULL,NULL,1),(102,'adminn','$2a$10$UfDvgAEcB7awzUm5BcOqR./Ke4B8IqIry5skOyDEAnP2FxcLcht02','adminn','adminn',NULL,'adminn','0000',NULL,'adminn',NULL,'image1525654779938797799.jpg',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,1),(103,'ban','$2b$10$UF.D/AHTEQKdLLafFfMoXOHdSf.GYxc/I/6tcGSTFVM3LGPri209.','ban','ban','ban','ban','5588855665',255,'ban','2024-10-02','image1525654779938797799.jpg',2,2,4,3,0,NULL,NULL,NULL,1),(104,'bvb','$2b$10$VKi.sy8wn/nG1FggSIXrSO9ZxFCMLD/Xu.bEE/nFzpdKgdWfvmToe','nnn','mmm','ggggggg','bvb','4324324434',423,'hjthtrhtr','2024-10-01','image1525654779938797799.jpg',2,4,1,2,0,'2024-10-11 10:15:09',NULL,NULL,1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userdislike`
+--
+
+DROP TABLE IF EXISTS `userdislike`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userdislike` (
+  `dislikeID` int NOT NULL AUTO_INCREMENT,
+  `dislikerID` int NOT NULL,
+  `dislikedID` int NOT NULL,
+  PRIMARY KEY (`dislikeID`),
+  KEY `userdislike_ibfk_1` (`dislikerID`),
+  KEY `userdislike_ibfk_2` (`dislikedID`),
+  CONSTRAINT `userdislike_ibfk_1` FOREIGN KEY (`dislikerID`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `userdislike_ibfk_2` FOREIGN KEY (`dislikedID`) REFERENCES `user` (`UserID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userdislike`
+--
+
+LOCK TABLES `userdislike` WRITE;
+/*!40000 ALTER TABLE `userdislike` DISABLE KEYS */;
+INSERT INTO `userdislike` VALUES (1,59,82),(2,59,84),(3,59,104),(4,59,60),(5,59,61),(6,59,96),(7,59,97),(8,59,102),(9,59,103);
+/*!40000 ALTER TABLE `userdislike` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userlike`
+--
+
+DROP TABLE IF EXISTS `userlike`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userlike` (
+  `likeID` int NOT NULL AUTO_INCREMENT,
+  `likerID` int NOT NULL,
+  `likedID` int NOT NULL,
+  PRIMARY KEY (`likeID`),
+  KEY `likerID` (`likerID`),
+  KEY `likedID` (`likedID`),
+  CONSTRAINT `userlike_ibfk_1` FOREIGN KEY (`likerID`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `userlike_ibfk_2` FOREIGN KEY (`likedID`) REFERENCES `user` (`UserID`)
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userlike`
+--
+
+LOCK TABLES `userlike` WRITE;
+/*!40000 ALTER TABLE `userlike` DISABLE KEYS */;
+INSERT INTO `userlike` VALUES (47,59,61),(48,59,82),(49,59,84),(50,59,96),(51,59,97),(52,59,102),(53,59,103),(54,59,104),(55,59,60),(56,60,59),(57,60,61),(58,60,82),(59,60,84),(60,60,96),(61,60,97),(62,60,102),(63,60,103),(64,60,104),(65,59,60),(66,59,60),(67,59,60),(68,59,60),(69,59,60),(70,59,60),(71,59,61),(72,59,82),(73,59,84),(74,59,96),(75,59,97),(76,59,102),(77,59,103),(78,59,104),(79,59,60),(80,59,61),(81,59,82),(82,59,84),(83,59,96),(84,59,97),(85,59,102),(86,59,103),(87,59,104),(88,59,60),(89,59,60),(90,59,60),(91,59,61),(92,59,82),(93,59,84),(94,59,96),(95,59,97),(96,59,102),(97,59,103),(98,59,104),(99,59,61),(100,59,82),(101,59,84),(102,59,96),(103,59,97),(104,59,102),(105,59,103),(106,59,104),(107,59,60),(108,59,61),(109,59,82),(110,59,84),(111,59,96),(112,59,97),(113,59,102),(114,59,103),(115,59,104);
+/*!40000 ALTER TABLE `userlike` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -274,8 +356,40 @@ CREATE TABLE `userpreferences` (
 
 LOCK TABLES `userpreferences` WRITE;
 /*!40000 ALTER TABLE `userpreferences` DISABLE KEYS */;
-INSERT INTO `userpreferences` VALUES (59,1),(84,1),(59,2),(60,2),(82,2),(84,2),(60,3),(61,3),(82,3),(59,4),(96,4),(97,7),(96,8),(96,12),(97,13),(97,15);
+INSERT INTO `userpreferences` VALUES (59,1),(84,1),(59,2),(60,2),(82,2),(84,2),(60,3),(61,3),(82,3),(59,4),(96,4),(97,7),(104,7),(96,8),(104,11),(96,12),(97,13),(103,14),(97,15),(103,15),(104,15);
 /*!40000 ALTER TABLE `userpreferences` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `userreport`
+--
+
+DROP TABLE IF EXISTS `userreport`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userreport` (
+  `userreportID` int NOT NULL AUTO_INCREMENT,
+  `reporterID` int NOT NULL,
+  `reportedID` int NOT NULL,
+  `reportID` int NOT NULL,
+  PRIMARY KEY (`userreportID`),
+  KEY `reporterID` (`reporterID`),
+  KEY `reportedID` (`reportedID`),
+  KEY `reportID` (`reportID`),
+  CONSTRAINT `userreport_ibfk_1` FOREIGN KEY (`reporterID`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `userreport_ibfk_2` FOREIGN KEY (`reportedID`) REFERENCES `user` (`UserID`),
+  CONSTRAINT `userreport_ibfk_3` FOREIGN KEY (`reportID`) REFERENCES `report` (`reportID`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userreport`
+--
+
+LOCK TABLES `userreport` WRITE;
+/*!40000 ALTER TABLE `userreport` DISABLE KEYS */;
+INSERT INTO `userreport` VALUES (2,59,60,1),(3,59,84,1),(4,59,97,3),(5,59,97,2),(6,59,82,2),(7,59,96,3),(8,59,82,2),(9,59,82,2),(10,59,102,2),(11,59,103,2),(12,59,104,1),(13,59,61,3);
+/*!40000 ALTER TABLE `userreport` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -287,4 +401,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-10 23:02:27
+-- Dump completed on 2024-10-13 23:06:26
