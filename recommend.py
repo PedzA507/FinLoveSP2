@@ -1,4 +1,4 @@
-from flask import Flask, send_file, request, abort
+from flask import Flask, send_file, request, jsonify
 from sklearn.neighbors import NearestNeighbors
 import mysql.connector as sql
 import pandas as pd
@@ -16,6 +16,9 @@ conn = sql.connect(host="localhost",
                    database="finlove", 
                    user="root",
                    password="1234")
+
+# เส้นทางของโฟลเดอร์ที่เก็บไฟล์รูปภาพ
+IMAGE_FOLDER = os.path.join(os.getcwd(), 'assets', 'user')
 
 
 @app.route('/api/recommend/<int:id>', methods=['GET'])
@@ -43,7 +46,7 @@ def recommend(id):
 
     # ถ้าไม่มีผู้ใช้ที่ตรงกัน ให้ส่งข้อมูลว่างกลับ
     if len(recommended_user_ids) == 0:
-        return {"message": "No similar users found"}, 200
+        return jsonify({"message": "No similar users found"}), 200
 
     # แปลง UserID ที่แนะนำเป็นสตริงเพื่อใช้ใน SQL Query
     recommended_user_ids_str = ', '.join(map(str, recommended_user_ids))
@@ -62,16 +65,29 @@ def recommend(id):
     '''
     recommended_users = pd.read_sql(sql_query, conn)
 
-    # ปรับปรุงเส้นทางของ imageFile
+    # ปรับปรุงเส้นทางของ imageFile เพื่อชี้ไปที่ API สำหรับโหลดภาพ
     for index, user in recommended_users.iterrows():
         if user['imageFile']:
-            # ตรวจสอบเส้นทางรูปภาพให้ตรงกับ API /api/user/<filename>
             recommended_users.at[index, 'imageFile'] = f"http://{request.host}/api/user/{user['imageFile']}"
 
     # ส่งข้อมูลผู้ใช้ที่แนะนำกลับในรูปแบบ JSON
-    return recommended_users[['UserID', 'nickname', 'imageFile']].to_dict(orient='records'), 200
+    return jsonify(recommended_users[['UserID', 'nickname', 'imageFile']].to_dict(orient='records')), 200
+
+
+@app.route('/api/user/<filename>', methods=['GET'])
+def get_user_image(filename):
+    # เส้นทางเต็มของไฟล์รูปภาพ
+    image_path = os.path.join(IMAGE_FOLDER, filename)
+
+    # ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
+    if os.path.exists(image_path):
+        # ส่งไฟล์รูปภาพกลับไปยังไคลเอนต์
+        return send_file(image_path, mimetype='image/jpeg')
+    else:
+        # ถ้าไม่พบไฟล์ ให้ส่ง 404 กลับไป
+        return jsonify({"error": "File not found"}), 404
 
 
 # Create Web server
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=6000)
