@@ -843,32 +843,6 @@ app.post('/api/like', (req, res) => {
 });
 
 
-// Route สำหรับเช็คการ Match
-app.post('/api/check_match', (req, res) => {
-    const { userID, likedID } = req.body;
-
-    // ตรวจสอบว่าผู้ที่ถูกกด Like (likedID) ได้กด Like ให้กับผู้ล็อกอิน (userID) อยู่ก่อนหรือไม่
-    const checkMatchQuery = `
-        SELECT * FROM userlike 
-        WHERE likerID = ? AND likedID = ?
-    `;
-
-    db.query(checkMatchQuery, [likedID, userID], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database error' });
-        }
-
-        if (result.length > 0) {
-            // ถ้าผู้ใช้ที่ถูกกด Like (likedID) ได้กด Like ให้ผู้ล็อกอิน (userID) ก่อนหน้านี้
-            return res.status(200).json({ match: true });
-        } else {
-            // ถ้าอีกฝ่ายยังไม่กด Like ให้ผู้ล็อกอิน
-            return res.status(200).json({ match: false });
-        }
-    });
-});
-
-
 // Route สำหรับ Dislike
 app.post('/api/dislike', (req, res) => {
     const { dislikerID, dislikedID } = req.body;
@@ -933,90 +907,140 @@ app.post('/api/dislike', (req, res) => {
 });
 
 
+app.post('/api/check_match', (req, res) => {
+    const { userID, likedID } = req.body;
+
+    // Query เพื่อตรวจสอบว่าผู้ใช้ที่ถูก Like (likedID) กด Like ให้กับผู้ใช้ปัจจุบัน (userID) หรือไม่
+    const checkMatchQuery = `
+        SELECT * FROM userlike 
+        WHERE likerID = ? AND likedID = ?
+    `;
+
+    db.query(checkMatchQuery, [likedID, userID], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (result.length > 0) {
+            // ถ้าทั้งสองฝ่ายกด Like ให้กัน ให้แทรกข้อมูลลงในตาราง matches
+            const insertMatchQuery = `
+                INSERT INTO matches (user1ID, user2ID)
+                VALUES (?, ?)
+            `;
+
+            // ตรวจสอบว่ามีการ Match อยู่แล้วหรือไม่
+            const checkExistingMatchQuery = `
+                SELECT * FROM matches
+                WHERE (user1ID = ? AND user2ID = ?) OR (user1ID = ? AND user2ID = ?)
+            `;
+
+            db.query(checkExistingMatchQuery, [userID, likedID, likedID, userID], (err, existingMatch) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Database error' });
+                }
+
+                if (existingMatch.length > 0) {
+                    // ถ้ามี Match อยู่แล้ว
+                    return res.status(200).json({ match: true, message: 'Match already exists' });
+                } else {
+                    // แทรกข้อมูล Match ใหม่ลงในตาราง matches
+                    db.query(insertMatchQuery, [userID, likedID], (err, matchResult) => {
+                        if (err) {
+                            return res.status(500).json({ error: 'Failed to insert match' });
+                        }
+                        return res.status(200).json({ match: true, message: 'New match created' });
+                    });
+                }
+            });
+        } else {
+            // ถ้าอีกฝ่ายยังไม่ได้กด Like ให้ผู้ใช้ปัจจุบัน
+            return res.status(200).json({ match: false });
+        }
+    });
+});
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Function to execute a query with a promise-based approach
-function query(sql, params) {
-    return new Promise(function (resolve, reject) {
-        db.query(sql, params, function (err, results) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(results);
+app.get('/api/matches/:userID', (req, res) => {
+    const { userID } = req.params;
+
+    // Query สำหรับดึงข้อความล่าสุดของการจับคู่ พร้อมทั้ง matchID
+    const getMatchedUsersWithLastMessageQuery = `
+        SELECT u.userID, u.nickname, u.imageFile, 
+               (SELECT c.message FROM chats c WHERE c.matchID = m.matchID ORDER BY c.timestamp DESC LIMIT 1) AS lastMessage,
+               m.matchID  -- ดึง matchID มาด้วย
+        FROM matches m
+        JOIN user u ON (m.user1ID = u.userID OR m.user2ID = u.userID)
+        WHERE (m.user1ID = ? OR m.user2ID = ?)
+        AND u.userID != ?;
+    `;
+
+    db.query(getMatchedUsersWithLastMessageQuery, [userID, userID, userID], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // ปรับปรุงเส้นทาง imageFile ให้ถูกต้อง
+        results.forEach(user => {
+            if (user.imageFile) {
+                user.imageFile = `${req.protocol}://${req.get('host')}/assets/user/${user.imageFile}`;
             }
         });
+
+        return res.status(200).json(results);
     });
-}
+});
 
-// Create or join a chat room
-app.post('/chat/join', async function (req, res) {
-    const { userID, chatRoomName } = req.body;
 
-    // Check if the chat room exists, if not create it
-    let sql = 'SELECT chat_room_id FROM chat_rooms WHERE chat_room_name = ?';
-    let results = await query(sql, [chatRoomName]);
 
-    let chatRoomID;
-    if (results.length === 0) {
-        sql = 'INSERT INTO chat_rooms (chat_room_name) VALUES (?)';
-        const insertResult = await query(sql, [chatRoomName]);
-        chatRoomID = insertResult.insertId;
-    } else {
-        chatRoomID = results[0].chat_room_id;
+
+app.post('/api/chats/:matchID', async (req, res) => {
+    const { matchID } = req.params;
+    const { senderID, message } = req.body;
+
+    const query = `
+        INSERT INTO chats (matchID, senderID, message)
+        VALUES (?, ?, ?);
+    `;
+
+    try {
+        await db.execute(query, [matchID, senderID, message]);
+        res.status(200).json({ success: 'Message sent' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to send message' });
     }
-
-    res.send({ 'message': 'User joined chat room', 'status': true, chatRoomID });
 });
 
-// Post a message in a chat room
-app.post('/chat/post', async function (req, res) {
-    const { chatRoomID, senderID, message } = req.body;
+app.get('/api/chats/:matchID', (req, res) => {
+    const { matchID } = req.params;
 
-    // Insert the message into the database
-    let sql = 'INSERT INTO messages (chat_room_id, sender_id, message) VALUES (?, ?, ?)';
-    await query(sql, [chatRoomID, senderID, message]);
+    const getChatQuery = `
+        SELECT c.senderID, u.nickname, u.imageFile, c.message, c.timestamp 
+        FROM chats c
+        JOIN user u ON c.senderID = u.userID
+        WHERE c.matchID = ?
+        ORDER BY c.timestamp ASC;
+    `;
 
-    res.send({ 'message': 'Message posted successfully', 'status': true });
+    db.query(getChatQuery, [matchID], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // ตรวจสอบและปรับปรุงเส้นทางของ imageFile สำหรับผู้ใช้แต่ละคน
+        results.forEach(chat => {
+            if (chat.imageFile) {
+                chat.imageFile = `${req.protocol}://${req.get('host')}/assets/user/${chat.imageFile}`;
+            }
+        });
+
+        return res.status(200).json({ messages: results });
+    });
 });
 
-// Show messages from a chat room
-app.get('/chat/show/:chatRoomID', async function (req, res) {
-    const chatRoomID = req.params.chatRoomID;
-
-    let sql = `SELECT m.message, u.username AS sender, 
-                    CASE
-                      WHEN CAST(CURRENT_TIMESTAMP AS DATE) = SUBSTRING(m.sent_at,1,10) THEN CONCAT(DATE_FORMAT(m.sent_at, "%H:%i"), " น.")
-                      ELSE DATE_FORMAT(m.sent_at, "%d/%m")
-                    END AS sent_at
-                FROM messages m
-                JOIN user u ON m.sender_id = u.UserID
-                WHERE m.chat_room_id = ?
-                ORDER BY m.sent_at ASC`;
-
-    const result = await query(sql, [chatRoomID]);
-    res.send(result);
-});
-
-
-// Show messages from a chat room
-app.get('/chat/show/:chatRoomID', async function (req, res) {
-    const chatRoomID = req.params.chatRoomID;
-    
-    let sql = `SELECT m.message, u.username AS sender, 
-                    CASE
-                      WHEN CAST(CURRENT_TIMESTAMP AS DATE) = SUBSTRING(m.sent_at,1,10) THEN CONCAT(DATE_FORMAT(m.sent_at, "%H:%i"), " น.")
-                      ELSE DATE_FORMAT(m.sent_at, "%d/%m")
-                    END AS sent_at
-                FROM messages m
-                JOIN user u ON m.sender_id = u.UserID
-                WHERE m.chat_room_id = ?
-                ORDER BY m.sent_at ASC`;
-    
-    const result = await query(sql, [chatRoomID]);
-    res.send(result);
-});
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
