@@ -798,19 +798,50 @@ app.post('/api/like', (req, res) => {
         return res.status(400).json({ error: 'You cannot like yourself' });
     }
 
-    // ลบการตรวจสอบ Like ซ้ำ
-    const insertLikeQuery = `
-        INSERT INTO userlike (likerID, likedID)
-        VALUES (?, ?)
-    `;
+    // เริ่ม Transaction เพื่อเพิ่ม Like และลบ Dislike ใน table userdislike
+    db.beginTransaction((err) => {
+        if (err) return res.status(500).send(err);
 
-    db.query(insertLikeQuery, [likerID, likedID], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database error' });
-        }
-        res.status(200).json({ success: true });
+        // ลบข้อมูลใน table userdislike ก่อน
+        const deleteDislikeQuery = `
+            DELETE FROM userdislike 
+            WHERE dislikerID = ? AND dislikedID = ?
+        `;
+
+        db.query(deleteDislikeQuery, [likerID, likedID], (err, result) => {
+            if (err) {
+                return db.rollback(() => {
+                    res.status(500).send(err);
+                });
+            }
+
+            // เพิ่ม Like ลงในฐานข้อมูล
+            const insertLikeQuery = `
+                INSERT INTO userlike (likerID, likedID)
+                VALUES (?, ?)
+            `;
+
+            db.query(insertLikeQuery, [likerID, likedID], (err, result) => {
+                if (err) {
+                    return db.rollback(() => {
+                        res.status(500).send(err);
+                    });
+                }
+
+                // Commit Transaction ถ้าทำงานสำเร็จทั้งหมด
+                db.commit((err) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).send(err);
+                        });
+                    }
+                    res.status(200).json({ success: true, message: 'User liked successfully and dislike removed' });
+                });
+            });
+        });
     });
 });
+
 
 // Route สำหรับเช็คการ Match
 app.post('/api/check_match', (req, res) => {
@@ -860,14 +891,47 @@ app.post('/api/dislike', (req, res) => {
             return res.status(200).json({ success: true, message: 'Already disliked this user' });
         }
 
-        // เพิ่ม Dislike ลงในฐานข้อมูล
-        const sql = 'INSERT INTO userdislike (dislikerID, dislikedID) VALUES (?, ?)';
-        db.query(sql, [dislikerID, dislikedID], (err, result) => {
+        // เริ่ม Transaction เพื่อเพิ่ม Dislike และลบ Like ใน table userlike
+        db.beginTransaction((err) => {
             if (err) return res.status(500).send(err);
-            res.status(200).send('User disliked successfully');
+
+            // ลบข้อมูลใน table userlike ก่อน
+            const deleteLikeQuery = `
+                DELETE FROM userlike 
+                WHERE likerID = ? AND likedID = ?
+            `;
+
+            db.query(deleteLikeQuery, [dislikerID, dislikedID], (err, result) => {
+                if (err) {
+                    return db.rollback(() => {
+                        res.status(500).send(err);
+                    });
+                }
+
+                // เพิ่ม Dislike ลงในฐานข้อมูล
+                const insertDislikeQuery = 'INSERT INTO userdislike (dislikerID, dislikedID) VALUES (?, ?)';
+                db.query(insertDislikeQuery, [dislikerID, dislikedID], (err, result) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            res.status(500).send(err);
+                        });
+                    }
+
+                    // Commit Transaction ถ้าทำงานสำเร็จทั้งหมด
+                    db.commit((err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                res.status(500).send(err);
+                            });
+                        }
+                        res.status(200).json({ success: true, message: 'User disliked successfully and like removed' });
+                    });
+                });
+            });
         });
     });
 });
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
