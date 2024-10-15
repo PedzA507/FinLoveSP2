@@ -5,14 +5,13 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'; 
-import BackgroundImage from './assets/BG.png'; 
+import Logo from './assets/logofin.png'; // ใส่ path ของโลโก้ที่คุณใช้
 
 function Copyright(props) {
   return (
@@ -71,16 +70,14 @@ export default function SignInUser() {
       <Box
         sx={{
           minHeight: '100vh',
-          backgroundImage: `url(${BackgroundImage})`, 
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundColor: '#F8E9F0', // สีพื้นหลังตามตัวอย่าง
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           padding: 2,
         }}
       >
-        <Container component="main" maxWidth="sm">
+        <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
             sx={{
@@ -88,15 +85,16 @@ export default function SignInUser() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+              backgroundColor: 'transparent', // เอากรอบสีขาวออก
               padding: '40px',
               borderRadius: '15px',
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
               minHeight: '500px',
             }}
           >
-            <Typography component="h1" variant="h4" sx={{ backgroundColor: '#b3b3ff', padding: '10px 30px', borderRadius: '15px 15px 15px 15px', color: 'white', width: '100%', textAlign: 'center', mb: 4 }}>
-              Sign In
+            {/* เปลี่ยน Avatar เป็นโลโก้สี่เหลี่ยมขอบมน */}
+            <Avatar src={Logo} sx={{ width: 80, height: 80, mb: 2, borderRadius: '10px' }} />
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#000', mb: 4 }}>
+              FINLOVE
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
               <TextField
@@ -107,8 +105,36 @@ export default function SignInUser() {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                autoFocus
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                InputLabelProps={{
+                  sx: {
+                    transform: 'translate(14px, 10px) scale(1)', // ปรับตำแหน่งเริ่มต้นของ label
+                    '&.MuiInputLabel-shrink': {
+                      transform: 'translate(15px, -20px) scale(1)', // ปรับตำแหน่งเมื่อ label ลอย
+                    },
+                  },
+                }}
+                sx={{
+                  backgroundColor: '#fff', // ปรับสีพื้นหลังเป็นสีขาว
+                  width: '100%',
+                  height: '50px',
+                  borderRadius: '10px',
+                  border: '1px solid #000',
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // เพิ่มเงารอบกรอบ
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'transparent', // ลบขอบของกรอบ
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
+                    },
+                  },
+                }}
               />
               <TextField
                 margin="normal"
@@ -120,24 +146,62 @@ export default function SignInUser() {
                 id="password"
                 autoComplete="current-password"
                 onChange={(e) => setPassword(e.target.value)}
+                InputLabelProps={{
+                  sx: {
+                    transform: 'translate(14px, 10px) scale(1)', // ปรับตำแหน่งเริ่มต้นของ label
+                    '&.MuiInputLabel-shrink': {
+                      transform: 'translate(15px, -20px) scale(1)', // ปรับตำแหน่งเมื่อ label ลอย
+                    },
+                  },
+                }}
+                sx={{
+                  backgroundColor: '#fff', // ปรับสีพื้นหลังเป็นสีขาว
+                  width: '100%',
+                  height: '50px',
+                  borderRadius: '10px',
+                  border: '1px solid #000',
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // เพิ่มเงารอบกรอบ
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'transparent', // ลบขอบของกรอบ
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
+                    },
+                  },
+                }}
               />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: '#333', color: 'white', padding: '12px' }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: '#FF6699',
+                  color: 'white',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  fontSize: '16px',
+                  width: '450px',
+                  height: '45px',
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // เพิ่มเงารอบปุ่ม
+                }}
               >
-                Sign In
+                เข้าสู่ระบบ
               </Button>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2" onClick={() => navigate('/forgotpass')}>
-                    Forgot password?
+                    ลืมรหัสผ่าน?
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href="#" variant="body2" onClick={() => navigate('/signup')}>
-                    {"Don't have an account? Sign Up"}
+                    {"สมัครสมาชิก"}
                   </Link>
                 </Grid>
               </Grid>
