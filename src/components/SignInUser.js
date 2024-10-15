@@ -2,8 +2,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -11,20 +9,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'; 
-import Logo from './assets/logofin.png'; // ใส่ path ของโลโก้ที่คุณใช้
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import LogoImage from './assets/logofinlove.png'; // ใช้โลโก้ที่คุณให้มา
 
 const defaultTheme = createTheme();
 
@@ -45,18 +30,16 @@ export default function SignInUser() {
       );
 
       const result = response.data;
-      console.log(result);
       alert(result['message']);
 
       if (result['status'] === true) {
         localStorage.setItem('token', result['token']);
-        // ตรวจสอบ role ที่ได้รับจาก backend
         if (result['role'] === 'admin') {
-          navigate('/dashboard'); // นำทางไปยังหน้าหลักของ admin
+          navigate('/dashboard'); 
         } else if (result['role'] === 'employee') {
-          navigate('/dashboard'); // นำทางไปยังหน้าหลักของ employee
+          navigate('/dashboard'); 
         } else {
-          navigate('/cusview'); // นำทางไปยังหน้าหลักของ user
+          navigate('/cusview'); 
         }
       }
 
@@ -70,7 +53,7 @@ export default function SignInUser() {
       <Box
         sx={{
           minHeight: '100vh',
-          backgroundColor: '#F8E9F0', // สีพื้นหลังตามตัวอย่าง
+          backgroundColor: '#FEF7FF', // สีพื้นตามที่คุณต้องการ
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -81,22 +64,30 @@ export default function SignInUser() {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 4,
+              marginTop: 8,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              backgroundColor: 'transparent', // เอากรอบสีขาวออก
-              padding: '40px',
-              borderRadius: '15px',
-              minHeight: '500px',
+              width: '100%', // เพิ่มความกว้างให้เต็มหน้าจอ
             }}
           >
-            {/* เปลี่ยน Avatar เป็นโลโก้สี่เหลี่ยมขอบมน */}
-            <Avatar src={Logo} sx={{ width: 80, height: 80, mb: 2, borderRadius: '10px' }} />
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#000', mb: 4 }}>
+            {/* โลโก้ */}
+            <Avatar 
+              sx={{ 
+                m: 1, 
+                width: 120, 
+                height: 120, 
+                borderRadius: '10px' // ปรับให้เป็นสี่เหลี่ยมขอบมน 10px
+              }} 
+              src={LogoImage} 
+            />
+
+            <Typography component="h1" variant="h4" sx={{ fontWeight: 'bold', mb: 2 }}>
               FINLOVE
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
+              {/* Username */}
               <TextField
                 margin="normal"
                 required
@@ -105,37 +96,32 @@ export default function SignInUser() {
                 label="Username"
                 name="username"
                 autoComplete="username"
-                autoFocus
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                InputProps={{
+                  style: {
+                    borderRadius: '10px', // ขอบมน 10px ตามที่ต้องการ
+                    borderColor: '#ccc',
+                    borderWidth: '2px',
+                    padding: '0.1px',
+                    width: '100%', // ปรับขนาดให้เต็มความกว้าง
+                  },
+                }}
                 InputLabelProps={{
-                  sx: {
-                    transform: 'translate(14px, 10px) scale(1)', // ปรับตำแหน่งเริ่มต้นของ label
-                    '&.MuiInputLabel-shrink': {
-                      transform: 'translate(15px, -20px) scale(1)', // ปรับตำแหน่งเมื่อ label ลอย
-                    },
+                  style: {
+                    color: 'black',
                   },
                 }}
                 sx={{
-                  backgroundColor: '#fff', // ปรับสีพื้นหลังเป็นสีขาว
-                  width: '100%',
-                  height: '50px',
-                  borderRadius: '10px',
-                  border: '1px solid #000',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // เพิ่มเงารอบกรอบ
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'transparent', // ลบขอบของกรอบ
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
-                    },
-                  },
+                  backgroundColor: 'white',
+                  mb: 2,
+                  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // เพิ่มเงาให้ช่องกรอก
+                  borderRadius: '10px', // ขอบมน 10px
+                  width: '100%', // ปรับความกว้างของช่องกรอก
                 }}
               />
+
+              {/* Password */}
               <TextField
                 margin="normal"
                 required
@@ -145,69 +131,54 @@ export default function SignInUser() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  style: {
+                    borderRadius: '10px', // ขอบมน 10px
+                    borderColor: '#ccc',
+                    borderWidth: '2px',
+                    padding: '0.1px',
+                    width: '100%', // ปรับขนาดให้เต็มความกว้าง
+                  },
+                }}
                 InputLabelProps={{
-                  sx: {
-                    transform: 'translate(14px, 10px) scale(1)', // ปรับตำแหน่งเริ่มต้นของ label
-                    '&.MuiInputLabel-shrink': {
-                      transform: 'translate(15px, -20px) scale(1)', // ปรับตำแหน่งเมื่อ label ลอย
-                    },
+                  style: {
+                    color: 'black',
                   },
                 }}
                 sx={{
-                  backgroundColor: '#fff', // ปรับสีพื้นหลังเป็นสีขาว
-                  width: '100%',
-                  height: '50px',
-                  borderRadius: '10px',
-                  border: '1px solid #000',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // เพิ่มเงารอบกรอบ
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'transparent', // ลบขอบของกรอบ
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'transparent', // ลบขอบเมื่อโฟกัส
-                    },
-                  },
+                  backgroundColor: 'white',
+                  mb: 2,
+                  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // เพิ่มเงาให้ช่องกรอก
+                  borderRadius: '10px', // ขอบมน 10px
+                  width: '100%', // ปรับความกว้างของช่องกรอก
                 }}
               />
+
+              {/* ปุ่มเข้าสู่ระบบ */}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: '#FF6699',
-                  color: 'white',
-                  padding: '12px',
-                  borderRadius: '10px',
-                  fontSize: '16px',
-                  width: '450px',
-                  height: '45px',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // เพิ่มเงารอบปุ่ม
+                sx={{ 
+                  mt: 3, 
+                  mb: 2, 
+                  backgroundColor: '#ff69b4', 
+                  color: 'white', 
+                  padding: '10px', // ทำให้ปุ่มผอมลง
+                  borderRadius: '10px', // ขอบมน 10px
+                  fontWeight: 'bold', 
+                  fontSize: '18px',
+                  width: '100%', // ปรับขนาดให้เต็มความกว้าง
+                  boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)' // เพิ่มเงาให้ปุ่ม
                 }}
               >
                 เข้าสู่ระบบ
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2" onClick={() => navigate('/forgotpass')}>
-                    ลืมรหัสผ่าน?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2" onClick={() => navigate('/signup')}>
-                    {"สมัครสมาชิก"}
-                  </Link>
-                </Grid>
-              </Grid>
+
             </Box>
           </Box>
-          <Copyright sx={{ mt: 5 }} />
         </Container>
       </Box>
     </ThemeProvider>
