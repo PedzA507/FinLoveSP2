@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Avatar, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Container, Grid, Card, CardContent, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Typography, Avatar, Button, ButtonGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Container, Grid, Card, CardContent, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, LineChart, Line, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -31,20 +31,20 @@ export default function Dashboard() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // Fetch user data from the API
+    // ดึงข้อมูลผู้ใช้ที่ถูก report จาก API
     axios.get(`${url}/user`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then((response) => {
-      setUsers(response.data); // Set users from the API response
+      setUsers(response.data); // ตั้งค่าผู้ใช้จากการตอบสนองของ API
     })
     .catch((error) => {
       console.error('Error fetching users:', error);
     });
   }, []);
 
-  const handleDeleteUser = (userID) => {
-    axios.delete(`${url}/user/${userID}`, {
+  const handleBanUser = (userID) => {
+    axios.put(`${url}/user/ban/${userID}`, null, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -52,14 +52,32 @@ export default function Dashboard() {
     .then((response) => {
       if (response.data.status === true) {
         alert(response.data.message);
-        // Update user list after deletion
-        setUsers((prevUsers) => prevUsers.filter(user => user.UserID !== userID));
+        setUsers((prevUsers) => prevUsers.map(user => user.userID === userID ? { ...user, isActive: 0 } : user));
       } else {
-        alert('Failed to delete user');
+        alert('Failed to suspend user');
       }
     })
     .catch((error) => {
-      console.error('Error deleting user:', error);
+      console.error('Error suspending user:', error);
+    });
+  };
+
+  const handleUnbanUser = (userID) => {
+    axios.put(`${url}/user/unban/${userID}`, null, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then((response) => {
+      if (response.data.status === true) {
+        alert(response.data.message);
+        setUsers((prevUsers) => prevUsers.map(user => user.userID === userID ? { ...user, isActive: 1 } : user));
+      } else {
+        alert('Failed to unban user');
+      }
+    })
+    .catch((error) => {
+      console.error('Error unbanning user:', error);
     });
   };
 
@@ -73,7 +91,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <Box sx={{ display: 'flex', backgroundColor: '#F8E9F0' }}> {/* เปลี่ยนพื้นหลังตามที่ตัวอย่าง */}
+    <Box sx={{ display: 'flex', backgroundColor: '#F8E9F0' }}>
       {/* Sidebar */}
       <Drawer
         variant="permanent"
@@ -82,7 +100,7 @@ export default function Dashboard() {
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            backgroundColor: '#fff', // เปลี่ยนสีพื้นหลังของ sidebar เป็นสีขาว
+            backgroundColor: '#fff',
             boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
             borderRight: '1px solid #e0e0e0',
             paddingTop: '20px',
@@ -107,7 +125,7 @@ export default function Dashboard() {
         sx={{
           flexGrow: 1,
           padding: 3,
-          backgroundColor: '#F8E9F0', // สีพื้นหลังของเนื้อหา
+          backgroundColor: '#F8E9F0',
           minHeight: '100vh',
         }}
       >
@@ -171,17 +189,21 @@ export default function Dashboard() {
                 </TableHead>
                 <TableBody>
                   {users.map((user) => (
-                    <TableRow key={user.UserID}>
-                      <TableCell align="center">{user.UserID}</TableCell>
+                    <TableRow key={user.userID}>
+                      <TableCell align="center">{user.userID}</TableCell>
                       <TableCell align="center">
                         <Avatar src={`${url}/user/image/${user.imageFile}`} alt={user.username} />
                       </TableCell>
                       <TableCell align="left">{user.username}</TableCell>
-                      <TableCell align="left">{user.reason || 'ไม่ระบุเหตุผล'}</TableCell>
+                      <TableCell align="left">{user.reportType || 'ไม่ระบุเหตุผล'}</TableCell> {/* แสดงเหตุผลจาก reportType */}
                       <TableCell align="center">
-                        <Button variant="contained" sx={{ backgroundColor: '#ff6699', color: '#fff', borderRadius: '10px' }}>ตรวจสอบ</Button>
-                        <Button variant="outlined" sx={{ ml: 2, borderColor: '#ff6699', color: '#ff6699', borderRadius: '10px' }}>ระงับผู้ใช้</Button>
-                        <Button variant="contained" color="error" sx={{ ml: 2, borderRadius: '10px' }} onClick={() => handleDeleteUser(user.UserID)}>ลบผู้ใช้</Button>
+                        <ButtonGroup color="primary" aria-label="outlined primary button group">
+                          {user.isActive === 1 ? (
+                            <Button variant="outlined" color="secondary" onClick={() => handleBanUser(user.userID)} sx={{ borderRadius: '10px' }}>ระงับผู้ใช้</Button>
+                          ) : (
+                            <Button variant="outlined" color="primary" onClick={() => handleUnbanUser(user.userID)} sx={{ borderRadius: '10px' }}>ปลดแบน</Button>
+                          )}
+                        </ButtonGroup>
                       </TableCell>
                     </TableRow>
                   ))}

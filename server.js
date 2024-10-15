@@ -191,11 +191,17 @@ app.get('/api/user', async function(req, res){
           return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
         }
         
-        // Query to pull the required fields from user table
-        let sql = "SELECT userID, username, firstname, lastname, imageFile FROM user";            
+        // Query to pull the required fields from user table and join with userreport and report
+        let sql = `
+            SELECT u.userID, u.username, u.imageFile, r.reportType
+            FROM user u
+            JOIN userreport ur ON u.userID = ur.reportedID
+            JOIN report r ON ur.reportID = r.reportID
+        `;  
+              
         db.query(sql, function (err, result){
             if (err) throw err;            
-            // Send the result back to the frontend, including userID
+            // Send the result back to the frontend, including userID and reportType
             res.send(result); 
         });      
 
@@ -203,6 +209,7 @@ app.get('/api/user', async function(req, res){
         res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
     }
 });
+
 
 
 // Show a user Profile
@@ -376,7 +383,7 @@ app.put('/api/user/unban/:id', async function(req, res) {
                 console.error(err);
                 return res.send({'message': 'เกิดข้อผิดพลาดในการปลดแบนผู้ใช้', 'status': false});
             }
-            res.send({'message': 'ปลดแบนผู้ใช้เรียบร้อยแล้วและเคลียร์จำนวนครั้งที่ล็อกอินไม่สำเร็จ', 'status': true});
+            res.send({'message': 'ปลดแบนผู้ใช้เรียบร้อยแล้วและเคลียร์จำนวนครั้งที่ล็อกอินสำเร็จ', 'status': true});
         });
 
     } catch (error) {
