@@ -53,7 +53,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', backgroundColor: '#F8E9F0' }}> {/* เปลี่ยนพื้นหลังตามที่ตัวอย่าง */}
       {/* Sidebar */}
       <Drawer
         variant="permanent"
@@ -62,7 +62,7 @@ export default function Dashboard() {
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#fff', // เปลี่ยนสีพื้นหลังของ sidebar เป็นสีขาว
             boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
             borderRight: '1px solid #e0e0e0',
             paddingTop: '20px',
@@ -72,7 +72,7 @@ export default function Dashboard() {
         <Box sx={{ overflow: 'auto' }}>
           <List>
             {menuItems.map((item, index) => (
-              <ListItem button key={item.text} onClick={item.action}>
+              <ListItem button key={item.text} onClick={item.action} sx={{ padding: '15px 20px' }}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItem>
@@ -87,7 +87,7 @@ export default function Dashboard() {
         sx={{
           flexGrow: 1,
           padding: 3,
-          backgroundColor: '#f5f5f5',
+          backgroundColor: '#F8E9F0', // สีพื้นหลังของเนื้อหา
           minHeight: '100vh',
         }}
       >
@@ -95,7 +95,7 @@ export default function Dashboard() {
           {/* Charts */}
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <Card sx={{ backgroundColor: '#fff' }}>
+              <Card sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     ผู้ใช้งานใหม่
@@ -114,7 +114,7 @@ export default function Dashboard() {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Card sx={{ backgroundColor: '#fff' }}>
+              <Card sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     จำนวนการแมท
@@ -138,10 +138,11 @@ export default function Dashboard() {
             <Typography variant="h6" gutterBottom>
               ผู้ใช้ถูกระงับใหม่
             </Typography>
-            <TableContainer component={Paper} sx={{ backgroundColor: '#fff' }}>
+            <TableContainer component={Paper} sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
               <Table>
                 <TableHead>
                   <TableRow>
+                    <TableCell align="center">รหัส</TableCell>
                     <TableCell align="center">รูป</TableCell>
                     <TableCell align="left">ชื่อผู้ใช้</TableCell>
                     <TableCell align="left">เหตุผล</TableCell>
@@ -151,14 +152,15 @@ export default function Dashboard() {
                 <TableBody>
                   {users.map((user) => (
                     <TableRow key={user.UserID}>
+                      <TableCell align="center">{user.UserID}</TableCell>
                       <TableCell align="center">
                         <Avatar src={`${url}/user/image/${user.imageFile}`} alt={user.username} />
                       </TableCell>
                       <TableCell align="left">{user.username}</TableCell>
                       <TableCell align="left">{user.reason || 'ไม่ระบุเหตุผล'}</TableCell>
                       <TableCell align="center">
-                        <Button variant="contained">ตรวจสอบ</Button>
-                        <Button variant="outlined" sx={{ ml: 2 }}>
+                        <Button variant="contained" sx={{ backgroundColor: '#ff6699', color: '#fff', borderRadius: '10px' }}>ตรวจสอบ</Button>
+                        <Button variant="outlined" sx={{ ml: 2, borderColor: '#ff6699', color: '#ff6699', borderRadius: '10px' }}>
                           ระงับผู้ใช้
                         </Button>
                       </TableCell>
