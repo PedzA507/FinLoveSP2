@@ -3,8 +3,8 @@
     <string name="title_Main">Main</string>
     <string name="title_Message">Message</string>
     <string name="title_Profile">Profile</string>
-    <string name="root_url">http://192.168.1.49:4000</string>
-    <string name="root_url2">http://192.168.1.49:5000</string>
+    <string name="root_url">http://10.13.1.67:4000</string>
+    <string name="root_url2">http://10.13.1.67:6000</string>
     <string-array name="education_levels">
         <item>มัธยมศึกษา</item>
         <item>ปริญญาตรี</item>

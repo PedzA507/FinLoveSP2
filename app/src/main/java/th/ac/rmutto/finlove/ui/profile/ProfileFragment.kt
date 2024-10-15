@@ -1,6 +1,6 @@
 package th.ac.rmutto.finlove
 
-import android.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
@@ -67,7 +67,7 @@ class ProfileFragment : Fragment() {
         // Initialize views
         initializeViews(root)
 
-        // ดึง userID ที่ส่งมาจาก intent
+        // Fetch user ID from intent
         val userID = requireActivity().intent.getIntExtra("userID", -1)
         Log.d("ProfileFragment", "Received userID: $userID")
 
@@ -105,11 +105,10 @@ class ProfileFragment : Fragment() {
 
         setupSpinners()
 
-        // Setup button listeners
-        buttonSelectDateProfile.setOnClickListener {
-            showDatePicker()
-        }
+        // Hide fields initially
+        hideFieldsForViewingMode()
 
+        // Setup button listeners
         buttonEditProfile.setOnClickListener {
             toggleEditMode()
         }
@@ -128,6 +127,16 @@ class ProfileFragment : Fragment() {
 
         buttonLogout.setOnClickListener {
             logoutUser(requireActivity().intent.getIntExtra("userID", -1))
+        }
+
+        buttonEditPreferences.setOnClickListener {
+            val intent = Intent(requireContext(), ChangePreferenceActivity::class.java)
+            intent.putExtra("userID", requireActivity().intent.getIntExtra("userID", -1))
+            startActivityForResult(intent, REQUEST_CODE_CHANGE_PREFERENCES)
+        }
+
+        buttonSelectDateProfile.setOnClickListener {
+            showDatePicker() // Fix for date picker
         }
     }
 
@@ -165,21 +174,6 @@ class ProfileFragment : Fragment() {
         spinnerInterestGender.adapter = interestGenderAdapter
     }
 
-    private fun showDatePicker() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            selectedDateOfBirth = "$selectedYear-${String.format("%02d", selectedMonth + 1)}-${String.format("%02d", selectedDay)}"
-            buttonSelectDateProfile.text = selectedDateOfBirth
-        }, year, month, day)
-
-        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
-        datePickerDialog.show()
-    }
-
     private fun toggleEditMode() {
         isEditing = !isEditing
         setEditingEnabled(isEditing)
@@ -210,6 +204,21 @@ class ProfileFragment : Fragment() {
                 .placeholder(R.drawable.img_1)
                 .error(R.drawable.error)
                 .into(imageViewProfile)
+        } else if (requestCode == REQUEST_CODE_CHANGE_PREFERENCES && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+            val updatedPreferences = data.getStringExtra("preferences")
+            updateUserPreferences(updatedPreferences)
+        }
+    }
+
+    private fun updateUserPreferences(preferences: String?) {
+        preferenceContainer.removeAllViews()
+        val preferencesArray = preferences?.split(",") ?: listOf()
+        for (preference in preferencesArray) {
+            val preferenceTextView = TextView(requireContext())
+            preferenceTextView.text = preference
+            preferenceTextView.setBackgroundResource(R.drawable.rounded_preference_box)
+            preferenceTextView.setPadding(16, 16, 16, 16)
+            preferenceContainer.addView(preferenceTextView)
         }
     }
 
@@ -250,6 +259,10 @@ class ProfileFragment : Fragment() {
         textViewHeight.setText(user.height.toString())
         textViewHome.setText(user.home)
         buttonSelectDateProfile.text = user.dateBirth
+
+        // Set user's nickname in the toolbar
+        val toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbarProfile)
+        toolbar.title = user.nickname // Set real nickname in toolbar
 
         preferenceContainer.removeAllViews()
         val preferencesArray = user.preferences?.split(",") ?: listOf()
@@ -364,6 +377,21 @@ class ProfileFragment : Fragment() {
             .into(imageView)
     }
 
+    private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            selectedDateOfBirth = "$selectedYear-${String.format("%02d", selectedMonth + 1)}-${String.format("%02d", selectedDay)}"
+            buttonSelectDateProfile.text = selectedDateOfBirth
+        }, year, month, day)
+
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis() // Disable future dates
+        datePickerDialog.show()
+    }
+
     private fun setEditingEnabled(enabled: Boolean) {
         textViewUsername.isEnabled = enabled
         textViewNickname.isEnabled = enabled
@@ -376,12 +404,14 @@ class ProfileFragment : Fragment() {
         spinnerGoal.isEnabled = enabled
         textViewHeight.isEnabled = enabled
         textViewHome.isEnabled = enabled
-        buttonSelectDateProfile.isEnabled = enabled
+        buttonSelectDateProfile.isEnabled = enabled // เปิดใช้งานปุ่มเลือกวันเกิด
         buttonChangeImage.isEnabled = enabled
         buttonSaveProfile.isEnabled = enabled
     }
 
+
     private fun showAllFields() {
+        spinnerInterestGender.visibility = View.VISIBLE
         textViewUsername.visibility = View.VISIBLE
         textViewEmail.visibility = View.VISIBLE
         textViewHeight.visibility = View.VISIBLE
@@ -392,6 +422,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun hideFieldsForViewingMode() {
+        // Initially show only Firstname, Lastname, Nickname, Gender, Preference
         textViewUsername.visibility = View.GONE
         textViewEmail.visibility = View.GONE
         textViewHeight.visibility = View.GONE
@@ -399,6 +430,11 @@ class ProfileFragment : Fragment() {
         buttonSelectDateProfile.visibility = View.GONE
         spinnerGoal.visibility = View.GONE
         spinnerEducation.visibility = View.GONE
+        spinnerInterestGender.visibility = View.GONE
+
+        buttonChangeImage.visibility = View.GONE
+        buttonSaveProfile.visibility = View.GONE
+        buttonEditPreferences.visibility = View.GONE
     }
 
     private fun restoreOriginalUserInfo() {

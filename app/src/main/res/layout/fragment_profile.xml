@@ -1,22 +1,320 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_profile"
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/logoImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/img"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:contentDescription="App Logo" />
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nickname"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/logoImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                android:gravity="center"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- ScrollView -->
+    <ScrollView
+        android:id="@+id/profileScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbarProfile"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Image View Profile -->
+            <ImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="262dp"
+                android:layout_height="287dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="Profile Image"
+                android:src="@drawable/img_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/buttonEditProfile"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="220dp"
+                android:layout_marginEnd="18dp"
+                android:background="@null"
+                android:contentDescription="Edit Profile"
+                android:padding="12dp"
+                android:src="@drawable/ic_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/imageViewProfile"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonChangeImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/button"
+                android:text="เปลี่ยนรูปภาพ"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageViewProfile" />
+
+            <!-- Username -->
+            <EditText
+                android:id="@+id/textViewUsername"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="120dp"
+                android:enabled="false"
+                android:hint="Username: "
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageViewProfile" />
+
+            <!-- Email -->
+            <EditText
+                android:id="@+id/textViewEmail"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:padding="12dp"
+                android:hint="Email: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewUsername"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- First Name -->
+            <EditText
+                android:id="@+id/textViewFirstName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:padding="12dp"
+                android:hint="Firstname: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewEmail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Last Name -->
+            <EditText
+                android:id="@+id/textViewLastName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:padding="12dp"
+                android:hint="Lastname: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewFirstName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Nickname -->
+            <EditText
+                android:id="@+id/textViewNickname"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:padding="12dp"
+                android:hint="Nickname: "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/textViewLastName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Gender Spinner -->
+            <Spinner
+                android:id="@+id/spinnerGender"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewNickname"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Preferences Section -->
+            <LinearLayout
+                android:id="@+id/preferenceContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/spinnerGender"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
+
+            <!-- ปุ่มแก้ไขความชอบ -->
+            <Button
+                android:id="@+id/buttonEditPreferences"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="แก้ไขความชอบของคุณ"
+                android:visibility="gone"
+                android:background="@drawable/button"
+                app:layout_constraintTop_toBottomOf="@id/preferenceContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Education Spinner -->
+            <Spinner
+                android:id="@+id/spinnerEducation"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/buttonEditPreferences"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Goal Spinner -->
+            <Spinner
+                android:id="@+id/spinnerGoal"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinnerEducation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Height -->
+            <EditText
+                android:id="@+id/textViewHeight"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Height"
+                android:enabled="false"
+                android:padding="12dp"
+                app:layout_constraintTop_toBottomOf="@id/spinnerGoal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Home -->
+            <EditText
+                android:id="@+id/textViewHome"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Home"
+                android:enabled="false"
+                android:padding="12dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewHeight"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Interest Gender Spinner -->
+            <Spinner
+                android:id="@+id/spinnerInterestGender"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/textViewHome"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Date of Birth Button -->
+            <Button
+                android:id="@+id/buttonSelectDateProfile"
+                android:layout_width="300dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edittext"
+                android:text="เลือก วัน/เดือน/ปีเกิด"
+                android:textAlignment="center"
+                app:layout_constraintTop_toBottomOf="@id/spinnerInterestGender"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Save Button -->
+            <Button
+                android:id="@+id/buttonSaveProfile"
+                android:layout_width="121dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button"
+                android:enabled="false"
+                android:text="Save"
+                app:layout_constraintTop_toBottomOf="@id/buttonSelectDateProfile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Logout Button -->
+            <Button
+                android:id="@+id/buttonLogout"
+                android:layout_width="126dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/button"
+                android:text="Logout"
+                app:layout_constraintTop_toBottomOf="@id/buttonSaveProfile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Delete Account Button -->
+            <Button
+                android:id="@+id/buttonDeleteAccount"
+                android:layout_width="186dp"
+                android:layout_height="54dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/button"
+                android:text="Delete Account"
+                app:layout_constraintTop_toBottomOf="@id/buttonLogout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
