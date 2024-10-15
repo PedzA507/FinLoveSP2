@@ -98,7 +98,6 @@ class HomeFragment : Fragment() {
         // เมื่อกดปุ่ม "Dislike"
         dislikeButton.setOnClickListener {
             dislikeUser(user.userID)
-            nextUser()
         }
 
         // เมื่อกดปุ่มรายงาน
@@ -261,7 +260,7 @@ class HomeFragment : Fragment() {
             override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
                 requireActivity().runOnUiThread {
                     if (response.isSuccessful) {
-                        nextUser()
+                        nextUser() // เรียก nextUser หลังจากการดำเนินการสำเร็จ
                     } else {
                         Toast.makeText(requireContext(), "Error: ${response.message}", Toast.LENGTH_SHORT).show()
                     }
