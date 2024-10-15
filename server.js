@@ -353,7 +353,7 @@ app.put('/api/user/ban/:id', async function(req, res) {
     }
 });
 
-// Unban a user (set isActive to 1 in user table)
+// Unban a user (set isActive to 1 and clear loginAttempt in user table)
 app.put('/api/user/unban/:id', async function(req, res) {
     const userID = req.params.id;
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null;
@@ -369,20 +369,21 @@ app.put('/api/user/unban/:id', async function(req, res) {
             return res.send({'message':'คุณไม่มีสิทธิ์ในการปลดแบนผู้ใช้', 'status': false});
         }
 
-        // อัปเดต isActive ในตาราง user ให้เป็น 1 (ปลดแบน)
-        let sql = "UPDATE user SET isActive = 1 WHERE userID = ?";
+        // อัปเดต isActive ในตาราง user ให้เป็น 1 และเคลีย loginAttempt
+        let sql = "UPDATE user SET isActive = 1, loginAttempt = 0 WHERE userID = ?";
         db.query(sql, [userID], (err, result) => {
             if (err) {
                 console.error(err);
                 return res.send({'message': 'เกิดข้อผิดพลาดในการปลดแบนผู้ใช้', 'status': false});
             }
-            res.send({'message': 'ปลดแบนผู้ใช้เรียบร้อยแล้ว', 'status': true});
+            res.send({'message': 'ปลดแบนผู้ใช้เรียบร้อยแล้วและเคลียร์จำนวนครั้งที่ล็อกอินไม่สำเร็จ', 'status': true});
         });
 
     } catch (error) {
         res.send({'message':'token ไม่ถูกต้อง', 'status': false});
     }
 });
+
 
 
 
@@ -627,7 +628,7 @@ app.put('/api/employee/ban/:id', async function(req, res) {
     }
 });
 
-// Unsuspend an employee (set isActive to 1 in employee table)
+// Unsuspend an employee (set isActive to 1 and clear loginAttempt in employee table if applicable)
 app.put('/api/employee/unban/:id', async function(req, res) {
     const empID = req.params.id;
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null;
@@ -643,20 +644,21 @@ app.put('/api/employee/unban/:id', async function(req, res) {
             return res.send({'message':'คุณไม่มีสิทธิ์ในการปลดแบนพนักงาน', 'status': false});
         }
 
-        // อัปเดต isActive ในตาราง employee ให้เป็น 1 (ปลดแบน)
-        let sql = "UPDATE employee SET isActive = 1 WHERE empID = ?";
+        // อัปเดต isActive ในตาราง employee ให้เป็น 1 และเคลีย loginAttempt (ถ้ามี)
+        let sql = "UPDATE employee SET isActive = 1, loginAttempt = 0 WHERE empID = ?";
         db.query(sql, [empID], (err, result) => {
             if (err) {
                 console.error(err);
                 return res.send({'message': 'เกิดข้อผิดพลาดในการปลดแบนพนักงาน', 'status': false});
             }
-            res.send({'message': 'ปลดแบนพนักงานเรียบร้อยแล้ว', 'status': true});
+            res.send({'message': 'ปลดแบนพนักงานเรียบร้อยแล้วและเคลียร์จำนวนครั้งที่ล็อกอินไม่สำเร็จ', 'status': true});
         });
 
     } catch (error) {
         res.send({'message':'token ไม่ถูกต้อง', 'status': false});
     }
 });
+
 
 
     
