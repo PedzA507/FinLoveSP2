@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Button, Container, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, ButtonGroup } from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // เพิ่มไอคอนย้อนกลับ
 
 const token = localStorage.getItem('token');
 const url = process.env.REACT_APP_BASE_URL;
@@ -96,67 +97,65 @@ export default function Index() {
   };
 
   return (
-      <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-        {/* Main Content */}
-        <Container sx={{ marginTop: 2 }} maxWidth="lg">
-          <Paper sx={{ padding: 3, backgroundColor: '#fafafa', borderRadius: 3 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                จัดการข้อมูลพนักงาน
-              </Typography>
-              <Link to="/addemployee">
-                <Button variant="contained" color="primary" sx={{ backgroundColor: '#1976d2' }}>
-                  เพิ่มข้อมูลพนักงาน
-                </Button>
-              </Link>
-            </Box>
-            <TableContainer>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="right">รหัส</TableCell>
-                    <TableCell align="center">รูป</TableCell>
-                    <TableCell align="left">ชื่อ</TableCell>
-                    <TableCell align="left">นามสกุล</TableCell>
-                    <TableCell align="left">ชื่อผู้ใช้</TableCell>
-                    <TableCell align="center">จัดการข้อมูล</TableCell>
+    <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8E9F0' }}> {/* เปลี่ยนสีพื้นหลังเป็นชมพูอ่อน */}
+      <Container sx={{ marginTop: 2 }} maxWidth="lg">
+        <Paper sx={{ padding: 2, backgroundColor: '#fff', borderRadius: '15px' }}> {/* เปลี่ยนพื้นหลังเป็นสีขาวและขอบมน */}
+          <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
+            {/* ปุ่มย้อนกลับ */}
+            <Button
+              startIcon={<ArrowBackIcon />}
+              onClick={() => navigate('/dashboard')}
+              sx={{ mr: 2, color: '#000', fontWeight: 'bold', fontSize: '18px' }}
+            >
+              จัดการข้อมูลผู้ใช้
+            </Button>
+          </Box>
+
+          {/* ตารางข้อมูลพนักงาน */}
+          <TableContainer>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="right" sx={{ fontWeight: 'bold', fontSize: '16px' }}>รหัส</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold', fontSize: '16px' }}>รูป</TableCell>
+                  <TableCell align="left" sx={{ fontWeight: 'bold', fontSize: '16px' }}>ชื่อ</TableCell>
+                  <TableCell align="left" sx={{ fontWeight: 'bold', fontSize: '16px' }}>นามสกุล</TableCell>
+                  <TableCell align="left" sx={{ fontWeight: 'bold', fontSize: '16px' }}>ชื่อผู้ใช้</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 'bold', fontSize: '16px' }}>จัดการข้อมูล</TableCell>
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {employees.map((employee) => (
+                  <TableRow key={employee.empID}>
+                    <TableCell align="right" sx={{ fontSize: '14px' }}>{employee.empID}</TableCell>
+                    <TableCell align="center">
+                      <Box display="flex" justifyContent="center">
+                        <Avatar src={url + '/employee/image/' + employee.imageFile} sx={{ width: 56, height: 56 }} /> {/* ขอบมน */}
+                      </Box>
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontSize: '14px' }}>{employee.firstname}</TableCell>
+                    <TableCell align="left" sx={{ fontSize: '14px' }}>{employee.lastname}</TableCell>
+                    <TableCell align="left" sx={{ fontSize: '14px' }}>{employee.username}</TableCell>
+                    <TableCell align="center">
+                      <ButtonGroup color="primary" aria-label="outlined primary button group">
+                        <Button variant="contained" onClick={() => ViewEmployee(employee.empID)} sx={{ borderRadius: '0px', backgroundColor: '#FFF', color: '#000', border: '1px solid #1976d2' }}>ตรวจสอบรายงาน</Button>
+                        <Button variant="outlined" onClick={() => UpdateEmployee(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#1976d2', color: '#1976d2' }}>แก้ไข</Button>
+                        {employee.isActive === 1 ? (
+                          <Button variant="outlined" color="secondary" onClick={() => EmployeeBan(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#FF6699', color: '#FF6699' }}>ระงับผู้ใช้</Button>
+                        ) : (
+                          <Button variant="outlined" color="primary" onClick={() => EmployeeUnban(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#1976d2', color: '#1976d2' }}>ปลดแบน</Button>
+                        )}
+                        <Button variant="contained" color="error" onClick={() => EmployeeDelete(employee.empID)} sx={{ borderRadius: '0px' }}>ลบผู้ใช้</Button>
+                      </ButtonGroup>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {employees.map((employee) => (
-                    <TableRow key={employee.empID}> 
-                      <TableCell align="right">{employee.empID}</TableCell>
-                      <TableCell align="center">
-                        <Box display="flex" justifyContent="center">
-                          <Avatar src={url + '/employee/image/' + employee.imageFile} />
-                        </Box>
-                      </TableCell>
-                      <TableCell align="left">{employee.firstname}</TableCell>
-                      <TableCell align="left">{employee.lastname}</TableCell>
-                      <TableCell align="left">{employee.username}</TableCell>
-                      <TableCell align="center">
-                        <ButtonGroup color="primary" aria-label="outlined primary button group">
-                          <Button variant="contained" onClick={() => ViewEmployee(employee.empID)}>ตรวจสอบรายงาน</Button>
-                          <Button variant="outlined" onClick={() => UpdateEmployee(employee.empID)}>แก้ไข</Button>
-
-                          {/* Conditionally render "แบนผู้ใช้" or "ปลดแบน" based on isActive */}
-                          {employee.isActive === 1 ? (
-                            <Button variant="outlined" color="secondary" onClick={() => EmployeeBan(employee.empID)}>แบนผู้ใช้</Button>
-                          ) : (
-                            <Button variant="outlined" color="primary" onClick={() => EmployeeUnban(employee.empID)}>ปลดแบน</Button>
-                          )}
-
-                          <Button variant="contained" color="error" onClick={() => EmployeeDelete(employee.empID)}>ลบผู้ใช้</Button>
-                        </ButtonGroup>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Container>
-      </Box>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
