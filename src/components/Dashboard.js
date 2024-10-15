@@ -43,6 +43,26 @@ export default function Dashboard() {
     });
   }, []);
 
+  const handleDeleteUser = (userID) => {
+    axios.delete(`${url}/user/${userID}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then((response) => {
+      if (response.data.status === true) {
+        alert(response.data.message);
+        // Update user list after deletion
+        setUsers((prevUsers) => prevUsers.filter(user => user.UserID !== userID));
+      } else {
+        alert('Failed to delete user');
+      }
+    })
+    .catch((error) => {
+      console.error('Error deleting user:', error);
+    });
+  };
+
   const drawerWidth = 240;
   const menuItems = [
     { text: 'จัดการข้อมูลผู้ใช้', action: () => navigate('/admin/user'), icon: <PeopleIcon /> },
@@ -160,9 +180,8 @@ export default function Dashboard() {
                       <TableCell align="left">{user.reason || 'ไม่ระบุเหตุผล'}</TableCell>
                       <TableCell align="center">
                         <Button variant="contained" sx={{ backgroundColor: '#ff6699', color: '#fff', borderRadius: '10px' }}>ตรวจสอบ</Button>
-                        <Button variant="outlined" sx={{ ml: 2, borderColor: '#ff6699', color: '#ff6699', borderRadius: '10px' }}>
-                          ระงับผู้ใช้
-                        </Button>
+                        <Button variant="outlined" sx={{ ml: 2, borderColor: '#ff6699', color: '#ff6699', borderRadius: '10px' }}>ระงับผู้ใช้</Button>
+                        <Button variant="contained" color="error" sx={{ ml: 2, borderRadius: '10px' }} onClick={() => handleDeleteUser(user.UserID)}>ลบผู้ใช้</Button>
                       </TableCell>
                     </TableRow>
                   ))}
