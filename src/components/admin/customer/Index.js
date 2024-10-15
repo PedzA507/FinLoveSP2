@@ -152,6 +152,7 @@ export default function Index() {
                         ) : (
                           <Button variant="outlined" color="primary" onClick={() => UserUnban(user.userID)}>ปลดแบน</Button>
                         )}
+                        <Button variant="contained" color="error" onClick={() => UserDelete(user.userID)}>ลบผู้ใช้</Button>
                       </ButtonGroup>
                     </TableCell>
                   </TableRow>
