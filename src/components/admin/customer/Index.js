@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Button, Container, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, ButtonGroup } from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ใช้ไอคอนสำหรับปุ่มย้อนกลับ
 
 const token = localStorage.getItem('token');
 const url = process.env.REACT_APP_BASE_URL;
@@ -106,67 +107,60 @@ export default function Index() {
   };
 
   return (
-      <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-        {/* Main Content */}
-        <Container sx={{ marginTop: 2 }} maxWidth="lg">
-          <Paper sx={{ padding: 3, backgroundColor: '#fafafa', borderRadius: 3 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                จัดการข้อมูลผู้ใช้
-              </Typography>
-              <Link to="/adduser">
-                <Button variant="contained" color="primary" sx={{ backgroundColor: '#1976d2' }}>
-                  เพิ่มข้อมูลผู้ใช้
-                </Button>
-              </Link>
-            </Box>
-            <TableContainer>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="right">รหัส</TableCell>
-                    <TableCell align="center">รูป</TableCell>
-                    <TableCell align="left">ชื่อ</TableCell>
-                    <TableCell align="left">นามสกุล</TableCell>
-                    <TableCell align="left">ชื่อผู้ใช้</TableCell>
-                    <TableCell align="center">จัดการข้อมูล</TableCell>
+    <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8E9F0' }}>
+      <Container sx={{ marginTop: 2 }} maxWidth="lg">
+        <Paper sx={{ padding: 2, backgroundColor: '#fff', borderRadius: 3 }}>
+          <Box display="flex" justifyContent="flex-start" alignItems="center" sx={{ mb: 2 }}>
+            <Button
+              startIcon={<ArrowBackIcon />}
+              onClick={() => navigate('/dashboard')}
+              sx={{ mr: 2 }}
+            >
+              จัดการข้อมูลผู้ใช้
+            </Button>
+          </Box>
+          <TableContainer>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="right">รหัส</TableCell>
+                  <TableCell align="center">รูป</TableCell>
+                  <TableCell align="left">ชื่อ</TableCell>
+                  <TableCell align="left">นามสกุล</TableCell>
+                  <TableCell align="left">ชื่อผู้ใช้</TableCell>
+                  <TableCell align="center">จัดการข้อมูล</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow key={user.userID}>
+                    <TableCell align="right">{user.userID}</TableCell>
+                    <TableCell align="center">
+                      <Box display="flex" justifyContent="center">
+                        <Avatar src={url + '/user/image/' + user.imageFile} sx={{ width: 56, height: 56 }} />
+                      </Box>
+                    </TableCell>
+                    <TableCell align="left">{user.firstname}</TableCell>
+                    <TableCell align="left">{user.lastname}</TableCell>
+                    <TableCell align="left">{user.username}</TableCell>
+                    <TableCell align="center">
+                      <ButtonGroup color="primary" aria-label="outlined primary button group">
+                        <Button variant="outlined" onClick={() => ViewUser(user.userID)}>ตรวจสอบรายงาน</Button>
+                        <Button variant="outlined" onClick={() => UpdateUser(user.userID)}>แก้ไข</Button>
+                        {user.isActive === 1 ? (
+                          <Button variant="outlined" color="secondary" onClick={() => UserBan(user.userID)}>ระงับผู้ใช้</Button>
+                        ) : (
+                          <Button variant="outlined" color="primary" onClick={() => UserUnban(user.userID)}>ปลดแบน</Button>
+                        )}
+                      </ButtonGroup>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.userID}>
-                      <TableCell align="right">{user.userID}</TableCell>
-                      <TableCell align="center">
-                        <Box display="flex" justifyContent="center">
-                          <Avatar src={url + '/user/image/' + user.imageFile} />
-                        </Box>
-                      </TableCell>
-                      <TableCell align="left">{user.firstname}</TableCell>
-                      <TableCell align="left">{user.lastname}</TableCell>
-                      <TableCell align="left">{user.username}</TableCell>
-                      <TableCell align="center">
-                        <ButtonGroup color="primary" aria-label="outlined primary button group">
-                          <Button variant="contained" onClick={() => ViewUser(user.userID)}>ตรวจสอบรายงาน</Button>
-                          <Button variant="outlined" onClick={() => UpdateUser(user.userID)}>แก้ไข</Button>
-
-                          {/* Conditionally render "แบนผู้ใช้" or "ปลดแบน" based on isActive */}
-                          {user.isActive === 1 ? (
-                            <Button variant="outlined" color="secondary" onClick={() => UserBan(user.userID)}>แบนผู้ใช้</Button>
-                          ) : (
-                            <Button variant="outlined" color="primary" onClick={() => UserUnban(user.userID)}>ปลดแบน</Button>
-                          )}
-
-                          <Button variant="contained" color="error" onClick={() => UserDelete(user.userID)}>ลบผู้ใช้</Button>
-                        </ButtonGroup>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Container>
-      </Box>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
