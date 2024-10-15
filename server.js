@@ -133,7 +133,7 @@ app.post('/api/login', async function(req, res) {
 
         // สร้าง token และส่งกลับ
         let tokenPayload = {
-            userID: isEmployee ? user['empID'] : user['custID'],
+            userID: isEmployee ? user['empID'] : user['userID'],
             username: username,
             role: isEmployee ? 'employee' : 'user'
         };
@@ -389,29 +389,69 @@ app.put('/api/user/unban/:id', async function(req, res) {
 
     
 //Delete a user
-app.delete('/api/user/:id',
-    async function(req, res){
-        const custID = req.params.id;        
-        const token = req.headers["authorization"].replace("Bearer ", "");
-            
-        try{
-            let decode = jwt.verify(token, SECRET_KEY);               
-            if(custID != decode.custID && decode.positionID != 1 && decode.positionID != 2) {
-                return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
-            }
-            
-            const sql = `DELETE FROM user WHERE custID = ?`;
-            db.query(sql, [custID], (err, result) => {
-                if (err) throw err;
-                res.send({'message':'ลบข้อมูลลูกค้าเรียบร้อยแล้ว','status':true});
-            });
+app.delete('/api/user/:id', async function(req, res) {
+    const userID = req.params.id;
+    const token = req.headers["authorization"].replace("Bearer ", "");
 
-        }catch(error){
-            res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
+    try {
+        let decode = jwt.verify(token, SECRET_KEY);
+        if (userID != decode.userID && decode.positionID != 1 && decode.positionID != 2) {
+            return res.send({'message': 'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน', 'status': false});
         }
-        
+
+        // Begin transaction to ensure consistency
+        db.beginTransaction((err) => {
+            if (err) throw err;
+
+            // First, delete related entries from the `userlike` table
+            const deleteLikesSQL = `DELETE FROM userlike WHERE likedID = ? OR likerID = ?`;
+            db.query(deleteLikesSQL, [userID, userID], (err, result) => {
+                if (err) {
+                    return db.rollback(() => {
+                        throw err;
+                    });
+                }
+
+                // Next, delete related entries from the `userreport` table
+                const deleteReportsSQL = `DELETE FROM userreport WHERE reportedID = ? OR reporterID = ?`;
+                db.query(deleteReportsSQL, [userID, userID], (err, result) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            throw err;
+                        });
+                    }
+
+                    // Then, delete the user from the `user` table
+                    const deleteUserSQL = `DELETE FROM user WHERE UserID = ?`;
+                    db.query(deleteUserSQL, [userID], (err, result) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                throw err;
+                            });
+                        }
+
+                        // Commit the transaction
+                        db.commit((err) => {
+                            if (err) {
+                                return db.rollback(() => {
+                                    throw err;
+                                });
+                            }
+
+                            res.send({'message': 'ลบข้อมูลลูกค้าเรียบร้อยแล้ว', 'status': true});
+                        });
+                    });
+                });
+            });
+        });
+
+    } catch (error) {
+        res.send({'message': 'โทเคนไม่ถูกต้อง', 'status': false});
     }
-);
+});
+
+
+
 
 //List employees
 app.get('/api/employee',
