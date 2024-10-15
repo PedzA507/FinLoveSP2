@@ -19,6 +19,24 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".MatchedUser"
+            android:exported="false" />
+        <activity
+            android:name=".RetrofitClient"
+            android:exported="false" />
+
+        <service
+            android:name=".ApiService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MatchesAdapter"
+            android:exported="false" />
+        <activity
             android:name=".UserAdapter"
             android:exported="false" />
         <activity

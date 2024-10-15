@@ -4,23 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="16dp">
 
-    <!-- ชื่อผู้ส่ง -->
+    <ImageView
+        android:id="@+id/imageProfile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_user" />
+
     <TextView
-        android:id="@+id/textViewSender"
+        android:id="@+id/textNickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Sender" />
-
-    <!-- ข้อความแชท -->
-    <TextView
-        android:id="@+id/textViewMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Message content"
-        android:padding="8dp"
-        android:background="@drawable/img"
-        android:maxWidth="250dp" />
+        android:layout_marginTop="8dp"
+        android:text="Nickname"
+        android:textSize="20sp" />
 </LinearLayout>

@@ -33,31 +33,31 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.navigation_home, bundle)
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
+            val bundle = Bundle().apply {
+                putInt("userID", userID)
+            }
             when (menuItem.itemId) {
                 R.id.navigation_profile -> {
                     if (navController.currentDestination?.id != R.id.navigation_profile) {
-                        val bundle = Bundle().apply {
-                            putInt("userID", userID)
-                        }
                         navController.navigate(R.id.navigation_profile, bundle)
                     }
                     true
                 }
+
                 R.id.navigation_home -> {
                     if (navController.currentDestination?.id != R.id.navigation_home) {
-                        val bundle = Bundle().apply {
-                            putInt("userID", userID)
-                        }
                         navController.navigate(R.id.navigation_home, bundle)
                     }
                     true
                 }
+
                 R.id.navigation_message -> {
                     if (navController.currentDestination?.id != R.id.navigation_message) {
-                        navController.navigate(R.id.navigation_message)
+                        navController.navigate(R.id.navigation_message, bundle)
                     }
                     true
                 }
+
                 else -> false
             }
         }
