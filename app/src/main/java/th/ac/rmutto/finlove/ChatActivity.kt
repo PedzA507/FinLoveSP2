@@ -1,18 +1,21 @@
 package th.ac.rmutto.finlove
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.FormBody
 import okhttp3.Request
-import org.json.JSONArray
 import org.json.JSONObject
 import th.ac.rmutto.finlove.databinding.ActivityChatBinding
 
@@ -157,6 +160,21 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         return messages
+    }
+
+    // เพิ่มการนำทางไปหน้าโปรไฟล์
+    inner class LeftChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val profileImage: ImageView = itemView.findViewById(R.id.profile_image)
+
+        fun bind(chatMessage: ChatMessage) {
+            // กดที่รูปเพื่อไปหน้าโปรไฟล์
+            profileImage.setOnClickListener {
+                Log.d("ChatActivity", "Clicked on profile image of user: ${chatMessage.senderID}")
+                val intent = Intent(this@ChatActivity, OtherProfileActivity::class.java)
+                intent.putExtra("userID", chatMessage.senderID)  // ส่ง userID ของผู้ส่งไปที่ OtherProfileActivity
+                startActivity(intent)
+            }
+        }
     }
 }
 
