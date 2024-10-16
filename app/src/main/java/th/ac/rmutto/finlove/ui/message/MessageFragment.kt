@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
-import org.json.JSONObject
 import th.ac.rmutto.finlove.ChatActivity
 import th.ac.rmutto.finlove.R
 import th.ac.rmutto.finlove.databinding.FragmentMessageBinding
@@ -79,10 +78,10 @@ class MessageFragment : Fragment() {
             userView.setOnClickListener {
                 val intent = Intent(requireContext(), ChatActivity::class.java).apply {
                     putExtra("matchID", user.matchID)  // ส่ง matchID ไปยัง ChatActivity
+                    putExtra("senderID", userID)  // ส่ง userID ของผู้ใช้ที่ล็อกอินไปด้วย (คือ senderID)
                 }
                 startActivity(intent)
             }
-
 
             // เพิ่ม view ของผู้ใช้แต่ละคนเข้าไปใน layout
             userListLayout.addView(userView)
@@ -93,34 +92,33 @@ class MessageFragment : Fragment() {
     private fun fetchMatchedUsers(callback: (List<MatchedUser>) -> Unit) {
         lifecycleScope.launch(Dispatchers.IO) {
             val url = getString(R.string.root_url) + "/api/matches/$userID"
-            Log.d("API Request", "Fetching matched users from URL: $url")  // เพิ่ม Log เพื่อตรวจสอบ URL
+            Log.d("API Request", "Fetching matched users from URL: $url")
             val request = Request.Builder().url(url).build()
 
             try {
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     val responseBody = response.body?.string()
-                    Log.d("API Response", responseBody ?: "ไม่มีการตอบกลับ")  // เพิ่ม Log เพื่อตรวจสอบการตอบกลับ
+                    Log.d("API Response", responseBody ?: "ไม่มีการตอบกลับ")
                     val matchedUsersList = parseUsers(responseBody)
                     withContext(Dispatchers.Main) {
                         callback(matchedUsersList)
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        Log.e("API Error", "Response not successful: ${response.message}")  // เพิ่ม Log เพื่อแสดง error
+                        Log.e("API Error", "Response not successful: ${response.message}")
                         Toast.makeText(requireContext(), "ไม่สามารถดึงข้อมูลผู้ใช้ได้", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Log.e("API Error", "Exception occurred: ${e.message}")  // เพิ่ม Log เพื่อแสดงข้อผิดพลาด
+                    Log.e("API Error", "Exception occurred: ${e.message}")
                     Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    // แปลงข้อมูล JSON ให้เป็นรายการผู้ใช้
     private fun parseUsers(responseBody: String?): List<MatchedUser> {
         val users = mutableListOf<MatchedUser>()
         responseBody?.let {
@@ -152,5 +150,5 @@ data class MatchedUser(
     val nickname: String,
     val profilePicture: String,
     val lastMessage: String?,
-    val matchID: Int  // เพิ่ม matchID ที่นี่
+    val matchID: Int
 )
