@@ -191,6 +191,30 @@ app.get('/api/user', async function(req, res){
           return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
         }
         
+        // Query to pull the required fields from user table
+        let sql = "SELECT userID, username, firstname, lastname, imageFile FROM user";            
+        db.query(sql, function (err, result){
+            if (err) throw err;            
+            // Send the result back to the frontend, including userID
+            res.send(result); 
+        });      
+
+    }catch(error){
+        res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
+    }
+});
+
+
+// List users with relevant fields only
+app.get('/api/userreport', async function(req, res){             
+    const token = req.headers["authorization"].replace("Bearer ", "");
+        
+    try{
+        let decode = jwt.verify(token, SECRET_KEY);               
+        if(decode.positionID != 1 && decode.positionID != 2) {
+          return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
+        }
+        
         // Query to pull the required fields from user table and join with userreport and report
         let sql = `
             SELECT u.userID, u.username, u.imageFile, r.reportType
@@ -223,7 +247,6 @@ app.get('/api/profile/:id', async function(req, res) {
 
     try {
         let decode = jwt.verify(token, SECRET_KEY);
-        console.log("Decoded token:", decode);
 
         // ตรวจสอบว่าสิทธิ์เป็น admin (positionID = 1) หรือไม่
         if (decode.positionID != 1 && decode.positionID != 2) {
@@ -231,21 +254,35 @@ app.get('/api/profile/:id', async function(req, res) {
         }
 
         // ดึงข้อมูลของ user ตาม userID ที่ต้องการดู
-        let sql = "SELECT username, firstname, lastname, email, GenderID, home, phonenumber, imageFile FROM user WHERE userID = ? AND isActive = 1"; 
-        let user = await query(sql, [userID]);
+        let userSQL = `
+            SELECT u.username, u.firstname, u.lastname, u.email, u.GenderID, u.home, u.phonenumber, u.imageFile
+            FROM user u
+            WHERE u.userID = ? AND u.isActive = 1
+        `;
+        let user = await query(userSQL, [userID]);
 
-        console.log("Query result:", user);
-
-        if (user.length > 0) {
-            user = user[0];
-            user['message'] = 'success';
-            user['status'] = true;
-            res.send(user);
-        } else {
-            res.send({'message':'ไม่พบผู้ใช้งาน', 'status': false});
+        if (user.length === 0) {
+            return res.send({'message':'ไม่พบผู้ใช้งาน', 'status': false});
         }
 
-    } catch(error) {
+        // ดึงประวัติการรายงานของผู้ใช้ (ไม่มี timestamp)
+        let reportSQL = `
+            SELECT r.reportType
+            FROM userreport ur
+            JOIN report r ON ur.reportID = r.reportID
+            WHERE ur.reportedID = ?
+        `;
+        let reportHistory = await query(reportSQL, [userID]);
+
+        user = user[0];
+        user['reportHistory'] = reportHistory;
+        user['message'] = 'success';
+        user['status'] = true;
+
+        res.send(user);
+
+    } catch (error) {
+        console.error('Error verifying token:', error);
         res.send({'message':'token ไม่ถูกต้อง', 'status': false});
     }
 });

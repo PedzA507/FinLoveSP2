@@ -32,7 +32,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // ดึงข้อมูลผู้ใช้ที่ถูก report จาก API
-    axios.get(`${url}/user`, {
+    axios.get(`${url}/userreport`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then((response) => {
