@@ -1,6 +1,5 @@
 import './App.css';
 import SignInUser from './components/SignInUser';
-import ForgotPass from './components/ForgotPass';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
@@ -23,7 +22,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/signinuser" />} /> 
         <Route exact path='/signinuser' element={<SignInUser />} />
-        <Route exact path='/forgotpass' element={<ForgotPass />} />
         <Route exact path='/dashboard' element={<Dashboard />} />
         <Route exact path='/addemployee' element={<AddEmployee />} />
         
