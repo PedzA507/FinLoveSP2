@@ -426,6 +426,43 @@ app.get('/api/user/:id', async function (req, res) {
 });
 
 
+app.get('/api/profile/:id', async function (req, res) {
+    const { id } = req.params;
+    const sql = `
+    SELECT 
+        u.firstname, 
+        u.lastname, 
+        u.nickname, 
+        g.Gender_Name AS gender, 
+        COALESCE(GROUP_CONCAT(DISTINCT p.PreferenceNames), 'ไม่มีความชอบ') AS preferences,
+        u.imageFile
+    FROM user u
+    LEFT JOIN gender g ON u.GenderID = g.GenderID
+    LEFT JOIN userpreferences up ON u.UserID = up.UserID
+    LEFT JOIN preferences p ON up.PreferenceID = p.PreferenceID
+    WHERE u.UserID = ?
+    GROUP BY u.UserID
+    `;
+
+    try {
+        const [result] = await db.promise().query(sql, [id]);
+        if (result.length > 0) {
+            if (result[0].imageFile) {
+                // แก้ไข path การเข้าถึงรูปภาพจาก assets/user
+                result[0].imageFile = `${req.protocol}://${req.get('host')}/assets/user/${result[0].imageFile}`;
+            }
+            res.send(result[0]);
+        } else {
+            res.status(404).send({ message: "ไม่พบข้อมูลผู้ใช้", status: false });
+        }
+    } catch (err) {
+        console.error('Database query error:', err);
+        res.status(500).send({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้", status: false });
+    }
+});
+
+
+
 
 // update ข้อมูลผู้ใช้
 app.post('/api/user/update/:id', async function(req, res) {
