@@ -46,6 +46,12 @@ class ChatActivity : AppCompatActivity() {
         // ตั้งค่า Toolbar ให้แสดงชื่อเล่นของคู่สนทนา
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = receiverNickname
+        supportActionBar?.setDisplayHomeAsUpEnabled(true) // เพิ่มปุ่มย้อนกลับ
+
+        // กำหนดการทำงานของปุ่มย้อนกลับ
+        binding.toolbar.setNavigationOnClickListener {
+            finish() // ย้อนกลับไปหน้าก่อนหน้า
+        }
 
         // ตั้งค่า RecyclerView
         val chatAdapter = ChatAdapter(senderID) // ใช้ senderID ของผู้ใช้ที่ล็อกอินเป็น currentUserID
@@ -69,6 +75,7 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun fetchChatMessages() {
         lifecycleScope.launch(Dispatchers.IO) {

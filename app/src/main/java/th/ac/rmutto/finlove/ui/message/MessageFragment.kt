@@ -20,6 +20,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import th.ac.rmutto.finlove.ChatActivity
+import th.ac.rmutto.finlove.OtherProfileActivity // เพิ่ม import สำหรับหน้าโปรไฟล์
 import th.ac.rmutto.finlove.R
 import th.ac.rmutto.finlove.databinding.FragmentMessageBinding
 
@@ -79,6 +80,14 @@ class MessageFragment : Fragment() {
                 val intent = Intent(requireContext(), ChatActivity::class.java).apply {
                     putExtra("matchID", user.matchID)  // ส่ง matchID ไปยัง ChatActivity
                     putExtra("senderID", userID)  // ส่ง userID ของผู้ใช้ที่ล็อกอินไปด้วย (คือ senderID)
+                }
+                startActivity(intent)
+            }
+
+            // เพิ่มฟังก์ชันการกดที่รูปโปรไฟล์เพื่อไปหน้า OtherProfileActivity
+            profileImage.setOnClickListener {
+                val intent = Intent(requireContext(), OtherProfileActivity::class.java).apply {
+                    putExtra("userID", user.userID)  // ส่ง userID ของคู่สนทนาไปหน้าโปรไฟล์
                 }
                 startActivity(intent)
             }
