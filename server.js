@@ -78,38 +78,31 @@ app.post('/api/register',
 
 //Login
 app.post('/api/login', async function(req, res) {
-    //Validate username
     const {username, password} = req.body;
     let sql = '';
-    let User = {};
-    let isEmployee = false;
+    let user = {};
     let positionID = null;
 
-    // ตรวจสอบว่าผู้ใช้เป็นลูกค้าหรือพนักงาน
-    sql = "SELECT * FROM user WHERE username=? AND isActive = 1";
-    let user = await query(sql, [username]);
+    // ตรวจสอบผู้ใช้จากตารางพนักงานเท่านั้น
+    sql = "SELECT * FROM employee WHERE username=? AND isActive = 1";
+    let employee = await query(sql, [username]);
 
-    if (user.length > 0) {
-        // ผู้ใช้เป็นลูกค้า
-        user = user[0];
-    } else {
-        // ถ้าไม่ใช่ลูกค้า ให้ตรวจสอบในตารางพนักงาน
-        sql = "SELECT * FROM employee WHERE username=? AND isActive = 1";
-        let employee = await query(sql, [username]);
+    if (employee.length > 0) {
+        // ผู้ใช้เป็นพนักงาน
+        user = employee[0];
+        positionID = user['positionID']; // ดึงข้อมูล positionID ของพนักงาน
 
-        if (employee.length > 0) {
-            // ผู้ใช้เป็นพนักงาน
-            user = employee[0];
-            isEmployee = true;  // ตั้งค่าว่าเป็นพนักงาน
-            positionID = user['positionID']; // ดึงข้อมูล positionID ของพนักงาน
-        } else {
-            return res.send({'message': 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง', 'status': false});
+        // ตรวจสอบเฉพาะ positionID ที่เป็น 1 หรือ 2 เท่านั้นที่สามารถเข้าสู่ระบบได้
+        if (positionID !== 1 && positionID !== 2) {
+            return res.send({'message': 'คุณไม่มีสิทธิ์ในการเข้าสู่ระบบ', 'status': false});
         }
+    } else {
+        return res.send({'message': 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง', 'status': false});
     }
 
     // ตรวจสอบจำนวนครั้งที่พยายามเข้าสู่ระบบ
     let loginAttempt = 0;
-    sql = `SELECT loginAttempt FROM ${isEmployee ? 'employee' : 'user'} WHERE username=? AND isActive = 1 
+    sql = `SELECT loginAttempt FROM employee WHERE username=? AND isActive = 1 
            AND lastAttemptTime >= CURRENT_TIMESTAMP - INTERVAL 24 HOUR`;
 
     let row = await query(sql, [username]);
@@ -121,26 +114,23 @@ app.post('/api/login', async function(req, res) {
         }
     } else {
         // reset login attempt
-        sql = `UPDATE ${isEmployee ? 'employee' : 'user'} SET loginAttempt = 0, lastAttemptTime=NULL WHERE username=? AND isActive = 1`;
+        sql = `UPDATE employee SET loginAttempt = 0, lastAttemptTime=NULL WHERE username=? AND isActive = 1`;
         await query(sql, [username]);
     }
 
     // ตรวจสอบรหัสผ่าน
     if (bcrypt.compareSync(password, user['password'])) {
         // reset login attempt
-        sql = `UPDATE ${isEmployee ? 'employee' : 'user'} SET loginAttempt = 0, lastAttemptTime=NULL WHERE username=? AND isActive = 1`;
+        sql = `UPDATE employee SET loginAttempt = 0, lastAttemptTime=NULL WHERE username=? AND isActive = 1`;
         await query(sql, [username]);
 
         // สร้าง token และส่งกลับ
         let tokenPayload = {
-            userID: isEmployee ? user['empID'] : user['userID'],
+            userID: user['empID'],
             username: username,
-            role: isEmployee ? 'employee' : 'user'
+            role: 'employee',
+            positionID: positionID // เพิ่ม positionID สำหรับพนักงาน
         };
-
-        if (isEmployee) {
-            tokenPayload['positionID'] = positionID; // ถ้าเป็นพนักงาน ให้เพิ่ม positionID
-        }
 
         const token = jwt.sign(tokenPayload, SECRET_KEY, { expiresIn: '1h' });
 
@@ -149,13 +139,13 @@ app.post('/api/login', async function(req, res) {
         user['status'] = true;
 
         // เพิ่มข้อมูล role และ positionID ลงใน response
-        user['role'] = isEmployee ? (positionID == 1 ? 'admin' : 'employee') : 'user';
+        user['role'] = positionID == 1 ? 'admin' : 'employee';
 
         res.send(user);
     } else {
         // update login attempt
         const lastAttemptTime = new Date();
-        sql = `UPDATE ${isEmployee ? 'employee' : 'user'} SET loginAttempt = loginAttempt + 1, lastAttemptTime=? WHERE username=? AND isActive = 1`;
+        sql = `UPDATE employee SET loginAttempt = loginAttempt + 1, lastAttemptTime=? WHERE username=? AND isActive = 1`;
         await query(sql, [lastAttemptTime, username]);
 
         if (loginAttempt >= 2) {
@@ -165,6 +155,13 @@ app.post('/api/login', async function(req, res) {
         }
     }
 });
+
+// Logout API
+app.post('/api/logout', (req, res) => {
+    // API สำหรับ logout ไม่มีการจัดการฝั่ง server มากนัก นอกจากแจ้งว่า logout สำเร็จ
+    res.status(200).send({ message: 'Logged out successfully', status: true });
+});
+
 
 
 //Function to execute a query with a promise-based approach
@@ -433,14 +430,17 @@ app.put('/api/user/unban/:id', async function(req, res) {
 
     
 //Delete a user
+//Delete a user
 app.delete('/api/user/:id', async function(req, res) {
     const userID = req.params.id;
     const token = req.headers["authorization"].replace("Bearer ", "");
 
     try {
         let decode = jwt.verify(token, SECRET_KEY);
-        if (userID != decode.userID && decode.positionID != 1 && decode.positionID != 2) {
-            return res.send({'message': 'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน', 'status': false});
+        
+        // ตรวจสอบว่าเป็น admin หรือไม่ (positionID = 1 เท่านั้น)
+        if (decode.positionID != 1) {
+            return res.send({'message': 'คุณไม่ได้รับสิทธิ์ในการลบผู้ใช้', 'status': false});
         }
 
         // Begin transaction to ensure consistency
@@ -497,57 +497,61 @@ app.delete('/api/user/:id', async function(req, res) {
 
 
 
-//List employees
-app.get('/api/employee',
-    function(req, res){             
-        const token = req.headers["authorization"].replace("Bearer ", "");
-            
-        try{
-            let decode = jwt.verify(token, SECRET_KEY);               
-            if(decode.positionID != 1) {
-              return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
-            }
-            
-            let sql = "SELECT empID, firstname, lastname, username, gender, imageFile, isActive FROM employee";            
-            db.query(sql, function (err, result){
-                if (err) throw err;            
-                res.send(result);
-            });      
 
-        }catch(error){
-            res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
+
+
+
+/*############## employee ##############*/
+// List employees
+app.get('/api/employee', function(req, res) {
+    const token = req.headers["authorization"].replace("Bearer ", "");
+
+    try {
+        let decode = jwt.verify(token, SECRET_KEY);
+
+        // ตรวจสอบว่าเป็น admin หรือพนักงานทั่วไป (positionID = 1 หรือ 2)
+        if (decode.positionID != 1 && decode.positionID != 2) {
+            return res.send({ 'message': 'คุณไม่ได้รับสิทธิ์ในการเข้าถึงข้อมูลพนักงาน', 'status': false });
         }
-        
+
+        let sql = "SELECT empID, firstname, lastname, username, gender, imageFile, isActive FROM employee";
+        db.query(sql, function(err, result) {
+            if (err) throw err;
+            res.send(result);
+        });
+
+    } catch (error) {
+        res.send({ 'message': 'โทเคนไม่ถูกต้อง', 'status': false });
     }
-);
+});
 
 
 //Show an employee detail
-app.get('/api/employee/:id',
-    async function(req, res){
-        const empID = req.params.id;        
-        const token = req.headers["authorization"].replace("Bearer ", "");
-            
-        try{
-            let decode = jwt.verify(token, SECRET_KEY);               
-            if(empID != decode.empID && decode.positionID != 1) {
-              return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
-            }
-            
-            let sql = "SELECT * FROM employee WHERE empID = ? AND isActive = 1";        
-            let employee = await query(sql, [empID]);        
-            
-            employee = employee[0];
-            employee['message'] = 'success';
-            employee['status'] = true;
-            res.send(employee); 
+app.get('/api/employee/:id', async function(req, res) {
+    const empID = req.params.id;
+    const token = req.headers["authorization"].replace("Bearer ", "");
 
-        }catch(error){
-            res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
+    try {
+        let decode = jwt.verify(token, SECRET_KEY);
+
+        // ตรวจสอบว่าเป็น admin หรือพนักงานทั่วไป (positionID = 1 หรือ 2)
+        if (decode.positionID != 1 && decode.positionID != 2) {
+            return res.send({'message': 'คุณไม่ได้รับสิทธิ์ในการเข้าถึงข้อมูลพนักงาน', 'status': false});
         }
-        
+
+        let sql = "SELECT * FROM employee WHERE empID = ?";
+        let employee = await query(sql, [empID]);
+
+        if (employee.length > 0) {
+            res.send(employee[0]);
+        } else {
+            res.send({'message': 'ไม่พบพนักงาน', 'status': false});
+        }
+    } catch (error) {
+        res.send({'message': 'โทเคนไม่ถูกต้อง', 'status': false});
     }
-);
+});
+
 
 //Show an employee image
 app.get('/api/employee/image/:filename', 
@@ -619,67 +623,52 @@ app.post('/api/employee',
 );
     
 //Update an employee
-app.put('/api/employee/:id', 
-    async function(req, res){
-  
-        //receive a token
-        const token = req.headers["authorization"].replace("Bearer ", "");
-        const empID = req.params.id;
-    
-        try{
-            //validate the token    
-            let decode = jwt.verify(token, SECRET_KEY);               
-            if(empID != decode.empID && decode.positionID != 1) {
-                return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
-            }
-        
-            //save file into folder  
-            let fileName = "";
-            if (req?.files?.imageFile){        
-                const imageFile = req.files.imageFile; // image file    
-                
-                fileName = imageFile.name.split(".");// file name
-                fileName = fileName[0] + Date.now() + '.' + fileName[1]; 
-        
-                const imagePath = path.join(__dirname, 'assets/employee', fileName); //image path
-        
-                fs.writeFile(imagePath, imageFile.data, (err) => {
-                if(err) throw err;
-                });
-                
-            }
-            
-            //save data into database
-            const {password, username, firstName, lastName, email, gender } = req.body;
-        
-            let sql = 'UPDATE employee SET username = ?,firstName = ?, lastName = ?, email = ?, gender = ?';
-            let params = [username, firstName, lastName, email, gender];
-        
-            if (password) {
-                const salt = await bcrypt.genSalt(10);
-                const password_hash = await bcrypt.hash(password, salt);   
-                sql += ', password = ?';
-                params.push(password_hash);
-            }
-        
-            if (fileName != "") {    
-                sql += ', imageFile = ?';
-                params.push(fileName);
-            }
-        
-            sql += ' WHERE empID = ?';
-            params.push(empID);
-        
-            db.query(sql, params, (err, result) => {
-                if (err) throw err;
-                res.send({ 'message': 'แก้ไขข้อมูลพนักงานเรียบร้อยแล้ว', 'status': true });
-            });
-            
-        }catch(error){
-            res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
-        }    
+app.put('/api/employee/:id', async function(req, res) {
+    const empID = req.params.id;
+    const token = req.headers["authorization"].replace("Bearer ", "");
+
+    try {
+        let decode = jwt.verify(token, SECRET_KEY);
+
+        // ตรวจสอบสิทธิ์ admin หรือเป็นพนักงานที่แก้ไขข้อมูลตนเอง
+        if (decode.positionID != 1 && decode.empID != empID) {
+            return res.status(403).json({ message: 'คุณไม่มีสิทธิ์ในการแก้ไขข้อมูลพนักงานคนอื่น', status: false });
+        }
+
+        const { password, username, firstname, lastname, email, gender, phonenumber } = req.body;
+
+        // ตรวจสอบไม่ให้ส่งค่า null ไปยังฐานข้อมูล
+        let sql = 'UPDATE employee SET username = ?, firstname = ?, lastname = ?, email = ?, gender = ?, phonenumber = ?';
+        let params = [
+            username, 
+            firstname || '',   // ตรวจสอบไม่ให้เป็น null
+            lastname || '',    // ตรวจสอบไม่ให้เป็น null
+            email, 
+            gender, 
+            phonenumber || ''  // ตรวจสอบไม่ให้เป็น null
+        ];
+
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const password_hash = await bcrypt.hash(password, salt);
+            sql += ', password = ?';
+            params.push(password_hash);
+        }
+
+        sql += ' WHERE empID = ?';
+        params.push(empID);
+
+        db.query(sql, params, (err, result) => {
+            if (err) throw err;
+            res.send({ message: 'แก้ไขข้อมูลพนักงานเรียบร้อยแล้ว', status: true });
+        });
+
+    } catch (error) {
+        res.status(401).json({ message: 'โทเคนไม่ถูกต้อง', status: false });
     }
-);
+});
+
+
 
 // Suspend an employee (set isActive to 0 in employee table)
 app.put('/api/employee/ban/:id', async function(req, res) {
@@ -735,7 +724,7 @@ app.put('/api/employee/unban/:id', async function(req, res) {
                 console.error(err);
                 return res.send({'message': 'เกิดข้อผิดพลาดในการปลดแบนพนักงาน', 'status': false});
             }
-            res.send({'message': 'ปลดแบนพนักงานเรียบร้อยแล้วและเคลียร์จำนวนครั้งที่ล็อกอินไม่สำเร็จ', 'status': true});
+            res.send({'message': 'ปลดแบนพนักงานเรียบร้อย', 'status': true});
         });
 
     } catch (error) {
@@ -743,9 +732,6 @@ app.put('/api/employee/unban/:id', async function(req, res) {
     }
 });
 
-
-
-    
 //Delete an employee
 app.delete('/api/employee/:id',
     async function(req, res){

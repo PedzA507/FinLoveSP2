@@ -81,13 +81,38 @@ export default function Dashboard() {
     });
   };
 
+  // ฟังก์ชันสำหรับ logout
+  const handleLogout = () => {
+    axios.post(`${url}/logout`, {}, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then((response) => {
+      if (response.data.status === true) {
+        // ลบ token ออกจาก localStorage
+        localStorage.removeItem('token');
+        
+        // นำทางไปยังหน้า login
+        navigate('/signinuser');
+        
+        // ป้องกันการย้อนกลับไปยังหน้า dashboard
+        window.history.pushState(null, '', '/signinuser');
+        window.addEventListener('popstate', () => {
+          window.history.pushState(null, '', '/signinuser');
+        });
+      }
+    })
+    .catch((error) => {
+      console.error('Error during logout:', error);
+    });
+  };
+
   const drawerWidth = 240;
   const menuItems = [
     { text: 'จัดการข้อมูลผู้ใช้', action: () => navigate('/admin/user'), icon: <PeopleIcon /> },
     { text: 'จัดการข้อมูลพนักงาน', action: () => navigate('/admin/employee'), icon: <SettingsIcon /> },
     { text: 'ตรวจสอบรายงานผู้ใช้', action: () => navigate('/admin/employee'), icon: <PeopleIcon /> },
     { text: 'เพิ่มผู้ดูแล', action: () => navigate('/addEmployee'), icon: <SettingsIcon /> },
-    { text: 'ออกจากระบบ', action: () => navigate('/signinuser'), icon: <HomeIcon /> }
+    { text: 'ออกจากระบบ', action: handleLogout, icon: <HomeIcon /> }  // เพิ่มการเรียกใช้งาน logout
   ];
 
   return (

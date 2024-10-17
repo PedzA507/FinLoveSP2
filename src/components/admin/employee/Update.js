@@ -25,11 +25,11 @@ export default function EditEmployee() {
       const employee = response.data;
       setEmpID(employee.empID); // ตั้งค่า empID จากข้อมูลที่ได้มา
       setUsername(employee.username);
-      setFirstName(employee.firstname);
-      setLastName(employee.lastname);
+      setFirstName(employee.firstname || ''); // ตรวจสอบและตั้งค่าเป็นค่าว่างถ้าเป็น null
+      setLastName(employee.lastname || '');   // ตรวจสอบและตั้งค่าเป็นค่าว่างถ้าเป็น null
       setEmail(employee.email);
-      setPhonenumber(employee.phonenumber); // ใช้ phonenumber แทน phoneNumber
-      setGender(employee.gender); // เพิ่ม gender
+      setPhonenumber(employee.phonenumber || ''); // ใช้ phonenumber แทน phoneNumber
+      setGender(employee.gender || ''); // เพิ่ม gender
     })
     .catch(error => {
       console.error('Error fetching employee data:', error);
@@ -40,24 +40,33 @@ export default function EditEmployee() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.put(`${url}/employee/${id}`, {
-      username,
-      firstname: firstName,
-      lastname: lastName,
-      email,
-      phonenumber, // เบอร์โทร
-      gender // เพศ
-    }, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    try {
+        const response = await axios.put(`${url}/employee/${id}`, {
+            username,
+            firstname: firstName || '',  // ตรวจสอบไม่ให้เป็น null
+            lastname: lastName || '',    // ตรวจสอบไม่ให้เป็น null
+            email,
+            phonenumber, // เบอร์โทร
+            gender // เพศ
+        }, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-    const result = response.data;
-    if (result.status) {
-        alert('บันทึกข้อมูลสำเร็จ');
-    } else {
-        alert('เกิดข้อผิดพลาด: ' + result.message);
+        const result = response.data;
+        if (result.status) {
+            alert('บันทึกข้อมูลสำเร็จ');
+        } else {
+            alert('เกิดข้อผิดพลาด: ' + result.message);
+        }
+    } catch (error) {
+        if (error.response && error.response.status === 403) {
+            alert('คุณไม่มีสิทธิ์ในการแก้ไขข้อมูล');
+        } else {
+            console.error('Error submitting form:', error);
+        }
     }
-  };
+};
+
 
   return (
     <Container component="main" maxWidth="sm">
@@ -84,7 +93,7 @@ export default function EditEmployee() {
                 fullWidth
                 id="firstname"
                 label="ชื่อ"
-                value={firstName} 
+                value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </Grid>

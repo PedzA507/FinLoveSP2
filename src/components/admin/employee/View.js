@@ -28,30 +28,26 @@ import BackgroundImage from '../../assets/BG.png';
 // Custom theme
 const customTheme = createTheme({
   palette: {
-    mode: 'dark',
     primary: {
       main: '#1976d2',
     },
     background: {
-      default: '#1f1f1f',
-      paper: '#242424',
-    },
-    text: {
-      primary: '#000000',
-      secondary: '#cccccc',
+      default: '#f0f0f0',
+      paper: '#ffffff',
     },
   },
   typography: {
-    h1: {
-      fontSize: '2.5rem',
-      color: '#000000',
-    },
-    h5: {
-      color: '#ffffff',
+    h4: {
+      fontSize: '2rem',
+      fontWeight: 'bold',
+      color: '#333',
     },
     h6: {
-      color: '#ffffff',
-      fontWeight: 'bold',
+      color: '#666',
+    },
+    body1: {
+      fontSize: '1rem',
+      color: '#333',
     },
   },
 });
@@ -60,48 +56,34 @@ const drawerWidth = 240;
 const token = localStorage.getItem('token');
 const url = process.env.REACT_APP_BASE_URL;
 
-export default function View() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [genderID, setGenderID] = useState("");
-  const [imageFile, setImageFile] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");  
-  const { id } = useParams();  // ใช้ employeeID จากการคลิกดู
+export default function ViewEmployee() {
+  const [employee, setEmployee] = useState({});
+  const { id } = useParams();  // employeeID from the clicked profile
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the current employee data when the component is mounted
-    axios.get(`${url}/profile/${id}`,
+    // Fetch the current employee data
+    axios.get(`${url}/employee/${id}`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       })
       .then(response => {
-        const employee = response.data;
-        setFirstName(employee.firstname || "No Firstname Provided");
-        setLastName(employee.lastname || "No Lastname Provided");
-        setEmail(employee.email || "No Email Provided");
-        setGenderID(employee.GenderID !== undefined ? employee.GenderID : "-");  // ใช้ GenderID
-        setImageFile(employee.imageFile || "");
-        setAddress(employee.home || "No home provided");  // ใช้ home แทน address
-        setPhoneNumber(employee.phonenumber || "No phone number provided");  // ใช้ phonenumber
+        const employeeData = response.data;
+        setEmployee(employeeData);
       })
       .catch(error => {
         console.error('Error fetching employee data:', error);
       });
   }, [id]);
 
-  // Function to handle employee update
-  const Updateemployee = (id) => {
-    navigate(`/admin/customer/update/${id}`);
+  const UpdateEmployee = (id) => {
+    navigate(`/admin/employee/update/${id}`);
   }
 
   const menuItems = [
     { text: 'Home', icon: <HomeIcon />, action: () => navigate('/') },
-    { text: 'Add Employee', icon: <AnalyticsIcon />, action: () => navigate('/addemployee') },
     { text: 'Clients', icon: <PeopleIcon />, action: () => navigate('/admin/customer') },
     { text: 'Tasks', icon: <AnalyticsIcon />, action: () => navigate('/tasks') },
     { text: 'Settings', icon: <SettingsIcon />, action: () => navigate('/settings') },
@@ -111,7 +93,7 @@ export default function View() {
 
   return (
     <ThemeProvider theme={customTheme}>
-      <Box sx={{ display: 'flex', minHeight: '100vh', backgroundImage: `url(${BackgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <Box sx={{ display: 'flex', minHeight: '100vh', backgroundImage: `url(${BackgroundImage})`, backgroundSize: 'cover' }}>
         {/* Sidebar */}
         <Drawer
           variant="permanent"
@@ -120,8 +102,7 @@ export default function View() {
             flexShrink: 0,
             '& .MuiDrawer-paper': {
               width: drawerWidth,
-              backgroundColor: '#1f1f1f',
-              color: '#ffffff',
+              backgroundColor: '#f4f4f4',
             },
           }}
         >
@@ -130,7 +111,7 @@ export default function View() {
             <List>
               {menuItems.map((item, index) => (
                 <ListItem button key={item.text} onClick={item.action}>
-                  <ListItemIcon sx={{ color: '#ffffff' }}>
+                  <ListItemIcon>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText primary={item.text} />
@@ -140,42 +121,38 @@ export default function View() {
           </Box>
         </Drawer>
 
+        {/* Main content */}
         <Container maxWidth="md" sx={{ marginTop: 10, marginBottom: 10, display: 'flex', justifyContent: 'center' }}>
-          <Card sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '15px', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', padding: '30px', width: '100%' }}>
+          <Card sx={{ backgroundColor: '#fff', borderRadius: '15px', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)', padding: '30px', width: '100%' }}>
             <CardContent>
               <Grid container spacing={4} alignItems="center">
                 <Grid item xs={12} sm={4}>
                   <Avatar sx={{ width: 150, height: 150 }}
-                    src={imageFile ? `${url}/customer/image/${imageFile}` : '/path/to/default-avatar.jpg'} />
+                    src={employee.imageFile ? `${url}/employee/image/${employee.imageFile}` : '/path/to/default-avatar.jpg'} />
                 </Grid>
                 <Grid item xs={12} sm={8}>
                   <Typography variant="h4" gutterBottom>
-                    {firstName} {lastName}
+                    {employee.firstname} {employee.lastname}
                   </Typography>
                   <Typography color="textSecondary" gutterBottom>
-                    {email}
+                    {employee.email}
                   </Typography>
                   <Typography color="textSecondary">
-                    เพศ : {genderID === 0 ? "ชาย" : genderID === 1 ? "หญิง" : "-"}
+                    เพศ : {employee.gender === 1 ? "ชาย" : employee.gender === 2 ? "หญิง" : employee.gender === 3 ? "อื่นๆ" : "-"}
                   </Typography>
                 </Grid>
               </Grid>
               <Divider sx={{ marginY: 2 }} />
               <Typography variant="body1" gutterBottom>
-                ที่อยู่ : {address}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                เบอร์โทร : {phoneNumber}
+                เบอร์โทร : {employee.phonenumber || "ไม่ระบุ"}
               </Typography>
               <Divider sx={{ marginY: 2 }} />
-              <Button variant="contained" color="primary"
-                onClick={() => Updateemployee(id)}>
+              <Button variant="contained" color="primary" onClick={() => UpdateEmployee(id)}>
                 แก้ไขบัญชีผู้ใช้
               </Button>
             </CardContent>
           </Card>
         </Container>
-
       </Box>
     </ThemeProvider>
   );
