@@ -110,7 +110,6 @@ export default function Dashboard() {
   const menuItems = [
     { text: 'จัดการข้อมูลผู้ใช้', action: () => navigate('/admin/user'), icon: <PeopleIcon /> },
     { text: 'จัดการข้อมูลพนักงาน', action: () => navigate('/admin/employee'), icon: <SettingsIcon /> },
-    { text: 'ตรวจสอบรายงานผู้ใช้', action: () => navigate('/admin/employee'), icon: <PeopleIcon /> },
     { text: 'เพิ่มผู้ดูแล', action: () => navigate('/addEmployee'), icon: <SettingsIcon /> },
     { text: 'ออกจากระบบ', action: handleLogout, icon: <HomeIcon /> }  // เพิ่มการเรียกใช้งาน logout
   ];
