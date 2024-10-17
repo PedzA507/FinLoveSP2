@@ -3,6 +3,7 @@ package th.ac.rmutto.finlove
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +23,7 @@ class OtherProfileActivity : AppCompatActivity() {
     private lateinit var lastNameTextView: TextView
     private lateinit var nicknameTextView: TextView
     private lateinit var genderTextView: TextView
-    private lateinit var preferencesTextView: TextView
+    private lateinit var preferencesContainer: LinearLayout
     private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,7 @@ class OtherProfileActivity : AppCompatActivity() {
         lastNameTextView = findViewById(R.id.textViewLastName)
         nicknameTextView = findViewById(R.id.textViewNickname)
         genderTextView = findViewById(R.id.textViewGender)
-        preferencesTextView = findViewById(R.id.textViewPreferences)
+        preferencesContainer = findViewById(R.id.preferenceContainer)
 
         // Get the userID from intent
         val userID = intent.getIntExtra("userID", -1)
@@ -70,16 +71,22 @@ class OtherProfileActivity : AppCompatActivity() {
 
                     // Update UI on the main thread
                     withContext(Dispatchers.Main) {
-                        firstNameTextView.text = firstName
-                        lastNameTextView.text = lastName
-                        nicknameTextView.text = nickname
-                        genderTextView.text = gender
-                        preferencesTextView.text = preferences
+                        firstNameTextView.text = "ชื่อจริง: $firstName"
+                        lastNameTextView.text = "นามสกุล: $lastName"
+                        nicknameTextView.text = "ชื่อเล่น: $nickname"
+                        genderTextView.text = "เพศ: $gender"
+
+                        // Update toolbar title to show the nickname
+                        val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
+                        toolbarTitle.text = nickname
 
                         // Load profile image using Glide
                         Glide.with(this@OtherProfileActivity)
                             .load(profileImage)
                             .into(profileImageView)
+
+                        // Update preferences
+                        updateUserPreferences(preferences)
                     }
                 } else {
                     withContext(Dispatchers.Main) {
@@ -92,6 +99,19 @@ class OtherProfileActivity : AppCompatActivity() {
                     Log.e("OtherProfileActivity", "Error fetching profile", e)
                 }
             }
+        }
+    }
+
+    private fun updateUserPreferences(preferences: String?) {
+        preferencesContainer.removeAllViews()
+
+        val preferencesArray = preferences?.split(",") ?: listOf()
+        for (preference in preferencesArray) {
+            val preferenceTextView = TextView(this)
+            preferenceTextView.text = preference
+            preferenceTextView.setBackgroundResource(R.drawable.rounded_preference_box)
+            preferenceTextView.setPadding(16, 16, 16, 16)
+            preferencesContainer.addView(preferenceTextView)
         }
     }
 }

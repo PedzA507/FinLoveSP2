@@ -3,18 +3,15 @@ package th.ac.rmutto.finlove
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
 import okhttp3.FormBody
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import th.ac.rmutto.finlove.databinding.ActivityChatBinding
@@ -25,23 +22,30 @@ class ChatActivity : AppCompatActivity() {
     private val client = OkHttpClient()
     private var matchID: Int = -1
     private var senderID: Int = -1
+    private var receiverNickname: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // รับค่า matchID, senderID, และ nickname ของคู่สนทนา
         matchID = intent.getIntExtra("matchID", -1)
         senderID = intent.getIntExtra("senderID", -1)
+        receiverNickname = intent.getStringExtra("nickname") ?: ""
 
         // ตรวจสอบค่าที่ได้รับ
-        Log.d("ChatActivity", "Received matchID: $matchID, senderID: $senderID")
+        Log.d("ChatActivity", "Received matchID: $matchID, senderID: $senderID, nickname: $receiverNickname")
 
         if (matchID == -1 || senderID == -1) {
-            Log.e("ChatActivity", "matchID หรือ senderID ไม่ถูกต้อง") // แสดง error log เมื่อไม่มีค่า
+            Log.e("ChatActivity", "matchID หรือ senderID ไม่ถูกต้อง")
             Toast.makeText(this, "ไม่พบข้อมูลการสนทนา", Toast.LENGTH_LONG).show()
             return
         }
+
+        // ตั้งค่า Toolbar ให้แสดงชื่อเล่นของคู่สนทนา
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = receiverNickname
 
         // ตั้งค่า RecyclerView
         val chatAdapter = ChatAdapter(senderID) // ใช้ senderID ของผู้ใช้ที่ล็อกอินเป็น currentUserID
@@ -160,21 +164,6 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         return messages
-    }
-
-    // เพิ่มการนำทางไปหน้าโปรไฟล์
-    inner class LeftChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val profileImage: ImageView = itemView.findViewById(R.id.profile_image)
-
-        fun bind(chatMessage: ChatMessage) {
-            // กดที่รูปเพื่อไปหน้าโปรไฟล์
-            profileImage.setOnClickListener {
-                Log.d("ChatActivity", "Clicked on profile image of user: ${chatMessage.senderID}")
-                val intent = Intent(this@ChatActivity, OtherProfileActivity::class.java)
-                intent.putExtra("userID", chatMessage.senderID)  // ส่ง userID ของผู้ส่งไปที่ OtherProfileActivity
-                startActivity(intent)
-            }
-        }
     }
 }
 
