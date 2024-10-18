@@ -4,6 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import AddEmployee from './components/AddEmployee';
+import ManagePreferences from './components/admin/ManagePreferences';
 
 import CustomerIndex from './components/admin/customer/Index';
 import CustomerCreate from './components/admin/customer/Create';
@@ -24,6 +25,7 @@ function App() {
         <Route exact path='/signinuser' element={<SignInUser />} />
         <Route exact path='/dashboard' element={<Dashboard />} />
         <Route exact path='/addemployee' element={<AddEmployee />} />
+        <Route exact path='/managepreferences' element={<ManagePreferences />} />
         
         <Route exact path='/admin/user' element={<CustomerIndex/>}/>
         <Route exact path='/admin/user/create' element={<CustomerCreate/>}/>  

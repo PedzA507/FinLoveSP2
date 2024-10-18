@@ -43,37 +43,21 @@ app.get('/', function(req, res){
     res.send('Hello World!')
 });
 
+//Function to execute a query with a promise-based approach
+function query(sql, params) {
+    return new Promise((resolve, reject) => {
+      db.query(sql, params, (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+}
 
-/*############## user ##############*/
-//Register
-app.post('/api/register', 
-    function(req, res) {  
-        const { username, password, firstName, lastName } = req.body;
-        
-        //check existing username
-        let sql="SELECT * FROM user WHERE username=?";
-        db.query(sql, [username], async function(err, results) {
-            if (err) throw err;
-            
-            if(results.length == 0) {
-                //password and salt are encrypted by hash function (bcrypt)
-                const salt = await bcrypt.genSalt(10); //generate salte
-                const password_hash = await bcrypt.hash(password, salt);        
-                                
-                //insert user data into the database
-                sql = 'INSERT INTO user (username, password, firstName, lastName) VALUES (?, ?, ?, ?)';
-                db.query(sql, [username, password_hash, firstName, lastName], (err, result) => {
-                    if (err) throw err;
-                
-                    res.send({'message':'ลงทะเบียนสำเร็จแล้ว','status':true});
-                });      
-            }else{
-                res.send({'message':'ชื่อผู้ใช้ซ้ำ','status':false});
-            }
 
-        });      
-    }
-);
+////////////////////////////////////////////////////////////////////////// Login ////////////////////////////////////////////////////////////////////////////////////
 
 
 //Login
@@ -163,22 +147,10 @@ app.post('/api/logout', (req, res) => {
 });
 
 
-
-//Function to execute a query with a promise-based approach
-function query(sql, params) {
-    return new Promise((resolve, reject) => {
-      db.query(sql, params, (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
-    });
-}
+////////////////////////////////////////////////////////////////////////// User ////////////////////////////////////////////////////////////////////////////////////
 
 
-// List users with relevant fields only
+// List users 
 app.get('/api/user', async function(req, res){             
     const token = req.headers["authorization"].replace("Bearer ", "");
         
@@ -363,7 +335,7 @@ app.put('/api/user/:id', async function(req, res) {
     }
 });
 
-// Suspend a user (set isActive to 0 in user table)
+// ban user
 app.put('/api/user/ban/:id', async function(req, res) {
     const userID = req.params.id;
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null;
@@ -394,7 +366,7 @@ app.put('/api/user/ban/:id', async function(req, res) {
     }
 });
 
-// Unban a user (set isActive to 1 and clear loginAttempt in user table)
+// Unban user
 app.put('/api/user/unban/:id', async function(req, res) {
     const userID = req.params.id;
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null;
@@ -425,11 +397,6 @@ app.put('/api/user/unban/:id', async function(req, res) {
     }
 });
 
-
-
-
-    
-//Delete a user
 //Delete a user
 app.delete('/api/user/:id', async function(req, res) {
     const userID = req.params.id;
@@ -495,13 +462,9 @@ app.delete('/api/user/:id', async function(req, res) {
 });
 
 
+////////////////////////////////////////////////////////////////////////// employee ////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-/*############## employee ##############*/
 // List employees
 app.get('/api/employee', function(req, res) {
     const token = req.headers["authorization"].replace("Bearer ", "");
@@ -642,10 +605,10 @@ app.put('/api/employee/:id', async function(req, res) {
         let params = [
             username, 
             firstname || '',   // ตรวจสอบไม่ให้เป็น null
-            lastname || '',    // ตรวจสอบไม่ให้เป็น null
+            lastname || '',    
             email, 
             gender, 
-            phonenumber || ''  // ตรวจสอบไม่ให้เป็น null
+            phonenumber || ''  
         ];
 
         if (password) {
@@ -670,7 +633,7 @@ app.put('/api/employee/:id', async function(req, res) {
 
 
 
-// Suspend an employee (set isActive to 0 in employee table)
+// ban employee
 app.put('/api/employee/ban/:id', async function(req, res) {
     const empID = req.params.id;
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null;
@@ -701,7 +664,7 @@ app.put('/api/employee/ban/:id', async function(req, res) {
     }
 });
 
-// Unsuspend an employee (set isActive to 1 and clear loginAttempt in employee table if applicable)
+// unban employee
 app.put('/api/employee/unban/:id', async function(req, res) {
     const empID = req.params.id;
     const token = req.headers["authorization"] ? req.headers["authorization"].replace("Bearer ", "") : null;
@@ -757,7 +720,71 @@ app.delete('/api/employee/:id',
     }
 );
 
-/*############## WEB SERVER ##############*/  
+////////////////////////////////////////////////////////////////////////// Preference ////////////////////////////////////////////////////////////////////////////////////
+
+// Get all preferences
+app.get('/api/preferences', async (req, res) => {
+    try {
+        let sql = 'SELECT * FROM preferences';
+        let preferences = await query(sql);
+        res.send(preferences);
+    } catch (error) {
+        res.status(500).send({ message: 'Error fetching preferences', error });
+    }
+});
+
+// Add a new preference
+app.post('/api/preferences', async (req, res) => {
+    const { PreferenceName } = req.body;
+
+    if (!PreferenceName) {
+        return res.status(400).send({ message: 'Preference name is required' });
+    }
+
+    try {
+        let sql = 'INSERT INTO preferences (PreferenceNames) VALUES (?)';
+        await query(sql, [PreferenceName]);
+        res.send({ message: 'Preference added successfully' });
+    } catch (error) {
+        res.status(500).send({ message: 'Error adding preference', error });
+    }
+});
+
+// Delete a preference
+app.delete('/api/preferences/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        let sql = 'DELETE FROM preferences WHERE PreferenceID = ?';
+        await query(sql, [id]);
+        res.send({ message: 'Preference deleted successfully' });
+    } catch (error) {
+        res.status(500).send({ message: 'Error deleting preference', error });
+    }
+});
+
+// Update a preference
+app.put('/api/preferences/:id', async (req, res) => {
+    const { id } = req.params;
+    const { PreferenceName } = req.body;
+
+    if (!PreferenceName) {
+        return res.status(400).send({ message: 'Preference name is required' });
+    }
+
+    try {
+        let sql = 'UPDATE preferences SET PreferenceNames = ? WHERE PreferenceID = ?';
+        await query(sql, [PreferenceName, id]);
+        res.send({ message: 'Preference updated successfully' });
+    } catch (error) {
+        res.status(500).send({ message: 'Error updating preference', error });
+    }
+});
+
+
+////////////////////////////////////////////////////////////////////////// Web server ////////////////////////////////////////////////////////////////////////////////////
+
+
 // Create an HTTPS server
 const httpsServer = https.createServer(credentials, app);
 app.listen(port, () => {
