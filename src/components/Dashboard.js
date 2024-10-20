@@ -125,19 +125,37 @@ export default function Dashboard() {
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            backgroundColor: '#fff',
-            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-            borderRight: '1px solid #e0e0e0',
-            paddingTop: '20px',
+            backgroundColor: '#f8e9f0',
+            borderRight: '0px solid #e0e0e0',
+            paddingTop: '48px',
+            paddingLeft: '25px'
           },
         }}
       >
         <Box sx={{ overflow: 'auto' }}>
           <List>
             {menuItems.map((item, index) => (
-              <ListItem button key={item.text} onClick={item.action} sx={{ padding: '15px 20px' }}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
+              <ListItem
+                button
+                key={item.text}
+                onClick={item.action}
+                sx={{
+                  padding: '15px 20px',
+                  backgroundColor: '#f9f9f9',
+                  borderRadius: '10px',
+                  border: '2px solid black',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                  marginBottom: '10px',
+                  '&:hover': {
+                    backgroundColor: '#f8e9f0',
+                    color: '#fff',
+                    boxShadow: '0 4px 12px rgba(255, 105, 180, 0.4)',
+                    borderColor: '#ff69b4',
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ color: '#000' }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} sx={{ color: '#000' }} />
               </ListItem>
             ))}
           </List>
@@ -158,7 +176,7 @@ export default function Dashboard() {
           {/* Charts */}
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <Card sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+              <Card sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', border: '2px solid black' }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     ผู้ใช้งานใหม่
@@ -177,7 +195,7 @@ export default function Dashboard() {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Card sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+              <Card sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', border: '2px solid black' }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
                     จำนวนการแมท
@@ -201,7 +219,7 @@ export default function Dashboard() {
             <Typography variant="h6" gutterBottom>
               ผู้ใช้ถูกระงับใหม่
             </Typography>
-            <TableContainer component={Paper} sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+            <TableContainer component={Paper} sx={{ backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', border: '2px solid black' }}>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -224,9 +242,37 @@ export default function Dashboard() {
                       <TableCell align="center">
                         <ButtonGroup color="primary" aria-label="outlined primary button group">
                           {user.isActive === 1 ? (
-                            <Button variant="outlined" color="secondary" onClick={() => handleBanUser(user.userID)} sx={{ borderRadius: '10px' }}>ระงับผู้ใช้</Button>
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                borderRadius: '10px',
+                                color: 'red',
+                                borderColor: 'red',
+                                backgroundColor: 'white',
+                                '&:hover': {
+                                  backgroundColor: '#ffe6e6',
+                                },
+                              }}
+                              onClick={() => handleBanUser(user.userID)}
+                            >
+                              ระงับผู้ใช้
+                            </Button>
                           ) : (
-                            <Button variant="outlined" color="primary" onClick={() => handleUnbanUser(user.userID)} sx={{ borderRadius: '10px' }}>ปลดแบน</Button>
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                borderRadius: '10px',
+                                color: 'black',
+                                borderColor: 'black',
+                                backgroundColor: 'white',
+                                '&:hover': {
+                                  backgroundColor: '#f8e9f0',
+                                },
+                              }}
+                              onClick={() => handleUnbanUser(user.userID)}
+                            >
+                              ปลดแบน
+                            </Button>
                           )}
                         </ButtonGroup>
                       </TableCell>
