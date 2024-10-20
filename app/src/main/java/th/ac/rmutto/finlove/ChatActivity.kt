@@ -3,6 +3,7 @@ package th.ac.rmutto.finlove
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -92,8 +93,17 @@ class ChatActivity : AppCompatActivity() {
 
                     val messages = parseChatMessages(responseBody)
                     withContext(Dispatchers.Main) {
-                        (binding.recyclerViewChat.adapter as ChatAdapter).setMessages(messages)
-                        Log.d("ChatActivity", "Messages set in Adapter: ${messages.size} items")
+                        if (messages.isEmpty()) {
+                            // ถ้าไม่มีข้อความในแชท ให้แสดงข้อความ "เริ่มแชทกันเลย !!!"
+                            binding.emptyChatMessage.visibility = View.VISIBLE
+                            binding.recyclerViewChat.visibility = View.GONE
+                        } else {
+                            // ถ้ามีข้อความในแชท ให้แสดงข้อความตามปกติ
+                            binding.emptyChatMessage.visibility = View.GONE
+                            binding.recyclerViewChat.visibility = View.VISIBLE
+                            (binding.recyclerViewChat.adapter as ChatAdapter).setMessages(messages)
+                            Log.d("ChatActivity", "Messages set in Adapter: ${messages.size} items")
+                        }
                     }
                 } else {
                     withContext(Dispatchers.Main) {

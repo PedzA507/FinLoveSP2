@@ -2,6 +2,7 @@ package th.ac.rmutto.finlove.ui.message
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import th.ac.rmutto.finlove.ChatActivity
-import th.ac.rmutto.finlove.OtherProfileActivity // เพิ่ม import สำหรับหน้าโปรไฟล์
+import th.ac.rmutto.finlove.OtherProfileActivity
 import th.ac.rmutto.finlove.R
 import th.ac.rmutto.finlove.databinding.FragmentMessageBinding
 
@@ -32,6 +33,21 @@ class MessageFragment : Fragment() {
     private val client = OkHttpClient()
 
     private var matchedUsers = listOf<MatchedUser>()
+
+    private val handler = Handler()
+    private val refreshInterval = 2000L // รีเฟรชทุก 2 วินาที
+
+    private val refreshRunnable = object : Runnable {
+        override fun run() {
+            fetchMatchedUsers { fetchedUsers ->
+                if (fetchedUsers.isNotEmpty()) {
+                    matchedUsers = fetchedUsers
+                    displayUsers() // อัปเดต UI ด้วยข้อมูลล่าสุด
+                }
+            }
+            handler.postDelayed(this, refreshInterval) // กำหนดการรีเฟรชครั้งถัดไป
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,16 +76,26 @@ class MessageFragment : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        handler.post(refreshRunnable) // เริ่มการรีเฟรชข้อมูล
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(refreshRunnable) // หยุดการรีเฟรชข้อมูล
+    }
+
     private fun displayUsers() {
         val userListLayout: LinearLayout = binding.userListLayout
         userListLayout.removeAllViews() // ลบรายการก่อนหน้าออก
 
         matchedUsers.forEach { user ->
-            val userView = LayoutInflater.from(requireContext()).inflate(R.layout.item_matched_user, userListLayout, false)
+            val userView = LayoutInflater.from(requireContext()).inflate(R.layout.item_message, userListLayout, false)
 
-            val nickname: TextView = userView.findViewById(R.id.nickname)
-            val profileImage: ImageView = userView.findViewById(R.id.profile_image)
-            val lastMessage: TextView = userView.findViewById(R.id.last_message)
+            val nickname: TextView = userView.findViewById(R.id.textNickname)
+            val profileImage: ImageView = userView.findViewById(R.id.imageProfile)
+            val lastMessage: TextView = userView.findViewById(R.id.lastMessage)
 
             nickname.text = user.nickname
             lastMessage.text = user.lastMessage ?: "ไม่มีข้อความล่าสุด"
@@ -116,13 +142,11 @@ class MessageFragment : Fragment() {
                 } else {
                     withContext(Dispatchers.Main) {
                         Log.e("API Error", "Response not successful: ${response.message}")
-                        Toast.makeText(requireContext(), "ไม่สามารถดึงข้อมูลผู้ใช้ได้", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Log.e("API Error", "Exception occurred: ${e.message}")
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
