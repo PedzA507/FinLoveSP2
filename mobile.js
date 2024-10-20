@@ -1004,15 +1004,17 @@ app.post('/api/check_match', (req, res) => {
 app.get('/api/matches/:userID', (req, res) => {
     const { userID } = req.params;
 
-    // Query สำหรับดึงข้อความล่าสุดของการจับคู่ พร้อมทั้ง matchID
+    // Query สำหรับดึงข้อความล่าสุดของการจับคู่ พร้อมทั้ง matchID, matchDate และ timestamp ล่าสุดจาก chats
     const getMatchedUsersWithLastMessageQuery = `
         SELECT u.userID, u.nickname, u.imageFile, 
                (SELECT c.message FROM chats c WHERE c.matchID = m.matchID ORDER BY c.timestamp DESC LIMIT 1) AS lastMessage,
-               m.matchID  -- ดึง matchID มาด้วย
+               m.matchID,
+               GREATEST(COALESCE((SELECT c.timestamp FROM chats c WHERE c.matchID = m.matchID ORDER BY c.timestamp DESC LIMIT 1), '1970-01-01'), m.matchDate) AS lastInteraction  -- ใช้ GREATEST เพื่อเลือกเวลาที่ล่าสุดระหว่าง matchDate และ timestamp
         FROM matches m
         JOIN user u ON (m.user1ID = u.userID OR m.user2ID = u.userID)
         WHERE (m.user1ID = ? OR m.user2ID = ?)
-        AND u.userID != ?;
+        AND u.userID != ?
+        ORDER BY lastInteraction DESC;  -- เรียงตามเวลาล่าสุดระหว่าง matchDate และ timestamp
     `;
 
     db.query(getMatchedUsersWithLastMessageQuery, [userID, userID, userID], (err, results) => {
@@ -1025,6 +1027,11 @@ app.get('/api/matches/:userID', (req, res) => {
             if (user.imageFile) {
                 user.imageFile = `${req.protocol}://${req.get('host')}/assets/user/${user.imageFile}`;
             }
+
+            // ตรวจสอบถ้า lastMessage เป็น null ให้แสดงข้อความ "เริ่มแชทกันเลย !!!"
+            if (user.lastMessage === null) {
+                user.lastMessage = "เริ่มแชทกันเลย !!!";
+            }
         });
 
         return res.status(200).json(results);
@@ -1032,24 +1039,6 @@ app.get('/api/matches/:userID', (req, res) => {
 });
 
 
-
-
-app.post('/api/chats/:matchID', async (req, res) => {
-    const { matchID } = req.params;
-    const { senderID, message } = req.body;
-
-    const query = `
-        INSERT INTO chats (matchID, senderID, message)
-        VALUES (?, ?, ?);
-    `;
-
-    try {
-        await db.execute(query, [matchID, senderID, message]);
-        res.status(200).json({ success: 'Message sent' });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to send message' });
-    }
-});
 
 app.get('/api/chats/:matchID', (req, res) => {
     const { matchID } = req.params;
@@ -1072,11 +1061,37 @@ app.get('/api/chats/:matchID', (req, res) => {
             if (chat.imageFile) {
                 chat.imageFile = `${req.protocol}://${req.get('host')}/assets/user/${chat.imageFile}`;
             }
+
+            // ตรวจสอบถ้า message เป็น null ให้แสดงข้อความ "เริ่มแชทกันเลย !!!"
+            if (chat.message === null) {
+                chat.message = "เริ่มแชทกันเลย !!!";
+            }
         });
 
         return res.status(200).json({ messages: results });
     });
 });
+
+// POST สำหรับส่งข้อความใหม่
+app.post('/api/chats/:matchID', (req, res) => {
+    const { matchID } = req.params;
+    const { senderID, message } = req.body; // รับ senderID และข้อความจาก body ของ request
+
+    const insertChatQuery = `
+        INSERT INTO chats (matchID, senderID, message, timestamp)
+        VALUES (?, ?, ?, NOW())  -- ใช้ NOW() เพื่อบันทึกเวลาปัจจุบัน
+    `;
+
+    db.query(insertChatQuery, [matchID, senderID, message], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        // ส่งสถานะความสำเร็จกลับไป
+        return res.status(200).json({ success: 'Message sent' });
+    });
+});
+
 
 
 

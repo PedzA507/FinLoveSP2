@@ -414,42 +414,62 @@ app.delete('/api/user/:id', async function(req, res) {
         db.beginTransaction((err) => {
             if (err) throw err;
 
-            // First, delete related entries from the `userlike` table
-            const deleteLikesSQL = `DELETE FROM userlike WHERE likedID = ? OR likerID = ?`;
-            db.query(deleteLikesSQL, [userID, userID], (err, result) => {
+            // ลบข้อมูลในตาราง chats ที่เกี่ยวข้องกับ matchID
+            const deleteChatsSQL = `DELETE FROM chats WHERE matchID IN (SELECT matchID FROM matches WHERE user1ID = ? OR user2ID = ?)`;
+            db.query(deleteChatsSQL, [userID, userID], (err, result) => {
                 if (err) {
                     return db.rollback(() => {
                         throw err;
                     });
                 }
 
-                // Next, delete related entries from the `userreport` table
-                const deleteReportsSQL = `DELETE FROM userreport WHERE reportedID = ? OR reporterID = ?`;
-                db.query(deleteReportsSQL, [userID, userID], (err, result) => {
+                // ลบข้อมูลในตาราง matches
+                const deleteMatchesSQL = `DELETE FROM matches WHERE user1ID = ? OR user2ID = ?`;
+                db.query(deleteMatchesSQL, [userID, userID], (err, result) => {
                     if (err) {
                         return db.rollback(() => {
                             throw err;
                         });
                     }
 
-                    // Then, delete the user from the `user` table
-                    const deleteUserSQL = `DELETE FROM user WHERE UserID = ?`;
-                    db.query(deleteUserSQL, [userID], (err, result) => {
+                    // ลบข้อมูลในตาราง userlike ที่เกี่ยวข้อง
+                    const deleteLikesSQL = `DELETE FROM userlike WHERE likedID = ? OR likerID = ?`;
+                    db.query(deleteLikesSQL, [userID, userID], (err, result) => {
                         if (err) {
                             return db.rollback(() => {
                                 throw err;
                             });
                         }
 
-                        // Commit the transaction
-                        db.commit((err) => {
+                        // ลบข้อมูลในตาราง userreport ที่เกี่ยวข้อง
+                        const deleteReportsSQL = `DELETE FROM userreport WHERE reportedID = ? OR reporterID = ?`;
+                        db.query(deleteReportsSQL, [userID, userID], (err, result) => {
                             if (err) {
                                 return db.rollback(() => {
                                     throw err;
                                 });
                             }
 
-                            res.send({'message': 'ลบข้อมูลลูกค้าเรียบร้อยแล้ว', 'status': true});
+                            // สุดท้ายลบผู้ใช้จากตาราง user
+                            const deleteUserSQL = `DELETE FROM user WHERE UserID = ?`;
+                            db.query(deleteUserSQL, [userID], (err, result) => {
+                                if (err) {
+                                    return db.rollback(() => {
+                                        throw err;
+                                    });
+                                }
+
+                                // Commit การทำงาน
+                                db.commit((err) => {
+                                    if (err) {
+                                        return db.rollback(() => {
+                                            throw err;
+                                        });
+                                    }
+
+                                    res.send({'message': 'ลบข้อมูลลูกค้าเรียบร้อยแล้ว', 'status': true});
+                                });
+                            });
                         });
                     });
                 });
