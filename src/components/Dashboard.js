@@ -223,23 +223,27 @@ export default function Dashboard() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center">รหัส</TableCell>
-                    <TableCell align="center">รูป</TableCell>
-                    <TableCell align="left">ชื่อผู้ใช้</TableCell>
-                    <TableCell align="left">เหตุผล</TableCell>
-                    <TableCell align="center">จัดการข้อมูล</TableCell>
+                    <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รหัส</TableCell>
+                    <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รูป</TableCell> {/* ปรับให้เว้นระยะและสอดคล้องกับขนาดของรูปภาพ */}
+                    <TableCell align="left" sx={{ padding: '16px' }}>ชื่อผู้ใช้</TableCell>
+                    <TableCell align="left" sx={{ padding: '16px' }}>เหตุผล</TableCell>
+                    <TableCell align="center" sx={{ padding: '16px' }}>จัดการข้อมูล</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {users.map((user) => (
                     <TableRow key={user.userID}>
-                      <TableCell align="center">{user.userID}</TableCell>
-                      <TableCell align="center">
-                        <Avatar src={`${url}/user/image/${user.imageFile}`} alt={user.username} />
+                      <TableCell align="center" sx={{ padding: '16px' }}>{user.userID}</TableCell>
+                      <TableCell align="center" sx={{ padding: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Avatar 
+                          src={`${url}/user/image/${user.imageFile}`} 
+                          alt={user.username} 
+                          sx={{ width: 50, height: 50 }} // ขนาดรูปภาพคงที่
+                        />
                       </TableCell>
-                      <TableCell align="left">{user.username}</TableCell>
-                      <TableCell align="left">{user.reportType || 'ไม่ระบุเหตุผล'}</TableCell> {/* แสดงเหตุผลจาก reportType */}
-                      <TableCell align="center">
+                      <TableCell align="left" sx={{ padding: '16px' }}>{user.username}</TableCell>
+                      <TableCell align="left" sx={{ padding: '16px' }}>{user.reportType || 'ไม่ระบุเหตุผล'}</TableCell>
+                      <TableCell align="center" sx={{ padding: '16px' }}>
                         <ButtonGroup color="primary" aria-label="outlined primary button group">
                           {user.isActive === 1 ? (
                             <Button
