@@ -111,7 +111,7 @@ export default function Dashboard() {
     { text: 'จัดการข้อมูลผู้ใช้', action: () => navigate('/admin/user'), icon: <PeopleIcon /> },
     { text: 'จัดการข้อมูลพนักงาน', action: () => navigate('/admin/employee'), icon: <SettingsIcon /> },
     { text: 'เพิ่มผู้ดูแล', action: () => navigate('/addEmployee'), icon: <SettingsIcon /> },
-    { text: 'เพิ่มผู้ดูแล', action: () => navigate('/managepreferences'), icon: <SettingsIcon /> },
+    { text: 'เพิ่มความชอบ', action: () => navigate('/managepreferences'), icon: <SettingsIcon /> },
     { text: 'ออกจากระบบ', action: handleLogout, icon: <HomeIcon /> }
   ];
 
