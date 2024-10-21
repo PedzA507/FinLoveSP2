@@ -1,247 +1,184 @@
-import React, { useState } from 'react';
-import { Button, CssBaseline, TextField, Grid, Box, Typography, Container } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useEffect, useState } from 'react';
+import { Button, Box, Grid, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import axios from 'axios';
 
-// Custom theme
-const customTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#ff6699', // สีชมพูอ่อน
-    },
-    background: {
-      default: '#F8E9F0', // สีพื้นหลัง
-    },
-    text: {
-      primary: '#000000', // สีดำสำหรับข้อความหลัก
-      secondary: '#666666', // สีเทาสำหรับข้อความรอง
-    },
-  },
-  typography: {
-    h1: {
-      fontSize: '1.8rem',
-      fontWeight: 'bold',
-      color: '#000',
-    },
-    h5: {
-      color: '#333333',
-    },
-    h6: {
-      color: '#333333',
-      fontWeight: 'bold',
-    },
-  },
-});
+const url = process.env.REACT_APP_BASE_URL;
+const token = localStorage.getItem('token');
 
-export default function AddEmployee() {
-  const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [gender, setGender] = useState('');
-  const [positionID, setPositionID] = useState('');
-  const [phonenumber, setPhonenumber] = useState(''); // เพิ่ม state สำหรับเบอร์โทร
-  const [profileImage, setProfileImage] = useState(null); // เพิ่ม state สำหรับจัดเก็บรูปภาพ
-  const [message, setMessage] = useState('');
-  const [status, setStatus] = useState(null);
+export default function ManagePreferences() {
+  const [preferences, setPreferences] = useState([]);
+  const [selectedPreference, setSelectedPreference] = useState(null);
+  const [newPreference, setNewPreference] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogType, setDialogType] = useState('');
 
-  // ฟังก์ชันสำหรับอัปโหลดรูปภาพ
-  const handleImageChange = (e) => {
-    setProfileImage(e.target.files[0]);
+  useEffect(() => {
+    fetchPreferences();
+  }, []);
+
+  const fetchPreferences = async () => {
+    try {
+      const response = await axios.get(`${url}/preferences`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setPreferences(response.data);
+    } catch (error) {
+      console.error('Error fetching preferences:', error);
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(); // ใช้ FormData เพื่อให้รองรับการอัปโหลดไฟล์
-    formData.append('username', username);
-    formData.append('firstName', firstName);
-    formData.append('lastName', lastName);
-    formData.append('email', email);
-    formData.append('gender', gender);
-    formData.append('positionID', positionID);
-    formData.append('phonenumber', phonenumber); // เพิ่มเบอร์โทรลงใน FormData
-    if (profileImage) {
-      formData.append('profileImage', profileImage); // เพิ่มรูปภาพลงใน FormData
+  const handleSelectPreference = (id) => {
+    if (selectedPreference === id) {
+        setSelectedPreference(null);
+        setNewPreference('');
+    } else {
+        setSelectedPreference(id);
+        setNewPreference(preferences.find((pref) => pref.PreferenceID === id)?.PreferenceNames || '');
     }
+  };
 
-    try {
-      const response = await axios.post(process.env.REACT_APP_BASE_URL + '/employee', formData, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data' // ใช้ multipart/form-data ในการส่งข้อมูล
-        }
-      });
-      const result = response.data;
-      setMessage(result['message']);
-      setStatus(result['status']);
-
-      if (result['status'] === true) {
-        // Reset fields
-        setUsername('');
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setGender('');
-        setPositionID('');
-        setPhonenumber(''); // Reset เบอร์โทร
-        setProfileImage(null); // Reset รูปภาพ
+  const handleDeletePreference = async () => {
+    if (selectedPreference) {
+      try {
+        await axios.delete(`${url}/preferences/${selectedPreference}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setSelectedPreference(null);
+        fetchPreferences();
+        setOpenDialog(false);
+      } catch (error) {
+        console.error('Error deleting preference:', error);
       }
-    } catch (err) {
-      console.log(err);
-      setMessage('เกิดข้อผิดพลาดในการเพิ่มพนักงาน');
-      setStatus(false);
     }
+  };
+
+  const handleAddPreference = async () => {
+    if (newPreference.trim()) {
+      try {
+        await axios.post(`${url}/preferences`, { PreferenceName: newPreference }, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setNewPreference('');
+        fetchPreferences();
+        setOpenDialog(false);
+      } catch (error) {
+        console.error('Error adding preference:', error);
+      }
+    }
+  };
+
+  const handleUpdatePreference = async () => {
+    if (selectedPreference && newPreference.trim()) {
+      try {
+        await axios.put(`${url}/preferences/${selectedPreference}`, { PreferenceName: newPreference }, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        setSelectedPreference(null);
+        setNewPreference('');
+        fetchPreferences();
+        setOpenDialog(false);
+      } catch (error) {
+        console.error('Error updating preference:', error);
+      }
+    }
+  };
+
+  const openModal = (type) => {
+    setDialogType(type);
+    setOpenDialog(true);
   };
 
   return (
-    <ThemeProvider theme={customTheme}>
-      <Box
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#fdeef4' }}>
+      <Paper
         sx={{
-          display: 'flex',
-          minHeight: '100vh',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#F8E9F0',
+          padding: 3,
+          width: '70%',
+          maxWidth: '800px',
+          backgroundColor: '#fff',
+          borderRadius: '20px',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          border: '2px solid black' // เพิ่มกรอบสีดำ
         }}
       >
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              backgroundColor: 'white',
-              padding: '40px',
-              borderRadius: '15px',
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #ddd' 
-            }}
-          >
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#ff6699', mb: 3 }}>
-              เพิ่มข้อมูลแอดมิน
-            </Typography>
-
-            {message && (
-              <Alert severity={status ? 'success' : 'error'} sx={{ width: '100%', mb: 2 }}>
-                {message}
-              </Alert>
-            )}
-
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: '100%' }}>
-              <TextField
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-              />
-              <TextField
-                required
-                fullWidth
-                id="firstname"
-                label="Firstname"
-                name="firstname"
-                autoComplete="given-name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-              />
-              <TextField
-                required
-                fullWidth
-                id="lastname"
-                label="Lastname"
-                name="lastname"
-                autoComplete="family-name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-              />
-              <TextField
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-              />
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    id="gender"
-                    label="Gender"
-                    name="gender"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    id="positionID"
-                    label="Position ID"
-                    name="positionID"
-                    value={positionID}
-                    onChange={(e) => setPositionID(e.target.value)}
-                    sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-                  />
-                </Grid>
-              </Grid>
-
-              {/* เพิ่มฟิลด์สำหรับเบอร์โทร */}
-              <TextField
-                fullWidth
-                id="phonenumber"
-                label="Phone Number"
-                name="phonenumber"
-                value={phonenumber}
-                onChange={(e) => setPhonenumber(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-              />
-
-              {/* เพิ่มฟิลด์สำหรับอัปโหลดรูปภาพ */}
-              <input 
-                type="file" 
-                accept="image/*" 
-                onChange={handleImageChange} 
-                style={{ marginTop: '16px', marginBottom: '16px' }} 
-              />
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="outlined"
+        <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold', color: '#000' }}>
+          จัดการความชอบ
+        </Typography>
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+          {preferences.map((pref) => (
+            <Grid item xs={4} key={pref.PreferenceID}>
+              <Box
                 sx={{
-                  mt: 3,
-                  mb: 2,
-                  color: '#ff6699',
-                  backgroundColor: 'transparent',
-                  padding: '12px',
-                  borderRadius: '15px',
-                  border: '2px solid #ff6699',
+                  border: selectedPreference === pref.PreferenceID ? '2px solid #ff69b4' : '1px solid black',
+                  backgroundColor: selectedPreference === pref.PreferenceID ? '#ff69b4' : '#ffffff',
+                  color: selectedPreference === pref.PreferenceID ? 'white' : 'black',
+                  padding: '10px',
                   textAlign: 'center',
-                  fontWeight: 'bold',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: selectedPreference === pref.PreferenceID ? '#ff69b4' : '#f5f5f5',
+                  },
                 }}
+                onClick={() => handleSelectPreference(pref.PreferenceID)}
               >
-                เพิ่มข้อมูลแอดมิน
-              </Button>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
-    </ThemeProvider>
+                {pref.PreferenceNames}
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3, gap: 2 }}>
+          <Button
+            variant="contained"
+            onClick={() => openModal('add')}
+            sx={{ backgroundColor: '#ff69b4', borderRadius: '10px', padding: '10px 20px', color: '#fff' }}
+          >
+            เพิ่ม
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => openModal('delete')}
+            disabled={!selectedPreference}
+            sx={{ backgroundColor: '#808080', borderRadius: '10px', padding: '10px 20px', color: '#fff' }}
+          >
+            ลบ
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => openModal('edit')}
+            disabled={!selectedPreference}
+            sx={{ backgroundColor: '#ff69b4', borderRadius: '10px', padding: '10px 20px', color: '#fff' }}
+          >
+            แก้ไข
+          </Button>
+        </Box>
+
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <DialogTitle>{dialogType === 'add' ? 'กรอกข้อมูลความชอบที่ต้องการเพิ่ม' : dialogType === 'edit' ? 'กรอกข้อมูลความชอบที่ต้องการแก้ไข' : 'คุณแน่ใจหรือไม่ที่จะลบความชอบนี้'}</DialogTitle>
+          {dialogType !== 'delete' && (
+            <DialogContent>
+              <TextField
+                value={newPreference}
+                onChange={(e) => setNewPreference(e.target.value)}
+                label="ความชอบ"
+                variant="outlined"
+                fullWidth
+              />
+            </DialogContent>
+          )}
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)} color="secondary">ยกเลิก</Button>
+            <Button
+              onClick={dialogType === 'add' ? handleAddPreference : dialogType === 'edit' ? handleUpdatePreference : handleDeletePreference}
+              color="primary"
+            >
+              {dialogType === 'add' ? 'เพิ่ม' : dialogType === 'edit' ? 'แก้ไข' : 'ยืนยัน'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Paper>
+    </Box>
   );
 }
