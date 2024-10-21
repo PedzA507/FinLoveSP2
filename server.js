@@ -235,7 +235,7 @@ app.get('/api/profile/:id', async function(req, res) {
 
         // ดึงข้อมูลของ user ตาม userID ที่ต้องการดู
         let userSQL = `
-            SELECT u.username, u.firstname, u.lastname, u.email, u.GenderID, u.home, u.phonenumber, u.imageFile
+            SELECT u.userID, u.username, u.firstname, u.lastname, u.email, u.GenderID, u.home, u.phonenumber, u.imageFile
             FROM user u
             WHERE u.userID = ? AND u.isActive = 1
         `;
@@ -245,17 +245,8 @@ app.get('/api/profile/:id', async function(req, res) {
             return res.send({'message':'ไม่พบผู้ใช้งาน', 'status': false});
         }
 
-        // ดึงประวัติการรายงานของผู้ใช้ (ไม่มี timestamp)
-        let reportSQL = `
-            SELECT r.reportType
-            FROM userreport ur
-            JOIN report r ON ur.reportID = r.reportID
-            WHERE ur.reportedID = ?
-        `;
-        let reportHistory = await query(reportSQL, [userID]);
-
+        // ส่งข้อมูล user รวมถึง userID กลับไปให้ frontend
         user = user[0];
-        user['reportHistory'] = reportHistory;
         user['message'] = 'success';
         user['status'] = true;
 
@@ -266,6 +257,7 @@ app.get('/api/profile/:id', async function(req, res) {
         res.send({'message':'token ไม่ถูกต้อง', 'status': false});
     }
 });
+
 
 
 //Show a user image
