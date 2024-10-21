@@ -292,6 +292,8 @@ app.put('/api/user/:id', async function(req, res) {
 
     try {
         let decode = jwt.verify(token, SECRET_KEY);               
+        
+        // ตรวจสอบสิทธิ์ในการแก้ไข
         if (userID != decode.userID && decode.positionID != 1 && decode.positionID != 2) {
             return res.send({'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน', 'status': false});
         }
@@ -300,12 +302,12 @@ app.put('/api/user/:id', async function(req, res) {
         let sqlSelect = 'SELECT imageFile FROM user WHERE userID = ?';
         const [user] = await query(sqlSelect, [userID]);
 
-        let profileImage = null;
+        let profileImage = user.imageFile; // ตั้งค่ารูปเดิมไว้ก่อน
 
-        // ตรวจสอบไฟล์รูปภาพใหม่
-        if (req.files && req.files.imageFile) {
-            const image = req.files.imageFile;
-            profileImage = Date.now() + '-' + image.name;
+        // ตรวจสอบว่ามีไฟล์รูปภาพใหม่หรือไม่
+        if (req.files && req.files.profileImage) {
+            const image = req.files.profileImage;
+            profileImage = Date.now() + '-' + image.name; // ตั้งชื่อไฟล์ใหม่
             const uploadPath = path.join(__dirname, 'assets/user', profileImage);
 
             // ลบรูปภาพเก่าหากมี
@@ -313,7 +315,6 @@ app.put('/api/user/:id', async function(req, res) {
                 const oldImagePath = path.join(__dirname, 'assets/user', user.imageFile);
                 fs.access(oldImagePath, fs.constants.F_OK, (err) => {
                     if (!err) {
-                        // ลบไฟล์เก่า
                         fs.unlink(oldImagePath, (err) => {
                             if (err) console.error('Error deleting old image:', err);
                         });
@@ -329,20 +330,20 @@ app.put('/api/user/:id', async function(req, res) {
             });
         }
 
-        // Destructure data from the request body
+        // ข้อมูลจาก body
         const { password, username, firstname, lastname, email, home, phonenumber } = req.body;
 
-        // Build SQL query
+        // SQL query สำหรับการอัปเดต
         let sql = 'UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, home = ?, phonenumber = ?';
         let params = [username, firstname || '', lastname || '', email, home || '', phonenumber || ''];
 
-        // If a new image was uploaded, update the image file
+        // อัปเดตไฟล์รูปภาพใหม่ในฐานข้อมูล
         if (profileImage) {    
             sql += ', imageFile = ?';
             params.push(profileImage);
         }
 
-        // If password is provided, hash and update it
+        // อัปเดตรหัสผ่านถ้ามีการส่งมา
         if (password) {
             const salt = await bcrypt.genSalt(10);
             const password_hash = await bcrypt.hash(password, salt);
@@ -350,14 +351,13 @@ app.put('/api/user/:id', async function(req, res) {
             params.push(password_hash);
         }
 
-        // Finalize the query with the userID
         sql += ' WHERE userID = ?';
         params.push(userID);
 
         // Execute the query
         db.query(sql, params, (err, result) => {
             if (err) throw err;
-            res.send({ 'message': 'แก้ไขข้อมูลลูกค้าเรียบร้อยแล้ว', 'status': true });
+            res.send({ 'message': 'แก้ไขข้อมูลผู้ใช้เรียบร้อยแล้ว', 'status': true });
         });
         
     } catch(error) {
