@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, ButtonGroup } from '@mui/material';
-import { useNavigate } from "react-router-dom";
+import { Typography, Button, Container, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, ButtonGroup } from '@mui/material';
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // เพิ่มไอคอนย้อนกลับ
 
@@ -112,7 +112,7 @@ export default function Index() {
           </Box>
 
           {/* ตารางข้อมูลพนักงาน */}
-          <TableContainer>
+          <TableContainer sx={{ border: '2px solid black', borderRadius: '10px' }}> {/* เพิ่มกรอบรอบนอกตาราง */}
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -139,14 +139,27 @@ export default function Index() {
                     <TableCell align="left" sx={{ fontSize: '14px' }}>{employee.username}</TableCell>
                     <TableCell align="center">
                       <ButtonGroup color="primary" aria-label="outlined primary button group">
-                        <Button variant="contained" onClick={() => ViewEmployee(employee.empID)} sx={{ borderRadius: '0px', backgroundColor: '#FFF', color: '#000', border: '1px solid #1976d2' }}>ตรวจสอบรายงาน</Button>
-                        <Button variant="outlined" onClick={() => UpdateEmployee(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#1976d2', color: '#1976d2' }}>แก้ไข</Button>
-                        {employee.isActive === 1 ? (
-                          <Button variant="outlined" color="secondary" onClick={() => EmployeeBan(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#FF6699', color: '#FF6699' }}>ระงับผู้ใช้</Button>
-                        ) : (
-                          <Button variant="outlined" color="primary" onClick={() => EmployeeUnban(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#1976d2', color: '#1976d2' }}>ปลดแบน</Button>
-                        )}
-                        <Button variant="contained" color="error" onClick={() => EmployeeDelete(employee.empID)} sx={{ borderRadius: '0px' }}>ลบผู้ใช้</Button>
+                        <Button variant="outlined" onClick={() => ViewEmployee(employee.empID)} sx={{ borderRadius: '10px', color: '#000', borderColor: '#000', backgroundColor: '#FFF' }}>
+                          ตรวจสอบรายงาน
+                        </Button>
+                        <Button variant="outlined" onClick={() => UpdateEmployee(employee.empID)} sx={{ borderRadius: '10px', borderColor: '#000', color: '#000' }}>
+                          แก้ไข
+                        </Button>
+                        <Button variant="contained" onClick={() => EmployeeBan(employee.empID)} sx={{
+                          borderRadius: '10px', color: 'red', border: '1px solid red', backgroundColor: employee.isActive === 0 ? '#ffcccc' : '#fff',
+                          '&:hover': { backgroundColor: '#ffe6e6' }
+                        }} disabled={employee.isActive === 0}>
+                          ระงับผู้ใช้
+                        </Button>
+                        <Button variant="contained" onClick={() => EmployeeUnban(employee.empID)} sx={{
+                          borderRadius: '10px', color: 'green', border: '1px solid green', backgroundColor: employee.isActive === 1 ? '#ccffcc' : '#fff',
+                          '&:hover': { backgroundColor: '#e6ffe6' }
+                        }} disabled={employee.isActive === 1}>
+                          ปลดแบน
+                        </Button>
+                        <Button variant="contained" color="error" onClick={() => EmployeeDelete(employee.empID)} sx={{ borderRadius: '10px' }}>
+                          ลบผู้ใช้
+                        </Button>
                       </ButtonGroup>
                     </TableCell>
                   </TableRow>
