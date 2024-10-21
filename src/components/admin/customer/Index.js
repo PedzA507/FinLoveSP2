@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Button, Container, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, ButtonGroup } from '@mui/material';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // เพิ่ม useNavigate
 import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ใช้ไอคอนสำหรับปุ่มย้อนกลับ
 
@@ -9,7 +9,7 @@ const url = process.env.REACT_APP_BASE_URL;
 
 export default function Index() {
   const [users, setUsers] = useState([]);
-  const navigate = useNavigate();
+  const navigate = useNavigate();  // ใช้ useNavigate เพื่อจัดการการนำทาง
 
   useEffect(() => {
     usersGet();  // Fetch users when component mounts
@@ -54,7 +54,7 @@ export default function Index() {
       }
     })
     .catch((error) => {
-      console.error('There was an error!', error);
+      console.error('Error deleting user:', error);
     });
   };
 
@@ -67,7 +67,12 @@ export default function Index() {
     .then((response) => {
       if (response.data.status === true) {
         alert(response.data.message);
-        usersGet();  // Refresh the users list after banning
+        // อัปเดตสถานะใน state ของ React หลังจากทำการระงับ
+        setUsers(prevUsers =>
+          prevUsers.map(user =>
+            user.userID === id ? { ...user, isActive: 0 } : user
+          )
+        );
       } else {
         alert('Failed to suspend user');
       }
@@ -86,7 +91,12 @@ export default function Index() {
     .then((response) => {
       if (response.data.status === true) {
         alert(response.data.message);
-        usersGet();  // Refresh the users list after unbanning
+        // อัปเดตสถานะใน state ของ React หลังจากทำการปลดแบน
+        setUsers(prevUsers =>
+          prevUsers.map(user =>
+            user.userID === id ? { ...user, isActive: 1 } : user
+          )
+        );
       } else {
         alert('Failed to unban user');
       }
@@ -109,7 +119,7 @@ export default function Index() {
               จัดการข้อมูลผู้ใช้
             </Button>
           </Box>
-          <TableContainer sx={{ border: '2px solid black', borderRadius: '10px' }}> {/* เพิ่มกรอบรอบนอกตาราง */}
+          <TableContainer sx={{ border: '2px solid black', borderRadius: '10px' }}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
