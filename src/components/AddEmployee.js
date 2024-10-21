@@ -3,13 +3,14 @@ import { Button, CssBaseline, TextField, Grid, Box, Typography, Container } from
 import Alert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate เพื่อใช้ในการนำทาง
 
 // Custom theme
 const customTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#ff6699', // สีชมพูอ่อน
+      main: '#000000', // เปลี่ยนสีของขอบเมื่อคลิกเป็นสีดำแทน
     },
     background: {
       default: '#F8E9F0', // สีพื้นหลัง
@@ -46,6 +47,8 @@ export default function AddEmployee() {
   const [profileImage, setProfileImage] = useState(null); // เพิ่ม state สำหรับจัดเก็บรูปภาพ
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState(null);
+  
+  const navigate = useNavigate(); // ใช้ useNavigate สำหรับการนำทาง
 
   // ฟังก์ชันสำหรับอัปโหลดรูปภาพ
   const handleImageChange = (e) => {
@@ -115,11 +118,6 @@ export default function AddEmployee() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              backgroundColor: 'white',
-              padding: '40px',
-              borderRadius: '15px',
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #ddd' 
             }}
           >
             <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#ff6699', mb: 3 }}>
@@ -142,7 +140,8 @@ export default function AddEmployee() {
                 autoComplete="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+                variant="outlined"
               />
               <TextField
                 required
@@ -153,7 +152,8 @@ export default function AddEmployee() {
                 autoComplete="given-name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+                variant="outlined"
               />
               <TextField
                 required
@@ -164,7 +164,8 @@ export default function AddEmployee() {
                 autoComplete="family-name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+                variant="outlined"
               />
               <TextField
                 fullWidth
@@ -174,32 +175,30 @@ export default function AddEmployee() {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+                variant="outlined"
               />
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    id="gender"
-                    label="Gender"
-                    name="gender"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    id="positionID"
-                    label="Position ID"
-                    name="positionID"
-                    value={positionID}
-                    onChange={(e) => setPositionID(e.target.value)}
-                    sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-                  />
-                </Grid>
-              </Grid>
+              {/* ช่องกรอกข้อมูล Gender และ Position ID จะถูกจัดเรียงให้เรียงลงมาแบบเดียวกับช่องกรอกข้อมูลอื่น */}
+              <TextField
+                fullWidth
+                id="gender"
+                label="Gender"
+                name="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+                variant="outlined"
+              />
+              <TextField
+                fullWidth
+                id="positionID"
+                label="Position ID"
+                name="positionID"
+                value={positionID}
+                onChange={(e) => setPositionID(e.target.value)}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+                variant="outlined"
+              />
 
               {/* เพิ่มฟิลด์สำหรับเบอร์โทร */}
               <TextField
@@ -223,20 +222,42 @@ export default function AddEmployee() {
               <Button
                 type="submit"
                 fullWidth
-                variant="outlined"
+                variant="contained"
                 sx={{
                   mt: 3,
                   mb: 2,
-                  color: '#ff6699',
-                  backgroundColor: 'transparent',
+                  color: '#fff',
+                  backgroundColor: '#ff6699',
                   padding: '12px',
-                  borderRadius: '15px',
-                  border: '2px solid #ff6699',
+                  borderRadius: '10px',
                   textAlign: 'center',
                   fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#ff4d88', // สีเมื่อ hover กลับไปแบบเดิม
+                  },
                 }}
               >
                 เพิ่มข้อมูลแอดมิน
+              </Button>
+
+              {/* ปุ่มย้อนกลับไปหน้าแดชบอร์ด */}
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{
+                  color: '#000',
+                  mt: 2,
+                  borderRadius: '10px',
+                  textAlign: 'center',
+                  border: '2px solid #000', // ขอบสีดำ
+                  fontWeight: 'bold',
+                  '&:hover': {
+                    backgroundColor: '#ff69b4',
+                  },
+                }}
+                onClick={() => navigate('/dashboard')}  // ใช้ navigate กลับไปหน้าแดชบอร์ด
+              >
+                ย้อนกลับไปหน้าแดชบอร์ด
               </Button>
             </Box>
           </Box>
