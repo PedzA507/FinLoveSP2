@@ -13,11 +13,11 @@ const customTheme = createTheme({
       main: '#000000', // เปลี่ยนสีของขอบเมื่อคลิกเป็นสีดำแทน
     },
     background: {
-      default: '#F8E9F0', // สีพื้นหลัง
+      default: '#F8E9F0', // สีพื้นหลังจากตัวอย่าง
     },
     text: {
-      primary: '#000000', // สีดำสำหรับข้อความหลัก
-      secondary: '#666666', // สีเทาสำหรับข้อความรอง
+      primary: '#000000',
+      secondary: '#666666',
     },
   },
   typography: {
@@ -43,40 +43,30 @@ export default function AddEmployee() {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [positionID, setPositionID] = useState('');
-  const [phonenumber, setPhonenumber] = useState(''); // เพิ่ม state สำหรับเบอร์โทร
-  const [profileImage, setProfileImage] = useState(null); // เพิ่ม state สำหรับจัดเก็บรูปภาพ
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState(null);
   
   const navigate = useNavigate(); // ใช้ useNavigate สำหรับการนำทาง
 
-  // ฟังก์ชันสำหรับอัปโหลดรูปภาพ
-  const handleImageChange = (e) => {
-    setProfileImage(e.target.files[0]);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(); // ใช้ FormData เพื่อให้รองรับการอัปโหลดไฟล์
-    formData.append('username', username);
-    formData.append('firstName', firstName);
-    formData.append('lastName', lastName);
-    formData.append('email', email);
-    formData.append('gender', gender);
-    formData.append('positionID', positionID);
-    formData.append('phonenumber', phonenumber); // เพิ่มเบอร์โทรลงใน FormData
-    if (profileImage) {
-      formData.append('profileImage', profileImage); // เพิ่มรูปภาพลงใน FormData
-    }
-
     try {
-      const response = await axios.post(process.env.REACT_APP_BASE_URL + '/employee', formData, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data' // ใช้ multipart/form-data ในการส่งข้อมูล
+      const response = await axios.post(process.env.REACT_APP_BASE_URL + '/employee',
+        {
+          username,
+          firstName,
+          lastName,
+          email,
+          gender,
+          positionID
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }
-      });
+      );
       const result = response.data;
       setMessage(result['message']);
       setStatus(result['status']);
@@ -89,8 +79,6 @@ export default function AddEmployee() {
         setEmail('');
         setGender('');
         setPositionID('');
-        setPhonenumber(''); // Reset เบอร์โทร
-        setProfileImage(null); // Reset รูปภาพ
       }
     } catch (err) {
       console.log(err);
@@ -120,10 +108,11 @@ export default function AddEmployee() {
               alignItems: 'center',
             }}
           >
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#ff6699', mb: 3 }}>
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#000', mb: 3 }}>
               เพิ่มข้อมูลแอดมิน
             </Typography>
 
+            {/* Display message alert */}
             {message && (
               <Alert severity={status ? 'success' : 'error'} sx={{ width: '100%', mb: 2 }}>
                 {message}
@@ -182,7 +171,7 @@ export default function AddEmployee() {
               <TextField
                 fullWidth
                 id="gender"
-                label="GenderID"
+                label="Gender"
                 name="gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
@@ -198,25 +187,6 @@ export default function AddEmployee() {
                 onChange={(e) => setPositionID(e.target.value)}
                 sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '4px' }}
                 variant="outlined"
-              />
-
-              {/* เพิ่มฟิลด์สำหรับเบอร์โทร */}
-              <TextField
-                fullWidth
-                id="phonenumber"
-                label="Phonenumber"
-                name="phonenumber"
-                value={phonenumber}
-                onChange={(e) => setPhonenumber(e.target.value)}
-                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-              />
-
-              {/* เพิ่มฟิลด์สำหรับอัปโหลดรูปภาพ */}
-              <input 
-                type="file" 
-                accept="image/*" 
-                onChange={handleImageChange} 
-                style={{ marginTop: '16px', marginBottom: '16px' }} 
               />
 
               <Button
