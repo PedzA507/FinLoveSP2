@@ -14,6 +14,7 @@ export default function EditUser() {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [profileImage, setProfileImage] = useState(null); // สำหรับจัดการรูปภาพใหม่
   const { id } = useParams(); // ดึง userID จาก URL
 
   useEffect(() => {
@@ -36,25 +37,46 @@ export default function EditUser() {
     });
   }, [id]);
 
+  // ฟังก์ชันจัดการอัปโหลดรูปภาพ
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.put(`${url}/user/${id}`, {
-      username,
-      firstname: firstName,
-      lastname: lastName,
-      email,
-      home: address,
-      phonenumber: phoneNumber
-    }, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('firstname', firstName);
+    formData.append('lastname', lastName);
+    formData.append('email', email);
+    formData.append('home', address);
+    formData.append('phonenumber', phoneNumber);
 
-    const result = response.data;
-    if (result.status) {
+    if (profileImage) {
+      formData.append('profileImage', profileImage); // เพิ่มรูปภาพใน FormData
+    }
+
+    try {
+      const response = await axios.put(`${url}/user/${id}`, formData, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data' // ใช้ multipart/form-data สำหรับส่งไฟล์
+        }
+      });
+
+      const result = response.data;
+      if (result.status) {
         alert('บันทึกข้อมูลสำเร็จ');
-    } else {
+      } else {
         alert('เกิดข้อผิดพลาด: ' + result.message);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        alert('คุณไม่มีสิทธิ์ในการแก้ไขข้อมูล');
+      } else {
+        console.error('Error submitting form:', error);
+      }
     }
   };
 
@@ -83,7 +105,7 @@ export default function EditUser() {
                 fullWidth
                 id="firstname"
                 label="ชื่อ"
-                value={firstName} 
+                value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </Grid>
@@ -124,6 +146,10 @@ export default function EditUser() {
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
+            </Grid>
+            <Grid item xs={12}>
+              {/* Input สำหรับอัปโหลดรูปภาพ */}
+              <input type="file" onChange={handleImageChange} />
             </Grid>
           </Grid>
           <Button

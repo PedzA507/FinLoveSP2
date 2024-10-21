@@ -9,8 +9,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'UX23Y24%@&2aMb';
 
-const fileupload = require('express-fileupload');  // ใช้ในการอัปโหลดไฟล์
-const multer = require('multer');                 // Multer สำหรับอัปโหลดไฟล์
+const fileupload = require('express-fileupload');
+const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 
@@ -22,7 +22,7 @@ const credentials = { key: privateKey, cert: certificate };
 // Import CORS library
 const cors = require('cors');
 
-//Database(MySql) configulation
+// Database(MySql) configuration
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -35,31 +35,25 @@ db.connect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(fileupload());  // ใช้ fileupload
+app.use(fileupload());
 
-// ใช้ express static เพื่อให้เข้าถึงไฟล์ใน assets/employee ได้
-app.use('/assets/employee', express.static(path.join(__dirname, 'assets/employee')));
+// Static assets
+app.use('/assets/user', express.static(path.join(__dirname, 'assets/user')));
 
-// ตั้งค่า multer สำหรับการอัปโหลดไฟล์
+// Multer configuration for uploading files
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadPath = path.join(__dirname, 'assets/employee');
-        // สร้างโฟลเดอร์ถ้ายังไม่มี
+        const uploadPath = path.join(__dirname, 'assets/user');
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });
         }
-        cb(null, uploadPath);  // เก็บไฟล์ใน assets/employee
+        cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);  // ตั้งชื่อไฟล์เป็น timestamp + ชื่อไฟล์เดิม
+        cb(null, Date.now() + '-' + file.originalname);
     }
 });
 const upload = multer({ storage: storage });
-
-// Hello World API
-app.get('/', function(req, res) {
-    res.send('Hello World!');
-});
 
 // Function to execute a query with a promise-based approach
 function query(sql, params) {
@@ -73,14 +67,6 @@ function query(sql, params) {
         });
     });
 }
-
-// ตัวอย่างในการใช้ Multer สำหรับการอัปโหลดไฟล์รูปภาพ (ถ้าใช้ใน API อื่น ๆ)
-app.post('/upload', upload.single('profileImage'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).send({ message: 'No file uploaded' });
-    }
-    res.send({ message: 'File uploaded successfully', filename: req.file.filename });
-});
 
 
 
@@ -299,7 +285,6 @@ app.get('/api/user/image/:filename', function(req, res) {
     });
 });
 
-
 // Update a user
 app.put('/api/user/:id', async function(req, res) {
     const token = req.headers["authorization"].replace("Bearer ", "");
@@ -311,16 +296,36 @@ app.put('/api/user/:id', async function(req, res) {
             return res.send({'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน', 'status': false});
         }
         
-        // Handle image file update if provided
-        let fileName = "";
-        if (req?.files?.imageFile) {        
-            const imageFile = req.files.imageFile;
-            fileName = imageFile.name.split(".");
-            fileName = fileName[0] + Date.now() + '.' + fileName[1]; 
-        
-            const imagePath = path.join(__dirname, 'assets/user', fileName);
-            fs.writeFile(imagePath, imageFile.data, (err) => {
-                if(err) throw err;
+        // ดึงข้อมูลผู้ใช้ปัจจุบันเพื่อเช็คว่ามีรูปภาพเดิมอยู่หรือไม่
+        let sqlSelect = 'SELECT imageFile FROM user WHERE userID = ?';
+        const [user] = await query(sqlSelect, [userID]);
+
+        let profileImage = null;
+
+        // ตรวจสอบไฟล์รูปภาพใหม่
+        if (req.files && req.files.imageFile) {
+            const image = req.files.imageFile;
+            profileImage = Date.now() + '-' + image.name;
+            const uploadPath = path.join(__dirname, 'assets/user', profileImage);
+
+            // ลบรูปภาพเก่าหากมี
+            if (user.imageFile) {
+                const oldImagePath = path.join(__dirname, 'assets/user', user.imageFile);
+                fs.access(oldImagePath, fs.constants.F_OK, (err) => {
+                    if (!err) {
+                        // ลบไฟล์เก่า
+                        fs.unlink(oldImagePath, (err) => {
+                            if (err) console.error('Error deleting old image:', err);
+                        });
+                    }
+                });
+            }
+
+            // บันทึกไฟล์รูปภาพใหม่
+            image.mv(uploadPath, (err) => {
+                if (err) {
+                    return res.status(500).send({ 'message': 'เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ', 'status': false });
+                }
             });
         }
 
@@ -329,7 +334,13 @@ app.put('/api/user/:id', async function(req, res) {
 
         // Build SQL query
         let sql = 'UPDATE user SET username = ?, firstname = ?, lastname = ?, email = ?, home = ?, phonenumber = ?';
-        let params = [username, firstname, lastname, email, home, phonenumber];
+        let params = [username, firstname || '', lastname || '', email, home || '', phonenumber || ''];
+
+        // If a new image was uploaded, update the image file
+        if (profileImage) {    
+            sql += ', imageFile = ?';
+            params.push(profileImage);
+        }
 
         // If password is provided, hash and update it
         if (password) {
@@ -337,12 +348,6 @@ app.put('/api/user/:id', async function(req, res) {
             const password_hash = await bcrypt.hash(password, salt);
             sql += ', password = ?';
             params.push(password_hash);
-        }
-
-        // If a new image was uploaded, update the image file
-        if (fileName != "") {    
-            sql += ', imageFile = ?';
-            params.push(fileName);
         }
 
         // Finalize the query with the userID
@@ -359,6 +364,7 @@ app.put('/api/user/:id', async function(req, res) {
         res.send({'message':'โทเคนไม่ถูกต้อง', 'status': false});
     }
 });
+
 
 // ban user
 app.put('/api/user/ban/:id', async function(req, res) {
