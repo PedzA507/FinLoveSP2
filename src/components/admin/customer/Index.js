@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, ButtonGroup } from '@mui/material';
-import { useNavigate } from "react-router-dom";
+import { Typography, Button, Container, Paper, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, ButtonGroup } from '@mui/material';
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // ใช้ไอคอนสำหรับปุ่มย้อนกลับ
 
@@ -31,11 +31,11 @@ export default function Index() {
 
   const ViewUser = (id) => {
     window.location = `/admin/user/view/${id}`;
-  }
+  };
 
   const UpdateUser = (id) => {
     window.location = `/admin/user/update/${id}`;
-  }
+  };
 
   const UserDelete = (id) => {
     axios.delete(`${url}/user/${id}`, {
@@ -67,12 +67,7 @@ export default function Index() {
     .then((response) => {
       if (response.data.status === true) {
         alert(response.data.message);
-        // Update state directly after banning the user
-        setUsers(prevUsers =>
-          prevUsers.map(user =>
-            user.userID === id ? { ...user, isActive: 0 } : user
-          )
-        );
+        usersGet();  // Refresh the users list after banning
       } else {
         alert('Failed to suspend user');
       }
@@ -91,12 +86,7 @@ export default function Index() {
     .then((response) => {
       if (response.data.status === true) {
         alert(response.data.message);
-        // Update state directly after unbanning the user
-        setUsers(prevUsers =>
-          prevUsers.map(user =>
-            user.userID === id ? { ...user, isActive: 1 } : user
-          )
-        );
+        usersGet();  // Refresh the users list after unbanning
       } else {
         alert('Failed to unban user');
       }
@@ -119,7 +109,7 @@ export default function Index() {
               จัดการข้อมูลผู้ใช้
             </Button>
           </Box>
-          <TableContainer>
+          <TableContainer sx={{ border: '2px solid black', borderRadius: '10px' }}> {/* เพิ่มกรอบรอบนอกตาราง */}
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -145,13 +135,50 @@ export default function Index() {
                     <TableCell align="left">{user.username}</TableCell>
                     <TableCell align="center">
                       <ButtonGroup color="primary" aria-label="outlined primary button group">
-                        <Button variant="outlined" onClick={() => ViewUser(user.userID)}>ตรวจสอบรายงาน</Button>
-                        <Button variant="outlined" onClick={() => UpdateUser(user.userID)}>แก้ไข</Button>
-                        {user.isActive === 1 ? (
-                          <Button variant="outlined" color="secondary" onClick={() => UserBan(user.userID)}>ระงับผู้ใช้</Button>
-                        ) : (
-                          <Button variant="outlined" color="primary" onClick={() => UserUnban(user.userID)}>ปลดแบน</Button>
-                        )}
+                        <Button
+                          variant="outlined"
+                          sx={{ borderColor: '#000', color: '#000' }}
+                          onClick={() => ViewUser(user.userID)}
+                        >
+                          ตรวจสอบรายงาน
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          sx={{ borderColor: '#000', color: '#000' }}
+                          onClick={() => UpdateUser(user.userID)}
+                        >
+                          แก้ไข
+                        </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: user.isActive === 0 ? '#ffcccc' : '#fff',
+                            color: 'red',
+                            border: '1px solid red',
+                            '&:hover': {
+                              backgroundColor: '#ffe6e6',
+                            },
+                          }}
+                          onClick={() => UserBan(user.userID)}
+                          disabled={user.isActive === 0} // ปิดการใช้งานเมื่อถูกแบน
+                        >
+                          ระงับผู้ใช้
+                        </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: user.isActive === 1 ? '#ccffcc' : '#fff',
+                            color: 'green',
+                            border: '1px solid green',
+                            '&:hover': {
+                              backgroundColor: '#e6ffe6',
+                            },
+                          }}
+                          onClick={() => UserUnban(user.userID)}
+                          disabled={user.isActive === 1} // ปิดการใช้งานเมื่อยังไม่ได้แบน
+                        >
+                          ปลดแบน
+                        </Button>
                         <Button variant="contained" color="error" onClick={() => UserDelete(user.userID)}>ลบผู้ใช้</Button>
                       </ButtonGroup>
                     </TableCell>
