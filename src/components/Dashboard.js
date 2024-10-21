@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Avatar, Button, ButtonGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Container, Grid, Card, CardContent, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, LineChart, Line, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Home as HomeIcon, People as PeopleIcon, Settings as SettingsIcon } from '@mui/icons-material';
+import { ResponsiveContainer, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, BarChart, Bar } from 'recharts';
 
 const url = process.env.REACT_APP_BASE_URL;
 const token = localStorage.getItem('token');
@@ -224,7 +224,7 @@ export default function Dashboard() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รหัส</TableCell>
-                    <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รูป</TableCell> {/* ปรับให้เว้นระยะและสอดคล้องกับขนาดของรูปภาพ */}
+                    <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รูป</TableCell>
                     <TableCell align="left" sx={{ padding: '16px' }}>ชื่อผู้ใช้</TableCell>
                     <TableCell align="left" sx={{ padding: '16px' }}>เหตุผล</TableCell>
                     <TableCell align="center" sx={{ padding: '16px' }}>จัดการข้อมูล</TableCell>
@@ -245,39 +245,36 @@ export default function Dashboard() {
                       <TableCell align="left" sx={{ padding: '16px' }}>{user.reportType || 'ไม่ระบุเหตุผล'}</TableCell>
                       <TableCell align="center" sx={{ padding: '16px' }}>
                         <ButtonGroup color="primary" aria-label="outlined primary button group">
-                          {user.isActive === 1 ? (
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderRadius: '10px',
-                                color: 'red',
-                                borderColor: 'red',
-                                backgroundColor: 'white',
-                                '&:hover': {
-                                  backgroundColor: '#ffe6e6',
-                                },
-                              }}
-                              onClick={() => handleBanUser(user.userID)}
-                            >
-                              ระงับผู้ใช้
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderRadius: '10px',
-                                color: 'black',
-                                borderColor: 'black',
-                                backgroundColor: 'white',
-                                '&:hover': {
-                                  backgroundColor: '#f8e9f0',
-                                },
-                              }}
-                              onClick={() => handleUnbanUser(user.userID)}
-                            >
-                              ปลดแบน
-                            </Button>
-                          )}
+                          <Button
+                            variant="contained"
+                            sx={{
+                              borderRadius: '5px',
+                              color: 'red',
+                              border: '1px solid red', // ขอบสีแดง
+                              backgroundColor: user.isActive === 0 ? '#ffcccc' : '#fff',
+                              '&:hover': {
+                                backgroundColor: '#ffe6e6',
+                              },
+                            }}
+                            onClick={() => handleBanUser(user.userID)}
+                          >
+                            ระงับผู้ใช้
+                          </Button>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              borderRadius: '5px',
+                              color: 'green',
+                              border: '1px solid green', // ขอบสีเขียว
+                              backgroundColor: user.isActive === 1 ? '#ccffcc' : '#fff',
+                              '&:hover': {
+                                backgroundColor: '#e6ffe6',
+                              },
+                            }}
+                            onClick={() => handleUnbanUser(user.userID)}
+                          >
+                            ปลดแบน
+                          </Button>
                         </ButtonGroup>
                       </TableCell>
                     </TableRow>
