@@ -57,7 +57,7 @@ const transporter = nodemailer.createTransport({
 // API สำหรับการเข้าสู่ระบบ
 app.post('/api/login', async function(req, res) {
     const { username, password } = req.body;
-    const sql = "SELECT UserId, password, loginAttempt, isActive, lastAttemptTime FROM User WHERE username = ?";
+    const sql = "SELECT userID, password, loginAttempt, isActive, lastAttemptTime FROM User WHERE username = ?";
 
     try {
         const [users] = await db.promise().query(sql, [username]);
@@ -72,7 +72,7 @@ app.post('/api/login', async function(req, res) {
             // ตรวจสอบสถานะของบัญชีว่าถูกล็อกหรือไม่
             if (isActive !== 1) {
                 // อัปเดต lastAttemptTime ทุกครั้งที่มีการพยายามเข้าสู่ระบบ
-                await db.promise().query("UPDATE User SET lastAttemptTime = NOW() WHERE UserId = ?", [user.UserId]);
+                await db.promise().query("UPDATE User SET lastAttemptTime = NOW() WHERE userID = ?", [user.userID]);
                 return res.send({ "message": "บัญชีนี้ถูกปิดใช้งาน", "status": false });
             }
 
@@ -84,7 +84,7 @@ app.post('/api/login', async function(req, res) {
 
             if (loginAttempt > 5 && diffHours < 24) {
                 // อัปเดต lastAttemptTime ทุกครั้งที่มีการพยายามเข้าสู่ระบบ
-                await db.promise().query("UPDATE User SET lastAttemptTime = NOW() WHERE UserId = ?", [user.UserId]);
+                await db.promise().query("UPDATE User SET lastAttemptTime = NOW() WHERE userID = ?", [user.userID]);
                 return res.send({ 
                     "message": "บัญชีคุณถูกล็อคเนื่องจากมีการพยายามเข้าสู่ระบบเกินกำหนด", 
                     "status": false 
@@ -96,23 +96,23 @@ app.post('/api/login', async function(req, res) {
 
             if (match) {
                 // รีเซ็ตจำนวนครั้งการพยายามเข้าสู่ระบบและ lastAttemptTime
-                const updateSql = "UPDATE User SET loginAttempt = 0, lastAttemptTime = NOW(), isActive = 1 WHERE UserId = ?";
-                const [updateResult] = await db.promise().query(updateSql, [user.UserId]);
+                const updateSql = "UPDATE User SET loginAttempt = 0, lastAttemptTime = NOW(), isActive = 1 WHERE userID = ?";
+                const [updateResult] = await db.promise().query(updateSql, [user.userID]);
 
                 // ตรวจสอบว่ามีการอัปเดตสำเร็จหรือไม่
                 if (updateResult.affectedRows > 0) {
                     return res.send({ 
                         "message": "เข้าสู่ระบบสำเร็จ", 
                         "status": true, 
-                        "userID": user.UserId 
+                        "userID": user.userID 
                     });
                 } else {
                     return res.send({ "message": "เกิดข้อผิดพลาดในการอัปเดตข้อมูล", "status": false });
                 }
             } else {
                 // เพิ่มจำนวนครั้งที่พยายามเข้าสู่ระบบและอัปเดต lastAttemptTime
-                const updateSql = "UPDATE User SET loginAttempt = loginAttempt + 1, lastAttemptTime = NOW() WHERE UserId = ?";
-                const [updateResult] = await db.promise().query(updateSql, [user.UserId]);
+                const updateSql = "UPDATE User SET loginAttempt = loginAttempt + 1, lastAttemptTime = NOW() WHERE userID = ?";
+                const [updateResult] = await db.promise().query(updateSql, [user.userID]);
 
                 // ตรวจสอบว่ามีการอัปเดตสำเร็จหรือไม่
                 if (updateResult.affectedRows > 0) {
@@ -140,7 +140,7 @@ app.post('/api/login', async function(req, res) {
 // Logout endpoint
 app.post('/api/logout/:id', async (req, res) => {
     const { id } = req.params;
-    const updateSql = "UPDATE User SET isActive = 1, loginAttempt = 0 WHERE UserId = ?";
+    const updateSql = "UPDATE User SET isActive = 1, loginAttempt = 0 WHERE userID = ?";
 
     try {
         await db.promise().query(updateSql, [id]);
@@ -226,7 +226,7 @@ app.post('/api/register8', upload.single('imageFile'), async function(req, res) 
         // บันทึก preferences
         const preferenceIDs = preferences.split(',').map(id => parseInt(id));
         for (const preferenceID of preferenceIDs) {
-            await db.promise().query("INSERT INTO userpreferences (UserID, PreferenceID) VALUES (?, ?)", [userID, preferenceID]);
+            await db.promise().query("INSERT INTO userpreferences (userID, PreferenceID) VALUES (?, ?)", [userID, preferenceID]);
         }
 
         console.log(`Preferences saved for user ${userID}: `, preferenceIDs);
@@ -253,14 +253,14 @@ app.post('/api/request-pin', async (req, res) => {
             return res.status(400).send({ message: "ไม่พบอีเมลนี้ในระบบ", status: false });
         }
 
-        const userId = result[0].userID;  // ดึง userID เพื่ออัพเดต PIN
+        const userID = result[0].userID;  // ดึง userID เพื่ออัพเดต PIN
         const pinCode = Math.floor(1000 + Math.random() * 9000).toString(); // PIN 4 หลัก
         const expirationDate = new Date(Date.now() + 3600000); // PIN หมดอายุใน 1 ชั่วโมง
 
         // อัพเดต pinCode และ pinCodeExpiration โดยใช้ userID
         const updateResult = await db.promise().query(
             "UPDATE User SET pinCode = ?, pinCodeExpiration = ? WHERE userID = ?",
-            [pinCode, expirationDate, userId]
+            [pinCode, expirationDate, userID]
         );
 
         // ตรวจสอบการอัพเดต
@@ -337,7 +337,7 @@ app.post('/api/reset-password', async (req, res) => {
             return res.status(400).send({ message: "PIN ไม่ถูกต้องหรือหมดอายุ", status: false });
         }
 
-        const userId = result[0].userID;
+        const userID = result[0].userID;
 
         // เข้ารหัสรหัสผ่านใหม่
         const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
@@ -345,7 +345,7 @@ app.post('/api/reset-password', async (req, res) => {
         // อัปเดตรหัสผ่านใหม่ในฟิลด์ password และลบข้อมูล PIN ออก
         const updateResult = await db.promise().query(
             "UPDATE User SET password = ?, pinCode = NULL, pinCodeExpiration = NULL WHERE userID = ?",
-            [hashedPassword, userId]
+            [hashedPassword, userID]
         );
 
         if (updateResult[0].affectedRows === 0) {
@@ -402,10 +402,10 @@ app.get('/api/user/:id', async function (req, res) {
     LEFT JOIN interestgender ig ON u.InterestGenderID = ig.interestGenderID
     LEFT JOIN education e ON u.educationID = e.educationID
     LEFT JOIN goal go ON u.goalID = go.goalID
-    LEFT JOIN userpreferences up ON u.UserID = up.UserID
+    LEFT JOIN userpreferences up ON u.userID = up.userID
     LEFT JOIN preferences p ON up.PreferenceID = p.PreferenceID
-    WHERE u.UserID = ?
-    GROUP BY u.UserID
+    WHERE u.userID = ?
+    GROUP BY u.userID
     `;
 
     try {
@@ -438,10 +438,10 @@ app.get('/api/profile/:id', async function (req, res) {
         u.imageFile
     FROM user u
     LEFT JOIN gender g ON u.GenderID = g.GenderID
-    LEFT JOIN userpreferences up ON u.UserID = up.UserID
+    LEFT JOIN userpreferences up ON u.userID = up.userID
     LEFT JOIN preferences p ON up.PreferenceID = p.PreferenceID
-    WHERE u.UserID = ?
-    GROUP BY u.UserID
+    WHERE u.userID = ?
+    GROUP BY u.userID
     `;
 
     try {
@@ -471,7 +471,7 @@ app.post('/api/user/update/:id', async function(req, res) {
 
     try {
         // Fetch current user data
-        const [userResult] = await db.promise().query("SELECT * FROM User WHERE UserId = ?", [id]);
+        const [userResult] = await db.promise().query("SELECT * FROM User WHERE userID = ?", [id]);
         if (userResult.length === 0) {
             return res.status(404).send({ message: "ไม่พบผู้ใช้ที่ต้องการอัปเดต", status: false });
         }
@@ -542,20 +542,20 @@ app.post('/api/user/update/:id', async function(req, res) {
         const updateUserSql = `
             UPDATE User 
             SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, GenderID = ?, InterestGenderID = ?, height = ?, home = ?, DateBirth = ?, educationID = ?, goalID = ?
-            WHERE UserId = ?
+            WHERE userID = ?
         `;
         await db.promise().query(updateUserSql, [username, email, firstname, lastname, nickname, genderID, interestGenderID, height, home, DateBirth, educationID, goalID, id]);
 
         // Update preferences in userpreferences table
         if (preferences && Array.isArray(preferences)) {
             // ลบ preference เก่าทั้งหมดของผู้ใช้
-            await db.promise().query("DELETE FROM userpreferences WHERE UserID = ?", [id]);
+            await db.promise().query("DELETE FROM userpreferences WHERE userID = ?", [id]);
 
             // เพิ่ม preference ใหม่
             for (const preference of preferences) {
                 const [preferenceResult] = await db.promise().query("SELECT PreferenceID FROM preferences WHERE PreferenceNames = ?", [preference]);
                 if (preferenceResult.length > 0) {
-                    await db.promise().query("INSERT INTO userpreferences (UserID, PreferenceID) VALUES (?, ?)", [id, preferenceResult[0].PreferenceID]);
+                    await db.promise().query("INSERT INTO userpreferences (userID, PreferenceID) VALUES (?, ?)", [id, preferenceResult[0].PreferenceID]);
                 }
             }
         }
@@ -581,7 +581,7 @@ app.post('/api/user/update_preferences/:id', async function (req, res) {
         }
 
         // ลบ preferences เก่าของผู้ใช้ในฐานข้อมูล
-        await db.promise().query("DELETE FROM userpreferences WHERE UserID = ?", [id]);
+        await db.promise().query("DELETE FROM userpreferences WHERE userID = ?", [id]);
 
         // แปลง comma-separated string เป็น array
         const preferencesArray = preferences.split(",");
@@ -600,7 +600,7 @@ app.post('/api/user/update_preferences/:id', async function (req, res) {
             }
 
             // เพิ่มข้อมูลในตาราง userpreferences
-            await db.promise().query("INSERT INTO userpreferences (UserID, PreferenceID) VALUES (?, ?)", [id, preferenceIDNumber]);
+            await db.promise().query("INSERT INTO userpreferences (userID, PreferenceID) VALUES (?, ?)", [id, preferenceIDNumber]);
         }
 
         res.send({ message: "Preferences ถูกอัปเดตเรียบร้อย", status: true });
@@ -624,7 +624,7 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
         }
 
         // Fetch current user data
-        const [userResult] = await db.promise().query("SELECT * FROM User WHERE UserId = ?", [id]);
+        const [userResult] = await db.promise().query("SELECT * FROM User WHERE userID = ?", [id]);
         if (userResult.length === 0) {
             return res.status(404).send({ message: "ไม่พบผู้ใช้ที่ต้องการอัปเดต", status: false });
         }
@@ -667,13 +667,13 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
         // อัปเดต preferences หลายรายการ
         if (preferences && Array.isArray(preferences)) {
             // ลบ preference เก่าทั้งหมดของผู้ใช้
-            await db.promise().query("DELETE FROM userpreferences WHERE UserID = ?", [id]);
+            await db.promise().query("DELETE FROM userpreferences WHERE userID = ?", [id]);
 
             // เพิ่ม preference ใหม่
             for (const preference of preferences) {
                 const [preferenceResult] = await db.promise().query("SELECT PreferenceID FROM preferences WHERE PreferenceNames = ?", [preference]);
                 if (preferenceResult.length > 0) {
-                    await db.promise().query("INSERT INTO userpreferences (UserID, PreferenceID) VALUES (?, ?)", [id, preferenceResult[0].PreferenceID]);
+                    await db.promise().query("INSERT INTO userpreferences (userID, PreferenceID) VALUES (?, ?)", [id, preferenceResult[0].PreferenceID]);
                 }
             }
         }
@@ -703,7 +703,7 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
         const sqlUpdate = `
             UPDATE User 
             SET username = ?, email = ?, firstname = ?, lastname = ?, nickname = ?, imageFile = ?, GenderID = ?, InterestGenderID = ?, height = ?, home = ?, DateBirth = ?, educationID = ?, goalID = ?
-            WHERE UserId = ?`;
+            WHERE userID = ?`;
         await db.promise().query(sqlUpdate, [username, email, firstname, lastname, nickname, currentImageFile, genderID, interestGenderID, height, home, DateBirth, educationID, goalID, id]);
 
         const imageUrl = currentImageFile ? `${req.protocol}://${req.get('host')}/uploads/${currentImageFile}` : null;
@@ -725,8 +725,8 @@ app.put('/api/user/update/:id', upload.single('image'), async function (req, res
 app.delete('/api/user/:id', async function (req, res) {
     const { id } = req.params;
 
-    const sqlGetUserImage = "SELECT imageFile FROM User WHERE UserId = ?";
-    const sqlDeleteUser = "DELETE FROM User WHERE UserId = ?";
+    const sqlGetUserImage = "SELECT imageFile FROM User WHERE userID = ?";
+    const sqlDeleteUser = "DELETE FROM User WHERE userID = ?";
 
     try {
         // ดึงชื่อไฟล์รูปภาพของผู้ใช้

@@ -479,7 +479,7 @@ app.delete('/api/user/:id', async function(req, res) {
                             }
 
                             // สุดท้ายลบผู้ใช้จากตาราง user
-                            const deleteUserSQL = `DELETE FROM user WHERE UserID = ?`;
+                            const deleteUserSQL = `DELETE FROM user WHERE userID = ?`;
                             db.query(deleteUserSQL, [userID], (err, result) => {
                                 if (err) {
                                     return db.rollback(() => {
