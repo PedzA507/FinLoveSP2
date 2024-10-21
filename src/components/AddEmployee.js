@@ -182,7 +182,7 @@ export default function AddEmployee() {
               <TextField
                 fullWidth
                 id="gender"
-                label="Gender"
+                label="GenderID"
                 name="gender"
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
@@ -204,7 +204,7 @@ export default function AddEmployee() {
               <TextField
                 fullWidth
                 id="phonenumber"
-                label="Phone Number"
+                label="Phonenumber"
                 name="phonenumber"
                 value={phonenumber}
                 onChange={(e) => setPhonenumber(e.target.value)}

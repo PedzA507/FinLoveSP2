@@ -417,7 +417,7 @@ app.put('/api/user/unban/:id', async function(req, res) {
                 console.error(err);
                 return res.send({'message': 'เกิดข้อผิดพลาดในการปลดแบนผู้ใช้', 'status': false});
             }
-            res.send({'message': 'ปลดแบนผู้ใช้เรียบร้อยแล้วและเคลียร์จำนวนครั้งที่ล็อกอินสำเร็จ', 'status': true});
+            res.send({'message': 'ปลดแบนผู้ใช้เรียบร้อยแล้ว', 'status': true});
         });
 
     } catch (error) {
