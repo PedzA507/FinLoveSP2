@@ -1,7 +1,7 @@
-const express = require('express')
-const mysql = require('mysql2')
-const app = express()
-const port = 5000
+const express = require('express');
+const mysql = require('mysql2');
+const app = express();
+const port = 5000;
 
 const https = require('https');
 const fs = require('fs');
@@ -9,7 +9,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'UX23Y24%@&2aMb';
 
-const fileupload = require('express-fileupload');
+const fileupload = require('express-fileupload');  // ใช้ในการอัปโหลดไฟล์
+const multer = require('multer');                 // Multer สำหรับอัปโหลดไฟล์
 const path = require('path');
 const crypto = require('crypto');
 
@@ -22,39 +23,66 @@ const credentials = { key: privateKey, cert: certificate };
 const cors = require('cors');
 
 //Database(MySql) configulation
-const db = mysql.createConnection(
-    {
-        host: "localhost",
-        user: "root",
-        password: "1234",
-        database: "finlove"
-    }
-)
-db.connect()
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "1234",
+    database: "finlove"
+});
+db.connect();
 
-//Middleware (Body parser)
-app.use(express.json())
-app.use(express.urlencoded ({extended: true}))
+// Middleware (Body parser)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(fileupload());
+app.use(fileupload());  // ใช้ fileupload
 
-//Hello World API
-app.get('/', function(req, res){
-    res.send('Hello World!')
+// ใช้ express static เพื่อให้เข้าถึงไฟล์ใน assets/employee ได้
+app.use('/assets/employee', express.static(path.join(__dirname, 'assets/employee')));
+
+// ตั้งค่า multer สำหรับการอัปโหลดไฟล์
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = path.join(__dirname, 'assets/employee');
+        // สร้างโฟลเดอร์ถ้ายังไม่มี
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath);  // เก็บไฟล์ใน assets/employee
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);  // ตั้งชื่อไฟล์เป็น timestamp + ชื่อไฟล์เดิม
+    }
+});
+const upload = multer({ storage: storage });
+
+// Hello World API
+app.get('/', function(req, res) {
+    res.send('Hello World!');
 });
 
-//Function to execute a query with a promise-based approach
+// Function to execute a query with a promise-based approach
 function query(sql, params) {
     return new Promise((resolve, reject) => {
-      db.query(sql, params, (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
+        db.query(sql, params, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
     });
 }
+
+// ตัวอย่างในการใช้ Multer สำหรับการอัปโหลดไฟล์รูปภาพ (ถ้าใช้ใน API อื่น ๆ)
+app.post('/upload', upload.single('profileImage'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send({ message: 'No file uploaded' });
+    }
+    res.send({ message: 'File uploaded successfully', filename: req.file.filename });
+});
+
+
 
 
 ////////////////////////////////////////////////////////////////////////// Login ////////////////////////////////////////////////////////////////////////////////////
@@ -536,76 +564,104 @@ app.get('/api/employee/:id', async function(req, res) {
 });
 
 
-//Show an employee image
-app.get('/api/employee/image/:filename', 
-    function(req, res) {
-        const filepath = path.join(__dirname, 'assets/employee', req.params.filename);  
-        res.sendFile(filepath);
-    }
-);
+// Show employee image
+app.get('/api/employee/image/:filename', function(req, res) {        
+    const filepath = path.join(__dirname, 'assets/employee', req.params.filename);
 
-//Generate a password
+    // Check if the file exists
+    fs.access(filepath, fs.constants.F_OK, (err) => {
+        if (err) {
+            // File does not exist, send a default image
+            const defaultImage = path.join(__dirname, 'assets/employee/default.jpg');
+            return res.sendFile(defaultImage); // Send default image if file not found
+        }
+        
+        // File exists, send the requested file
+        res.sendFile(filepath);
+    });
+});
+
+
+// Generate a password
 function generateRandomPassword(length) {
-    return crypto
-        .randomBytes(length)
-        .toString('base64')
-        .slice(0, length)
-        .replace(/\+/g, 'A')  // Replace '+' to avoid special chars if needed
-        .replace(/\//g, 'B'); // Replace '/' to avoid special chars if needed
+    return crypto.randomBytes(length)
+                 .toString('base64')
+                 .slice(0, length)
+                 .replace(/\+/g, 'A')  // Replace '+' to avoid special chars if needed
+                 .replace(/\//g, 'B'); // Replace '/' to avoid special chars if needed
 }
 
 
-//Add an employee
-app.post('/api/employee', 
-    async function(req, res){
-  
-        //receive a token
-        const token = req.headers["authorization"].replace("Bearer ", "");        
-    
-        try{
-            //validate the token    
-            let decode = jwt.verify(token, SECRET_KEY);               
-            if(decode.positionID != 1) {
-                return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
-            }            
+// Add an employee
+app.post('/api/employee', async function (req, res) {
+    const token = req.headers["authorization"]?.replace("Bearer ", "");
 
-            //receive data from users
-            const {username, firstName, lastName, email, gender } = req.body;
-
-            //check existing username
-            let sql="SELECT * FROM employee WHERE username=?";
-            db.query(sql, [username], async function(err, results) {
-                if (err) throw err;
-                
-                if(results.length == 0) {
-                    //password and salt are encrypted by hash function (bcrypt)
-                    const password = generateRandomPassword(8);
-                    const salt = await bcrypt.genSalt(10); //generate salte
-                    const password_hash = await bcrypt.hash(password, salt);    
-                    
-                    //save data into database                
-                    let sql = `INSERT INTO employee(
-                            username, password, firstName, lastName, email, gender
-                            )VALUES(?, ?, ?, ?, ?, ?)`;   
-                    let params = [username, password_hash, firstName, lastName, email, gender];
-                
-                    db.query(sql, params, (err, result) => {
-                        if (err) throw err;
-                        res.send({ 'message': 'เพิ่มข้อมูลพนักงานเรียบร้อยแล้ว', 'status': true });
-                    });                    
-
-                }else{
-                    res.send({'message':'ชื่อผู้ใช้ซ้ำ','status':false});
-                }
-            });                        
-            
-        }catch(error){
-            res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
-        }    
+    if (!token) {
+        return res.status(401).send({ 'message': 'ไม่ได้รับโทเคน', 'status': false });
     }
-);
+
+    try {
+        let decode = jwt.verify(token, SECRET_KEY);
+        if (decode.positionID != 1) {
+            return res.status(403).send({ 'message': 'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน', 'status': false });
+        }
+
+        const { username, firstName, lastName, email, gender, positionID, phonenumber } = req.body;
+
+        let sql = "SELECT * FROM employee WHERE username=?";
+        db.query(sql, [username], async function (err, results) {
+            if (err) {
+                return res.status(500).send({ 'message': 'เกิดข้อผิดพลาดในระบบ', 'status': false });
+            }
+
+            if (results.length === 0) {
+                try {
+                    const password = generateRandomPassword(8);
+                    const salt = await bcrypt.genSalt(10);
+                    const password_hash = await bcrypt.hash(password, salt);
+
+                    let profileImage = null;
+
+                    // เช็คว่าได้รับไฟล์รูปภาพหรือไม่
+                    if (req.files && req.files.profileImage) {
+                        const image = req.files.profileImage;
+                        profileImage = Date.now() + '-' + image.name;
+                        const uploadPath = path.join(__dirname, 'assets/employee', profileImage);
+
+                        // บันทึกไฟล์ไปที่ assets/employee
+                        image.mv(uploadPath, (err) => {
+                            if (err) {
+                                return res.status(500).send({ 'message': 'เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ', 'status': false });
+                            }
+                        });
+                    }
+
+                    // บันทึกข้อมูลใน database
+                    let sql = `INSERT INTO employee (username, password, firstName, lastName, email, gender, positionID, phonenumber, imageFile) 
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                    let params = [username, password_hash, firstName, lastName, email, gender, positionID, phonenumber, profileImage];
+
+                    db.query(sql, params, (err, result) => {
+                        if (err) {
+                            return res.status(500).send({ 'message': 'เกิดข้อผิดพลาดในการเพิ่มพนักงาน', 'status': false });
+                        }
+                        res.send({ 'message': 'เพิ่มข้อมูลพนักงานเรียบร้อยแล้ว', 'status': true });
+                    });
+                } catch (hashError) {
+                    return res.status(500).send({ 'message': 'เกิดข้อผิดพลาดในการสร้างรหัสผ่าน', 'status': false });
+                }
+            } else {
+                return res.status(400).send({ 'message': 'ชื่อผู้ใช้ซ้ำ', 'status': false });
+            }
+        });
+    } catch (error) {
+        res.status(401).send({ 'message': 'โทเคนไม่ถูกต้อง', 'status': false });
+    }
+});
+
+
     
-//Update an employee
+// Update an employee
 app.put('/api/employee/:id', async function(req, res) {
     const empID = req.params.id;
     const token = req.headers["authorization"].replace("Bearer ", "");
@@ -619,6 +675,38 @@ app.put('/api/employee/:id', async function(req, res) {
         }
 
         const { password, username, firstname, lastname, email, gender, phonenumber } = req.body;
+        let profileImage = null;
+
+        // ดึงข้อมูลพนักงานปัจจุบันเพื่อเช็คว่ามีรูปภาพเดิมอยู่หรือไม่
+        let sqlSelect = 'SELECT imageFile FROM employee WHERE empID = ?';
+        const [employee] = await query(sqlSelect, [empID]);
+
+        // ตรวจสอบไฟล์รูปภาพใหม่
+        if (req.files && req.files.profileImage) {
+            const image = req.files.profileImage;
+            profileImage = Date.now() + '-' + image.name;
+            const uploadPath = path.join(__dirname, 'assets/employee', profileImage);
+
+            // ลบรูปภาพเก่าหากมี
+            if (employee.imageFile) {
+                const oldImagePath = path.join(__dirname, 'assets/employee', employee.imageFile);
+                fs.access(oldImagePath, fs.constants.F_OK, (err) => {
+                    if (!err) {
+                        // ลบไฟล์เก่า
+                        fs.unlink(oldImagePath, (err) => {
+                            if (err) console.error('Error deleting old image:', err);
+                        });
+                    }
+                });
+            }
+
+            // บันทึกไฟล์รูปภาพใหม่
+            image.mv(uploadPath, (err) => {
+                if (err) {
+                    return res.status(500).send({ 'message': 'เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ', 'status': false });
+                }
+            });
+        }
 
         // ตรวจสอบไม่ให้ส่งค่า null ไปยังฐานข้อมูล
         let sql = 'UPDATE employee SET username = ?, firstname = ?, lastname = ?, email = ?, gender = ?, phonenumber = ?';
@@ -630,6 +718,11 @@ app.put('/api/employee/:id', async function(req, res) {
             gender, 
             phonenumber || ''  
         ];
+
+        if (profileImage) {
+            sql += ', imageFile = ?'; // อัปเดตไฟล์รูปภาพใหม่
+            params.push(profileImage);
+        }
 
         if (password) {
             const salt = await bcrypt.genSalt(10);
@@ -650,7 +743,6 @@ app.put('/api/employee/:id', async function(req, res) {
         res.status(401).json({ message: 'โทเคนไม่ถูกต้อง', status: false });
     }
 });
-
 
 
 // ban employee

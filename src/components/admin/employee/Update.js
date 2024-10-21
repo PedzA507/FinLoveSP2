@@ -14,6 +14,7 @@ export default function EditEmployee() {
   const [email, setEmail] = useState('');
   const [phonenumber, setPhonenumber] = useState(''); // เบอร์โทร
   const [gender, setGender] = useState(''); // เพศ
+  const [profileImage, setProfileImage] = useState(null); // สำหรับรูปภาพใหม่
   const { id } = useParams(); // ดึง empID จาก URL
 
   useEffect(() => {
@@ -36,37 +37,48 @@ export default function EditEmployee() {
     });
   }, [id]);
 
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
+
   // ฟังก์ชันสำหรับส่งข้อมูลที่แก้ไขไปยัง API
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-        const response = await axios.put(`${url}/employee/${id}`, {
-            username,
-            firstname: firstName || '',  // ตรวจสอบไม่ให้เป็น null
-            lastname: lastName || '',    // ตรวจสอบไม่ให้เป็น null
-            email,
-            phonenumber, // เบอร์โทร
-            gender // เพศ
-        }, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('firstname', firstName || '');  // ตรวจสอบไม่ให้เป็น null
+    formData.append('lastname', lastName || '');    // ตรวจสอบไม่ให้เป็น null
+    formData.append('email', email);
+    formData.append('phonenumber', phonenumber); // เบอร์โทร
+    formData.append('gender', gender); // เพศ
 
-        const result = response.data;
-        if (result.status) {
-            alert('บันทึกข้อมูลสำเร็จ');
-        } else {
-            alert('เกิดข้อผิดพลาด: ' + result.message);
-        }
-    } catch (error) {
-        if (error.response && error.response.status === 403) {
-            alert('คุณไม่มีสิทธิ์ในการแก้ไขข้อมูล');
-        } else {
-            console.error('Error submitting form:', error);
-        }
+    if (profileImage) {
+      formData.append('profileImage', profileImage); // ส่งรูปภาพถ้ามีการเปลี่ยนแปลง
     }
-};
 
+    try {
+      const response = await axios.put(`${url}/employee/${id}`, formData, {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data' // ใช้ multipart/form-data สำหรับการส่งไฟล์
+        }
+      });
+
+      const result = response.data;
+      if (result.status) {
+        alert('บันทึกข้อมูลสำเร็จ');
+      } else {
+        alert('เกิดข้อผิดพลาด: ' + result.message);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        alert('คุณไม่มีสิทธิ์ในการแก้ไขข้อมูล');
+      } else {
+        console.error('Error submitting form:', error);
+      }
+    }
+  };
 
   return (
     <Container component="main" maxWidth="sm">
@@ -134,6 +146,10 @@ export default function EditEmployee() {
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
               />
+            </Grid>
+            <Grid item xs={12}>
+              {/* Input สำหรับอัปโหลดรูปภาพ */}
+              <input type="file" onChange={handleImageChange} />
             </Grid>
           </Grid>
           <Button

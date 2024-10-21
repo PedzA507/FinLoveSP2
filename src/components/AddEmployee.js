@@ -9,14 +9,14 @@ const customTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#ff6699', // เปลี่ยนเป็นสีชมพูอ่อน
+      main: '#ff6699', // สีชมพูอ่อน
     },
     background: {
-      default: '#F8E9F0', // สีพื้นหลังจากตัวอย่าง
+      default: '#F8E9F0', // สีพื้นหลัง
     },
     text: {
-      primary: '#000000',
-      secondary: '#666666',
+      primary: '#000000', // สีดำสำหรับข้อความหลัก
+      secondary: '#666666', // สีเทาสำหรับข้อความรอง
     },
   },
   typography: {
@@ -42,28 +42,38 @@ export default function AddEmployee() {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [positionID, setPositionID] = useState('');
+  const [phonenumber, setPhonenumber] = useState(''); // เพิ่ม state สำหรับเบอร์โทร
+  const [profileImage, setProfileImage] = useState(null); // เพิ่ม state สำหรับจัดเก็บรูปภาพ
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState(null);
+
+  // ฟังก์ชันสำหรับอัปโหลดรูปภาพ
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData(); // ใช้ FormData เพื่อให้รองรับการอัปโหลดไฟล์
+    formData.append('username', username);
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('email', email);
+    formData.append('gender', gender);
+    formData.append('positionID', positionID);
+    formData.append('phonenumber', phonenumber); // เพิ่มเบอร์โทรลงใน FormData
+    if (profileImage) {
+      formData.append('profileImage', profileImage); // เพิ่มรูปภาพลงใน FormData
+    }
+
     try {
-      const response = await axios.post(process.env.REACT_APP_BASE_URL + '/employee',
-        {
-          username,
-          firstName,
-          lastName,
-          email,
-          gender,
-          positionID
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+      const response = await axios.post(process.env.REACT_APP_BASE_URL + '/employee', formData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data' // ใช้ multipart/form-data ในการส่งข้อมูล
         }
-      );
+      });
       const result = response.data;
       setMessage(result['message']);
       setStatus(result['status']);
@@ -76,6 +86,8 @@ export default function AddEmployee() {
         setEmail('');
         setGender('');
         setPositionID('');
+        setPhonenumber(''); // Reset เบอร์โทร
+        setProfileImage(null); // Reset รูปภาพ
       }
     } catch (err) {
       console.log(err);
@@ -95,7 +107,7 @@ export default function AddEmployee() {
           backgroundColor: '#F8E9F0',
         }}
       >
-        <Container component="main" maxWidth="xs"> {/* จำกัดความกว้างให้สอดคล้องกับตัวอย่าง */}
+        <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
             sx={{
@@ -103,17 +115,17 @@ export default function AddEmployee() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              backgroundColor: 'white', // เปลี่ยนเป็นสีขาวตามตัวอย่าง
+              backgroundColor: 'white',
               padding: '40px',
               borderRadius: '15px',
               boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+              border: '1px solid #ddd' 
             }}
           >
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#000', mb: 3 }}>
+            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#ff6699', mb: 3 }}>
               เพิ่มข้อมูลแอดมิน
             </Typography>
 
-            {/* Display message alert */}
             {message && (
               <Alert severity={status ? 'success' : 'error'} sx={{ width: '100%', mb: 2 }}>
                 {message}
@@ -189,20 +201,39 @@ export default function AddEmployee() {
                 </Grid>
               </Grid>
 
+              {/* เพิ่มฟิลด์สำหรับเบอร์โทร */}
+              <TextField
+                fullWidth
+                id="phonenumber"
+                label="Phone Number"
+                name="phonenumber"
+                value={phonenumber}
+                onChange={(e) => setPhonenumber(e.target.value)}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
+              />
+
+              {/* เพิ่มฟิลด์สำหรับอัปโหลดรูปภาพ */}
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageChange} 
+                style={{ marginTop: '16px', marginBottom: '16px' }} 
+              />
+
               <Button
                 type="submit"
                 fullWidth
-                variant="outlined" // เปลี่ยนเป็น Outlined ตามตัวอย่าง
+                variant="outlined"
                 sx={{
                   mt: 3,
                   mb: 2,
-                  color: '#000', // ใช้สีดำตามตัวอย่างในรูป
-                  backgroundColor: 'transparent', // เปลี่ยนพื้นหลังเป็นโปร่งใส
+                  color: '#ff6699',
+                  backgroundColor: 'transparent',
                   padding: '12px',
-                  borderRadius: '15px', // เปลี่ยนเป็นขอบมนตามตัวอย่าง
-                  border: '2px solid #000', // ใช้ขอบสีดำตามตัวอย่าง
-                  textAlign: 'center', // จัดกลางข้อความในปุ่ม
-                  fontWeight: 'bold', // ทำให้ตัวอักษรหนา
+                  borderRadius: '15px',
+                  border: '2px solid #ff6699',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
                 }}
               >
                 เพิ่มข้อมูลแอดมิน

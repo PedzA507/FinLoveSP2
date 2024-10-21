@@ -2,8 +2,9 @@ from flask import Flask, request, jsonify
 import cv2
 import pytesseract
 import re
+import os
 
-# กำหนดที่ตั้งของ tesseract บนเครื่อง
+# กำหนดที่ตั้งของ tesseract บนเครื่อง (ตรวจสอบว่าเส้นทางนี้ถูกต้อง)
 pytesseract.pytesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 app = Flask(__name__)
@@ -12,13 +13,19 @@ app = Flask(__name__)
 def preprocess_image_for_ocr(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     enhanced_image = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
-    return enhanced_image
+    
+    # เพิ่มการใช้ dilate เพื่อลด noise และทำให้เส้นขอบชัดเจนขึ้น
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    processed_image = cv2.dilate(enhanced_image, kernel, iterations=1)
+    
+    return processed_image
 
 # ฟังก์ชัน OCR เพื่อดึงข้อความจากบัตรประชาชน
 def extract_text_from_image(image):
     processed_image = preprocess_image_for_ocr(image)
     
-    custom_config = r'--psm 6'
+    # ใช้ psm 4 เพื่อรองรับ layout ที่มีหลายบรรทัดและซับซ้อน
+    custom_config = r'--psm 4'
     text = pytesseract.image_to_string(processed_image, config=custom_config, lang='eng+tha')
     
     # ลบอักขระพิเศษและตัวอักษรที่ไม่จำเป็นออก
@@ -46,7 +53,12 @@ def process_image():
 
     id_card = request.files['id_card']
     
-    id_card_path = 'uploaded_id_card.jpg'
+    # บันทึกภาพที่อัปโหลดไปยังโฟลเดอร์ 'uploads'
+    upload_folder = 'uploads'
+    if not os.path.exists(upload_folder):
+        os.makedirs(upload_folder)
+    
+    id_card_path = os.path.join(upload_folder, 'uploaded_id_card.jpg')
     id_card.save(id_card_path)
 
     image = cv2.imread(id_card_path)
