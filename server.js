@@ -188,11 +188,11 @@ app.get('/api/user', async function(req, res){
           return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
         }
         
-        // Query to pull the required fields from user table
-        let sql = "SELECT userID, username, firstname, lastname, imageFile FROM user";            
+        // Query to pull the required fields from user table, including isActive
+        let sql = "SELECT userID, username, firstname, lastname, imageFile, isActive FROM user";            
         db.query(sql, function (err, result){
             if (err) throw err;            
-            // Send the result back to the frontend, including userID
+            // Send the result back to the frontend, including isActive
             res.send(result); 
         });      
 
@@ -200,7 +200,6 @@ app.get('/api/user', async function(req, res){
         res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
     }
 });
-
 
 // List users with relevant fields only
 app.get('/api/userreport', async function(req, res){             
@@ -212,9 +211,9 @@ app.get('/api/userreport', async function(req, res){
           return res.send( {'message':'คุณไม่ได้รับสิทธิ์ในการเข้าใช้งาน','status':false} );
         }
         
-        // Query to pull the required fields from user table and join with userreport and report
+        // Query to pull the required fields from user table, including isActive
         let sql = `
-            SELECT u.userID, u.username, u.imageFile, r.reportType
+            SELECT u.userID, u.username, u.imageFile, u.isActive, r.reportType
             FROM user u
             JOIN userreport ur ON u.userID = ur.reportedID
             JOIN report r ON ur.reportID = r.reportID
@@ -222,7 +221,7 @@ app.get('/api/userreport', async function(req, res){
               
         db.query(sql, function (err, result){
             if (err) throw err;            
-            // Send the result back to the frontend, including userID and reportType
+            // Send the result back to the frontend, including userID, reportType, and isActive
             res.send(result); 
         });      
 
@@ -230,8 +229,6 @@ app.get('/api/userreport', async function(req, res){
         res.send( {'message':'โทเคนไม่ถูกต้อง','status':false} );
     }
 });
-
-
 
 // Show a user Profile
 app.get('/api/profile/:id', async function(req, res) {
@@ -379,7 +376,7 @@ app.put('/api/user/ban/:id', async function(req, res) {
             return res.send({'message':'คุณไม่มีสิทธิ์ในการระงับผู้ใช้', 'status': false});
         }
 
-        // อัปเดต isActive ในตาราง user ให้เป็น 0
+        // อัปเดต isActive ในตาราง user ให้เป็น 0 (ระงับผู้ใช้)
         let sql = "UPDATE user SET isActive = 0 WHERE userID = ?";
         db.query(sql, [userID], (err, result) => {
             if (err) {
@@ -410,7 +407,7 @@ app.put('/api/user/unban/:id', async function(req, res) {
             return res.send({'message':'คุณไม่มีสิทธิ์ในการปลดแบนผู้ใช้', 'status': false});
         }
 
-        // อัปเดต isActive ในตาราง user ให้เป็น 1 และเคลีย loginAttempt
+        // อัปเดต isActive ในตาราง user ให้เป็น 1 และเคลีย loginAttempt (ปลดแบน)
         let sql = "UPDATE user SET isActive = 1, loginAttempt = 0 WHERE userID = ?";
         db.query(sql, [userID], (err, result) => {
             if (err) {
