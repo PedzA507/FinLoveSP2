@@ -224,7 +224,7 @@ export default function Dashboard() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รหัส</TableCell>
-                    <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รูป</TableCell> {/* ปรับให้เว้นระยะและสอดคล้องกับขนาดของรูปภาพ */}
+                    <TableCell align="center" sx={{ padding: '16px', width: 100 }}>รูป</TableCell> {/* ปรับให้เว้นระยะและสอดคล้องกับขนาดของรูปภาพ */} 
                     <TableCell align="left" sx={{ padding: '16px' }}>ชื่อผู้ใช้</TableCell>
                     <TableCell align="left" sx={{ padding: '16px' }}>เหตุผล</TableCell>
                     <TableCell align="center" sx={{ padding: '16px' }}>จัดการข้อมูล</TableCell>
@@ -245,39 +245,38 @@ export default function Dashboard() {
                       <TableCell align="left" sx={{ padding: '16px' }}>{user.reportType || 'ไม่ระบุเหตุผล'}</TableCell>
                       <TableCell align="center" sx={{ padding: '16px' }}>
                         <ButtonGroup color="primary" aria-label="outlined primary button group">
-                          {user.isActive === 1 ? (
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderRadius: '10px',
-                                color: 'red',
-                                borderColor: 'red',
-                                backgroundColor: 'white',
-                                '&:hover': {
-                                  backgroundColor: '#ffe6e6',
-                                },
-                              }}
-                              onClick={() => handleBanUser(user.userID)}
-                            >
-                              ระงับผู้ใช้
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="outlined"
-                              sx={{
-                                borderRadius: '10px',
-                                color: 'black',
-                                borderColor: 'black',
-                                backgroundColor: 'white',
-                                '&:hover': {
-                                  backgroundColor: '#f8e9f0',
-                                },
-                              }}
-                              onClick={() => handleUnbanUser(user.userID)}
-                            >
-                              ปลดแบน
-                            </Button>
-                          )}
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              borderRadius: '5px',
+                              color: user.isActive === 0 ? '#fff' : '#FF0000',
+                              borderColor: 'red',
+                              backgroundColor: user.isActive === 0 ? '#f97d7d' : 'transparent',
+                              '&:hover': {
+                                backgroundColor: user.isActive === 0 ? '#FF0000' : '#ffe6e6',
+                              },
+                            }}
+                            onClick={() => handleBanUser(user.userID)}
+                            disabled={user.isActive === 0} // ปิดการใช้งานปุ่มระงับถ้าผู้ใช้ถูกระงับแล้ว
+                          >
+                            ระงับผู้ใช้
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            sx={{
+                              borderRadius: '5px',
+                              color: user.isActive === 1 ? '#fff' : '#00FF00',
+                              borderColor: 'black',
+                              backgroundColor: user.isActive === 1 ? '#abfcab' : 'transparent',
+                              '&:hover': {
+                                backgroundColor: user.isActive === 1 ? '#00ff00' : '#f8e9f0',
+                              },
+                            }}
+                            onClick={() => handleUnbanUser(user.userID)}
+                            disabled={user.isActive === 1} // ปิดการใช้งานปุ่มปลดแบนถ้าผู้ใช้ยังไม่ถูกระงับ
+                          >
+                            ปลดแบน
+                          </Button>
                         </ButtonGroup>
                       </TableCell>
                     </TableRow>
