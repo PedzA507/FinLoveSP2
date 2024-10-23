@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Button, CssBaseline, TextField, Grid, Box, Typography, Container } from '@mui/material';
+import { Button, CssBaseline, TextField, Box, Typography, Container } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // Custom theme
 const customTheme = createTheme({
@@ -21,9 +23,9 @@ const customTheme = createTheme({
   },
   typography: {
     h1: {
-      fontSize: '1.8rem',
+      fontSize: '30px', // เพิ่มขนาดเป็น 50px
       fontWeight: 'bold',
-      color: '#000',
+      color: '#ff6699',
     },
     h5: {
       color: '#333333',
@@ -46,10 +48,15 @@ export default function AddEmployee() {
   const [profileImage, setProfileImage] = useState(null); // เพิ่ม state สำหรับจัดเก็บรูปภาพ
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState(null);
+  const [imagePreview, setImagePreview] = useState(''); // เพิ่ม state สำหรับ preview รูปภาพ
 
   // ฟังก์ชันสำหรับอัปโหลดรูปภาพ
   const handleImageChange = (e) => {
-    setProfileImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      setImagePreview(URL.createObjectURL(file)); // ตั้งค่า preview รูปภาพ
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -88,6 +95,7 @@ export default function AddEmployee() {
         setPositionID('');
         setPhonenumber(''); // Reset เบอร์โทร
         setProfileImage(null); // Reset รูปภาพ
+        setImagePreview(''); // Reset รูปภาพที่ preview
       }
     } catch (err) {
       console.log(err);
@@ -115,14 +123,10 @@ export default function AddEmployee() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              backgroundColor: 'white',
               padding: '40px',
-              borderRadius: '15px',
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
-              border: '1px solid #ddd' 
             }}
           >
-            <Typography component="h1" variant="h5" sx={{ fontWeight: 'bold', color: '#ff6699', mb: 3 }}>
+            <Typography component="h1" variant="h1" sx={{ mb: 3 }}>
               เพิ่มข้อมูลแอดมิน
             </Typography>
 
@@ -131,6 +135,44 @@ export default function AddEmployee() {
                 {message}
               </Alert>
             )}
+
+            {/* ฟิลด์สำหรับอัปโหลดรูปภาพ */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
+              {/* แสดง preview รูปภาพถ้ามี */}
+              {imagePreview && (
+                <Box
+                  component="img"
+                  src={imagePreview}
+                  alt="Profile Preview"
+                  sx={{ 
+                    width: 200, 
+                    height: 200, 
+                    borderRadius: '10px', 
+                    objectFit: 'cover', 
+                    border: '2px solid black' // เพิ่มขอบสีดำ
+                  }}
+                />
+              )}
+
+              <input
+                accept="image/*"
+                style={{ display: 'none' }}
+                id="profileImage"
+                type="file"
+                onChange={handleImageChange}
+              />
+              <label htmlFor="profileImage">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  component="span"
+                  startIcon={<PhotoCamera />}
+                  sx={{ mt: 2, textTransform: 'none', borderRadius: '10px' }}
+                >
+                  อัปโหลดรูปภาพโปรไฟล์
+                </Button>
+              </label>
+            </Box>
 
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: '100%' }}>
               <TextField
@@ -176,30 +218,26 @@ export default function AddEmployee() {
                 onChange={(e) => setEmail(e.target.value)}
                 sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
               />
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    id="gender"
-                    label="Gender"
-                    name="gender"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    id="positionID"
-                    label="Position ID"
-                    name="positionID"
-                    value={positionID}
-                    onChange={(e) => setPositionID(e.target.value)}
-                    sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
-                  />
-                </Grid>
-              </Grid>
+
+              <TextField
+                fullWidth
+                id="gender"
+                label="Gender"
+                name="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
+              />
+
+              <TextField
+                fullWidth
+                id="positionID"
+                label="Position ID"
+                name="positionID"
+                value={positionID}
+                onChange={(e) => setPositionID(e.target.value)}
+                sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
+              />
 
               {/* เพิ่มฟิลด์สำหรับเบอร์โทร */}
               <TextField
@@ -212,31 +250,37 @@ export default function AddEmployee() {
                 sx={{ mb: 2, backgroundColor: '#fff', borderRadius: '10px' }}
               />
 
-              {/* เพิ่มฟิลด์สำหรับอัปโหลดรูปภาพ */}
-              <input 
-                type="file" 
-                accept="image/*" 
-                onChange={handleImageChange} 
-                style={{ marginTop: '16px', marginBottom: '16px' }} 
-              />
-
               <Button
                 type="submit"
                 fullWidth
-                variant="outlined"
+                variant="contained" // เปลี่ยนปุ่มเป็นปุ่มแบบพื้นหลังเต็ม
                 sx={{
                   mt: 3,
                   mb: 2,
-                  color: '#ff6699',
-                  backgroundColor: 'transparent',
+                  color: '#fff',
+                  backgroundColor: '#ff6699', // สีพื้นหลังชมพูอ่อน
                   padding: '12px',
                   borderRadius: '15px',
-                  border: '2px solid #ff6699',
                   textAlign: 'center',
                   fontWeight: 'bold',
+                  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)', // เพิ่มเงาเล็กน้อย
+                  '&:hover': {
+                    backgroundColor: '#ff3366', // สีเข้มขึ้นเมื่อ hover
+                  },
                 }}
               >
                 เพิ่มข้อมูลแอดมิน
+              </Button>
+
+              {/* ปุ่มย้อนกลับไปหน้า Dashboard */}
+              <Button
+                fullWidth
+                variant="text"
+                startIcon={<ArrowBackIcon />} // ไอคอนย้อนกลับ
+                onClick={() => window.location = '/dashboard'}
+                sx={{ color: '#000', mt: 1 }}
+              >
+                กลับไปหน้า Dashboard
               </Button>
             </Box>
           </Box>
