@@ -218,6 +218,16 @@ class ProfileFragment : Fragment() {
             preferenceTextView.text = preference
             preferenceTextView.setBackgroundResource(R.drawable.rounded_preference_box)
             preferenceTextView.setPadding(16, 16, 16, 16)
+            preferenceTextView.textSize = 18f // เพิ่มขนาดตัวอักษร
+
+            // เพิ่มระยะห่างระหว่างบล็อก
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(16, 16, 16, 16) // กำหนดระยะห่างระหว่างบล็อก
+
+            preferenceTextView.layoutParams = layoutParams
             preferenceContainer.addView(preferenceTextView)
         }
     }
@@ -269,8 +279,22 @@ class ProfileFragment : Fragment() {
         for (preference in preferencesArray) {
             val preferenceTextView = TextView(requireContext())
             preferenceTextView.text = preference
-            preferenceTextView.setBackgroundResource(R.drawable.rounded_preference_box)
+            preferenceTextView.setBackgroundResource(R.drawable.show_preference)
             preferenceTextView.setPadding(16, 16, 16, 16)
+
+            // เพิ่มขนาดตัวอักษร
+            preferenceTextView.textSize = 18f
+            //สีขาว
+            preferenceTextView.setTextColor(resources.getColor(R.color.white))
+
+            // เพิ่มระยะห่างระหว่างบล็อก
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(16, 16, 16, 16) // กำหนดระยะห่างระหว่างบล็อก
+
+            preferenceTextView.layoutParams = layoutParams
             preferenceContainer.addView(preferenceTextView)
         }
 

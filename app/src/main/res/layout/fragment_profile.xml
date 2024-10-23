@@ -11,7 +11,7 @@
         android:id="@+id/toolbarProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/blue_main"
         android:elevation="4dp"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent">
@@ -76,7 +76,7 @@
                 android:id="@+id/buttonEditProfile"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="220dp"
+                android:layout_marginTop="255dp"
                 android:layout_marginEnd="18dp"
                 android:background="@null"
                 android:contentDescription="Edit Profile"
@@ -92,7 +92,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/button"
+                android:background="@drawable/button_pressed"
+                android:textSize="13dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
                 android:text="เปลี่ยนรูปภาพ"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -194,7 +197,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"/>
+                android:layout_marginEnd="16dp"
+                android:gravity="center" /> <!-- เพิ่ม gravity center เพื่อให้อยู่ตรงกลาง -->
 
             <!-- ปุ่มแก้ไขความชอบ -->
             <Button
