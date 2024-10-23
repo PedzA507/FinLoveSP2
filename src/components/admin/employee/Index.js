@@ -99,15 +99,15 @@ export default function Index() {
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8E9F0' }}> {/* เปลี่ยนสีพื้นหลังเป็นชมพูอ่อน */}
       <Container sx={{ marginTop: 2 }} maxWidth="lg">
-        <Paper sx={{ padding: 2, backgroundColor: '#fff', borderRadius: '15px' }}> {/* เปลี่ยนพื้นหลังเป็นสีขาวและขอบมน */}
+        <Paper sx={{ padding: 2, backgroundColor: '#fff', borderRadius: '15px', border: '2px solid black' }}> {/* เพิ่มกรอบสีดำ */}
           <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
             {/* ปุ่มย้อนกลับ */}
             <Button
-              startIcon={<ArrowBackIcon />}
+              startIcon={<ArrowBackIcon sx={{ fontSize: '20px', color: 'black' }} />}  // ปรับขนาดและสีของไอคอน
               onClick={() => navigate('/dashboard')}
-              sx={{ mr: 2, color: '#000', fontWeight: 'bold', fontSize: '18px' }}
+              sx={{ mr: 2, color: 'black', fontWeight: 'bold', fontSize: '20px' }} // ปรับสีและขนาดของข้อความ
             >
-              จัดการข้อมูลผู้ใช้
+              จัดการข้อมูลพนักงาน
             </Button>
           </Box>
 
@@ -139,14 +139,70 @@ export default function Index() {
                     <TableCell align="left" sx={{ fontSize: '14px' }}>{employee.username}</TableCell>
                     <TableCell align="center">
                       <ButtonGroup color="primary" aria-label="outlined primary button group">
-                        <Button variant="contained" onClick={() => ViewEmployee(employee.empID)} sx={{ borderRadius: '0px', backgroundColor: '#FFF', color: '#000', border: '1px solid #1976d2' }}>ตรวจสอบรายงาน</Button>
-                        <Button variant="outlined" onClick={() => UpdateEmployee(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#1976d2', color: '#1976d2' }}>แก้ไข</Button>
-                        {employee.isActive === 1 ? (
-                          <Button variant="outlined" color="secondary" onClick={() => EmployeeBan(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#FF6699', color: '#FF6699' }}>ระงับผู้ใช้</Button>
-                        ) : (
-                          <Button variant="outlined" color="primary" onClick={() => EmployeeUnban(employee.empID)} sx={{ borderRadius: '0px', borderColor: '#1976d2', color: '#1976d2' }}>ปลดแบน</Button>
-                        )}
-                        <Button variant="contained" color="error" onClick={() => EmployeeDelete(employee.empID)} sx={{ borderRadius: '0px' }}>ลบผู้ใช้</Button>
+
+                        <Button 
+                          variant="outlined" 
+                          onClick={() => ViewEmployee(employee.empID)} 
+                          sx={{ border: '1px solid black' }}  // ใส่กรอบสีดำ
+                        >
+                          ตรวจสอบรายงาน
+                        </Button>
+
+                        <Button 
+                          variant="outlined" 
+                          onClick={() => UpdateEmployee(employee.empID)} 
+                          sx={{ border: '1px solid black' }}  // ใส่กรอบสีดำ
+                        >
+                          แก้ไข
+                        </Button>
+
+                        {/* ปุ่มระงับพนักงาน */}
+                        <Button 
+                          variant="outlined" 
+                          color="secondary" 
+                          onClick={() => EmployeeBan(employee.empID)} 
+                          disabled={employee.isActive === 0} 
+                          sx={{
+                            border: '1px solid black',
+                            color: employee.isActive === 0 ? '#fff' : '#FF0000', // สีแดงเข้มเมื่อยังไม่ถูกแบน
+                            backgroundColor: employee.isActive === 0 ? '#f97d7d' : 'transparent', // พื้นหลังแดงเข้มเมื่อถูกแบนแล้ว
+                            fontWeight: 'bold',
+                            '&:hover': {
+                              backgroundColor: employee.isActive === 0 ? '#FF0000' : 'rgba(255, 0, 0, 0.1)', // พื้นหลังโปร่งเมื่อ hover
+                            }
+                          }}
+                        >
+                          ระงับผู้ใช้
+                        </Button>
+
+                        {/* ปุ่มปลดแบน */}
+                        <Button 
+                          variant="outlined" 
+                          color="primary" 
+                          onClick={() => EmployeeUnban(employee.empID)} 
+                          disabled={employee.isActive === 1} 
+                          sx={{
+                            border: '1px solid black',
+                            color: employee.isActive === 1 ? '#fff' : '#00FF00', // สีเขียวเมื่อยังไม่ได้กด
+                            backgroundColor: employee.isActive === 1 ? '#abfcab' : 'transparent', // พื้นหลังเขียวเมื่อถูกปลดแบนแล้ว
+                            fontWeight: 'bold',
+                            '&:hover': {
+                              backgroundColor: employee.isActive === 1 ? '#00FF00' : 'rgba(0, 255, 0, 0.1)', // พื้นหลังโปร่งเมื่อ hover
+                            }
+                          }}
+                        >
+                          ปลดแบน
+                        </Button>
+
+                        <Button 
+                          variant="contained" 
+                          color="error" 
+                          onClick={() => EmployeeDelete(employee.empID)} 
+                          sx={{ border: '1px solid black' }}  // ใส่กรอบสีดำ
+                        >
+                          ลบผู้ใช้
+                        </Button>
+
                       </ButtonGroup>
                     </TableCell>
                   </TableRow>
