@@ -67,7 +67,6 @@ export default function Index() {
     .then((response) => {
       if (response.data.status === true) {
         alert(response.data.message);
-        // Update state directly after banning the user
         setUsers(prevUsers =>
           prevUsers.map(user =>
             user.userID === id ? { ...user, isActive: 0 } : user
@@ -91,7 +90,6 @@ export default function Index() {
     .then((response) => {
       if (response.data.status === true) {
         alert(response.data.message);
-        // Update state directly after unbanning the user
         setUsers(prevUsers =>
           prevUsers.map(user =>
             user.userID === id ? { ...user, isActive: 1 } : user
@@ -109,12 +107,12 @@ export default function Index() {
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8E9F0' }}>
       <Container sx={{ marginTop: 2 }} maxWidth="lg">
-        <Paper sx={{ padding: 2, backgroundColor: '#fff', borderRadius: 3 }}>
+        <Paper sx={{ padding: 2, backgroundColor: '#fff', borderRadius: 3, border: '2px solid black' }}> {/* เพิ่มกรอบสีดำ */}
           <Box display="flex" justifyContent="flex-start" alignItems="center" sx={{ mb: 2 }}>
             <Button
-              startIcon={<ArrowBackIcon />}
+              startIcon={<ArrowBackIcon sx={{ fontSize: '20px', color: 'black' }} />}  // ปรับขนาดและสีของไอคอน
               onClick={() => navigate('/dashboard')}
-              sx={{ mr: 2 }}
+              sx={{ mr: 2, color: 'black', fontWeight: 'bold', fontSize: '20px' }} // ปรับสีและขนาดของข้อความ
             >
               จัดการข้อมูลผู้ใช้
             </Button>
@@ -145,14 +143,70 @@ export default function Index() {
                     <TableCell align="left">{user.username}</TableCell>
                     <TableCell align="center">
                       <ButtonGroup color="primary" aria-label="outlined primary button group">
-                        <Button variant="outlined" onClick={() => ViewUser(user.userID)}>ตรวจสอบรายงาน</Button>
-                        <Button variant="outlined" onClick={() => UpdateUser(user.userID)}>แก้ไข</Button>
-                        {user.isActive === 1 ? (
-                          <Button variant="outlined" color="secondary" onClick={() => UserBan(user.userID)}>ระงับผู้ใช้</Button>
-                        ) : (
-                          <Button variant="outlined" color="primary" onClick={() => UserUnban(user.userID)}>ปลดแบน</Button>
-                        )}
-                        <Button variant="contained" color="error" onClick={() => UserDelete(user.userID)}>ลบผู้ใช้</Button>
+
+                        <Button 
+                          variant="outlined" 
+                          onClick={() => ViewUser(user.userID)} 
+                          sx={{ border: '1px solid black' }}  // ใส่กรอบสีดำ
+                        >
+                          ตรวจสอบรายงาน
+                        </Button>
+
+                        <Button 
+                          variant="outlined" 
+                          onClick={() => UpdateUser(user.userID)} 
+                          sx={{ border: '1px solid black' }}  // ใส่กรอบสีดำ
+                        >
+                          แก้ไข
+                        </Button>
+
+                        {/* ปุ่มระงับผู้ใช้ */}
+                        <Button 
+                          variant="outlined" 
+                          color="secondary" 
+                          onClick={() => UserBan(user.userID)} 
+                          disabled={user.isActive === 0}
+                          sx={{
+                            border: '1px solid black',
+                            color: user.isActive === 0 ? '#fff' : '#FF0000', // สีตัวอักษรแดงเข้มเมื่อยังไม่ถูกแบน
+                            backgroundColor: user.isActive === 0 ? '#f97d7d' : 'transparent', // พื้นหลังแดงเข้มเมื่อถูกกด
+                            fontWeight: 'bold',
+                            '&:hover': {
+                              backgroundColor: user.isActive === 0 ? '#FF0000' : 'rgba(255, 0, 0, 0.1)', // พื้นหลังโปร่งเมื่อ hover
+                            }
+                          }}
+                        >
+                          ระงับผู้ใช้
+                        </Button>
+
+                        {/* ปุ่มปลดแบน */}
+                        <Button 
+                          variant="outlined" 
+                          color="primary" 
+                          onClick={() => UserUnban(user.userID)} 
+                          disabled={user.isActive === 1} 
+                          sx={{
+                            border: '1px solid black',
+                            color: user.isActive === 1 ? '#fff' : '#00FF00', // สีเขียวเมื่อยังไม่ได้กด
+                            backgroundColor: user.isActive === 1 ? '#abfcab' : 'transparent', // พื้นหลังเขียวเมื่อกดแล้ว
+                            fontWeight: 'bold',
+                            '&:hover': {
+                              backgroundColor: user.isActive === 1 ? '#00FF00' : 'rgba(0, 255, 0, 0.1)', // พื้นหลังโปร่งเมื่อ hover
+                            }
+                          }}
+                        >
+                          ปลดแบน
+                        </Button>
+
+                        <Button 
+                          variant="contained" 
+                          color="error" 
+                          onClick={() => UserDelete(user.userID)} 
+                          sx={{ border: '1px solid black' }}  // ใส่กรอบสีดำ
+                        >
+                          ลบผู้ใช้
+                        </Button>
+
                       </ButtonGroup>
                     </TableCell>
                   </TableRow>
